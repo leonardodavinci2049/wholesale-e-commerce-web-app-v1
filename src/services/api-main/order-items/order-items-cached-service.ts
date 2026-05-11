@@ -1,0 +1,81 @@
+import "server-only";
+
+import { cacheLife, cacheTag } from "next/cache";
+import { createLogger } from "@/core/logger";
+import { CACHE_TAGS } from "@/lib/cache-config";
+
+import { orderItemsServiceApi } from "./order-items-service-api";
+import {
+  transformOrderItemDetailEntity,
+  transformOrderItemList,
+  type UIOrderItem,
+  type UIOrderItemDetail,
+} from "./transformers/transformers";
+
+const logger = createLogger("order-items-cached-service");
+
+export async function getOrderItems(
+  params: {
+    orderId?: number;
+    limit?: number;
+    pe_user_id?: string;
+    pe_user_name?: string;
+    pe_user_role?: string;
+    pe_person_id?: number;
+  } = {},
+): Promise<UIOrderItem[]> {
+  "use cache";
+  cacheLife("seconds");
+  cacheTag(CACHE_TAGS.orderItems);
+
+  try {
+    const response = await orderItemsServiceApi.findAllOrderItems({
+      pe_order_id: params.orderId,
+      pe_limit: params.limit,
+      pe_user_id: params.pe_user_id,
+      pe_user_name: params.pe_user_name,
+      pe_user_role: params.pe_user_role,
+      pe_person_id: params.pe_person_id,
+    });
+
+    const items = orderItemsServiceApi.extractOrderItems(response);
+    return transformOrderItemList(items);
+  } catch (error) {
+    logger.error("Erro ao buscar itens de pedido:", error);
+    throw error;
+  }
+}
+
+export async function getOrderItemById(
+  id: number,
+  params: {
+    pe_user_id?: string;
+    pe_user_name?: string;
+    pe_user_role?: string;
+    pe_person_id?: number;
+  } = {},
+): Promise<UIOrderItemDetail | undefined> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.orderItem(String(id)), CACHE_TAGS.orderItems);
+
+  try {
+    const response = await orderItemsServiceApi.findOrderItemById({
+      pe_order_item_id: id,
+      pe_user_id: params.pe_user_id,
+      pe_user_name: params.pe_user_name,
+      pe_user_role: params.pe_user_role,
+      pe_person_id: params.pe_person_id,
+    });
+
+    const item = orderItemsServiceApi.extractOrderItemById(response);
+    if (!item) {
+      return undefined;
+    }
+
+    return transformOrderItemDetailEntity(item);
+  } catch (error) {
+    logger.error(`Erro ao buscar item de pedido por ID ${id}:`, error);
+    throw error;
+  }
+}
