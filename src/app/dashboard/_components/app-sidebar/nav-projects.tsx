@@ -1,14 +1,15 @@
 "use client";
 
 import {
-  ArrowRightIcon,
-  Delete02Icon,
-  FolderIcon,
-  MoreHorizontalCircle01Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+  Folder,
+  Forward,
+  type LucideIcon,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,101 +27,69 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-function isRouteActive(pathname: string, href: string) {
-  if (!href || href === "#") {
-    return false;
-  }
-
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
 export function NavProjects({
   projects,
 }: {
   projects: {
     name: string;
     url: string;
-    icon: React.ReactNode;
+    icon: LucideIcon;
   }[];
 }) {
   const { isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
 
-  const handleNavigation = () => {
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  };
-
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>Gerenciar</SidebarGroupLabel>
       <SidebarMenu>
-        {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton
-              asChild
-              isActive={isRouteActive(pathname, item.url)}
-            >
-              <Link href={item.url} onClick={handleNavigation}>
-                {item.icon}
-                <span>{item.name}</span>
-              </Link>
-            </SidebarMenuButton>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction
-                  showOnHover
-                  className="aria-expanded:bg-muted"
+        {projects.map((item) => {
+          const isActive = pathname === item.url;
+          return (
+            <SidebarMenuItem key={item.name}>
+              <SidebarMenuButton asChild isActive={isActive}>
+                <Link
+                  href={item.url}
+                  prefetch={false}
+                  onClick={() => setOpenMobile(false)}
                 >
-                  <HugeiconsIcon
-                    icon={MoreHorizontalCircle01Icon}
-                    strokeWidth={2}
-                  />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-48 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
-                <DropdownMenuItem>
-                  <HugeiconsIcon
-                    icon={FolderIcon}
-                    strokeWidth={2}
-                    className="text-muted-foreground"
-                  />
-                  <span>View Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <HugeiconsIcon
-                    icon={ArrowRightIcon}
-                    strokeWidth={2}
-                    className="text-muted-foreground"
-                  />
-                  <span>Share Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <HugeiconsIcon
-                    icon={Delete02Icon}
-                    strokeWidth={2}
-                    className="text-muted-foreground"
-                  />
-                  <span>Delete Project</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        ))}
+                  <item.icon />
+                  <span>{item.name}</span>
+                </Link>
+              </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuAction showOnHover>
+                    <MoreHorizontal />
+                    <span className="sr-only">More</span>
+                  </SidebarMenuAction>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-48 rounded-lg"
+                  side={isMobile ? "bottom" : "right"}
+                  align={isMobile ? "end" : "start"}
+                >
+                  <DropdownMenuItem>
+                    <Folder className="text-muted-foreground" />
+                    <span>View Project</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Forward className="text-muted-foreground" />
+                    <span>Share Project</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Trash2 className="text-muted-foreground" />
+                    <span>Delete Project</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          );
+        })}
         <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
-            <HugeiconsIcon
-              icon={MoreHorizontalCircle01Icon}
-              strokeWidth={2}
-              className="text-sidebar-foreground/70"
-            />
+            <MoreHorizontal className="text-sidebar-foreground/70" />
             <span>More</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
