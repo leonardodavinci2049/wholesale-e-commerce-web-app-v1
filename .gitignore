@@ -41,14 +41,18 @@ yarn-error.log*
 next-env.d.ts
 
 # others
-/public/images
+.github/
+.agents/
+.vscode
+.agent/
+/datanase-schemas
+/scripts
+/upload
+/docs
 ecosystem.config.js
 .well-known
-.github/
-.vscode
-.vscode/
-.agents/
-/docs
-/scripts
+AGENTS.md
+public/upload
+public/images
 
 
