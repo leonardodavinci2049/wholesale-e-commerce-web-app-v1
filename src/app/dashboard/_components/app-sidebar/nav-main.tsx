@@ -1,10 +1,9 @@
 "use client";
 
-import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as React from "react";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,21 +21,13 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-function isRouteActive(pathname: string, href: string) {
-  if (!href || href === "#") {
-    return false;
-  }
-
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
 export function NavMain({
   items,
 }: {
   items: {
     title: string;
     url: string;
-    icon?: React.ReactNode;
+    icon?: LucideIcon;
     isActive?: boolean;
     items?: {
       title: string;
@@ -45,80 +36,70 @@ export function NavMain({
   }[];
 }) {
   const pathname = usePathname();
-  const { isMobile, setOpenMobile } = useSidebar();
-
-  const handleNavigation = React.useCallback(() => {
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  }, [isMobile, setOpenMobile]);
-
-  const activeGroupTitle = React.useMemo(
-    () =>
-      items.find((item) =>
-        item.items?.some((subItem) => isRouteActive(pathname, subItem.url)),
-      )?.title,
-    [items, pathname],
-  );
-
-  const [openGroupTitle, setOpenGroupTitle] = React.useState<string | null>(
-    activeGroupTitle ?? null,
-  );
-
-  React.useEffect(() => {
-    setOpenGroupTitle(activeGroupTitle ?? null);
-  }, [activeGroupTitle]);
+  const { setOpenMobile } = useSidebar();
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>PDV - Sistema de Vendas</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const hasActiveChild =
-            item.items?.some((subItem) =>
-              isRouteActive(pathname, subItem.url),
-            ) ?? false;
-          const isOpen = hasActiveChild || openGroupTitle === item.title;
+          const hasItems = item.items && item.items.length > 0;
+          // Verifica se algum filho está ativo para manter o menu aberto
+          const isChildActive = hasItems
+            ? item.items?.some((subItem) => pathname === subItem.url)
+            : false;
+
+          // Se não tiver subitens, renderiza como um link direto
+          if (!hasItems) {
+            const isActive = pathname === item.url;
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive}
+                  tooltip={item.title}
+                >
+                  <Link
+                    href={item.url}
+                    prefetch={false}
+                    onClick={() => setOpenMobile(false)}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          }
 
           return (
             <Collapsible
               key={item.title}
               asChild
-              open={isOpen}
-              onOpenChange={(nextOpen) => {
-                if (hasActiveChild) {
-                  setOpenGroupTitle(item.title);
-                  return;
-                }
-
-                setOpenGroupTitle(nextOpen ? item.title : null);
-              }}
+              // Abre se um filho estiver ativo ou se o estado inicial for ativo
+              defaultOpen={isChildActive || item.isActive}
               className="group/collapsible"
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    title={item.title}
-                    isActive={hasActiveChild}
-                  >
-                    {item.icon}
+                  <SidebarMenuButton tooltip={item.title}>
+                    {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                    <HugeiconsIcon
-                      icon={ArrowRight01Icon}
-                      strokeWidth={2}
-                      className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-                    />
+                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.items?.map((subItem) => {
-                      const isActive = isRouteActive(pathname, subItem.url);
-
+                      const isSubActive = pathname === subItem.url;
                       return (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild isActive={isActive}>
-                            <Link href={subItem.url} onClick={handleNavigation}>
+                          <SidebarMenuSubButton asChild isActive={isSubActive}>
+                            <Link
+                              href={subItem.url}
+                              prefetch={false}
+                              onClick={() => setOpenMobile(false)}
+                            >
                               <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuSubButton>

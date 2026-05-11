@@ -4,11 +4,14 @@ import {
   BarChart3,
   Bolt,
   CalendarDays,
+  ClipboardList,
   LayoutGrid,
   Mail,
+  PackageSearch,
   PhoneCall,
   Settings,
   ShieldCheck,
+  Store,
   Target,
   TriangleAlert,
   Users,
@@ -30,67 +33,58 @@ import { SiteHeaderWithBreadcrumb } from "./_components/header/site-header-with-
 
 const modules = [
   {
-    title: "Cupons da Myh",
-    description: "Acesse os cupons e atalhos da plataforma Myh.",
-    href: "/dashboard/platforms/myh-coupons",
-    icon: BadgeCheck,
+    title: "Painel de Vendas",
+    description: "Inicie novas vendas e acompanhe o fluxo de caixa.",
+    href: "/dashboard/sales-dashboard",
+    icon: Store,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     borderColor: "group-hover:border-blue-500/50",
   },
   {
-    title: "Elly Indica",
-    description: "Entre no módulo de indicações e acompanhamento da Elly.",
-    href: "/dashboard/platforms/elly-indicates",
-    icon: Target,
+    title: "Orçamentos e Pedidos",
+    description: "Gerencie pedidos, orçamentos e status de entrega.",
+    href: "/dashboard/order/order-list",
+    icon: ClipboardList,
     color: "text-amber-500",
     bgColor: "bg-amber-500/10",
     borderColor: "group-hover:border-amber-500/50",
   },
   {
-    title: "Bot Links Bianca",
-    description: "Gerencie os links e acessos rápidos do bot Bianca.",
-    href: "/dashboard/telegram-bots/links-bianca-bot",
-    icon: Mail,
+    title: "Catálogo de Produtos",
+    description: "Consulte estoque, preços e portfólio de produtos.",
+    href: "/dashboard/product/catalog",
+    icon: PackageSearch,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
     borderColor: "group-hover:border-emerald-500/50",
   },
   {
-    title: "Bot Links Mih",
-    description: "Abra o módulo de links rápidos configurados para a Mih.",
-    href: "/dashboard/telegram-bots/links-mih-bot",
-    icon: Bolt,
+    title: "Lista de Clientes",
+    description: "Acesse o cadastro e histórico completo de compras.",
+    href: "/dashboard/customer/customer-list",
+    icon: Users,
     color: "text-indigo-500",
     bgColor: "bg-indigo-500/10",
     borderColor: "group-hover:border-indigo-500/50",
   },
   {
-    title: "Bot Suporte Mih",
-    description: "Acesse o fluxo de suporte da Mih no bot configurado.",
-    href: "/dashboard/telegram-bots/links-mih-bot",
-    icon: PhoneCall,
+    title: "Painel de Relatórios",
+    description: "Visualize métricas, resultados, metas e comissões.",
+    href: "/dashboard/report/panel",
+    icon: BarChart3,
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
     borderColor: "group-hover:border-purple-500/50",
   },
   {
     title: "CRM",
-    description: "Acompanhe relacionamento, pipeline e oportunidades.",
-    href: "/dashboard/crm",
-    icon: Users,
+    description: "Gestão de relacionamento e pipeline de vendas.",
+    href: "/dashboard/crm/crm-panel",
+    icon: Target,
     color: "text-rose-500",
     bgColor: "bg-rose-500/10",
     borderColor: "group-hover:border-rose-500/50",
-  },
-  {
-    title: "Relatórios",
-    description: "Consulte os painéis e indicadores gerais do sistema.",
-    href: "/dashboard/report/panel",
-    icon: BarChart3,
-    color: "text-cyan-500",
-    bgColor: "bg-cyan-500/10",
-    borderColor: "group-hover:border-cyan-500/50",
   },
   {
     title: "Agenda",
@@ -103,7 +97,7 @@ const modules = [
   },
   {
     title: "Configurações",
-    description: "Ajuste preferências e opções da sua conta.",
+    description: "Ajuste preferências e configurações da sua conta.",
     href: "/dashboard/settings",
     icon: Settings,
     color: "text-slate-500",
@@ -114,26 +108,22 @@ const modules = [
 
 const quickInfoItems = [
   {
-    title:
-      "Use Cupons da Myh e Elly Indica para acessar as plataformas principais do projeto.",
+    title: "Acesse o Painel de Vendas para acompanhar indicadores do dia.",
     icon: Bolt,
     color: "text-amber-500",
   },
   {
-    title:
-      "Seu acesso é validado pelo login atual do sistema antes da liberação do dashboard.",
+    title: "Seus dados permanecem protegidos com autenticação e sessão ativa.",
     icon: ShieldCheck,
     color: "text-emerald-500",
   },
   {
-    title:
-      "Os bots da Bianca e da Mih ficam centralizados aqui para entrada rápida nos fluxos operacionais.",
+    title: "Relatórios e metas ficam centralizados para consulta rápida.",
     icon: BarChart3,
     color: "text-sky-500",
   },
   {
-    title:
-      "Agenda, CRM, Relatórios e Configurações continuam disponíveis como atalhos fixos do painel.",
+    title: "Clientes e agenda ajudam a priorizar contatos e retornos.",
     icon: PhoneCall,
     color: "text-teal-500",
   },
@@ -164,7 +154,7 @@ export default async function DashboardPage() {
   const { session, authWarning } = await getAuthContext();
 
   const { user } = session;
-  const firstName = user?.name?.split(" ")[0] || "Usuário";
+  const firstName = user?.name?.split(" ")[0] || "Vendedor";
   const userInitials = getInitials(user?.name);
   const userRole = formatRole(user?.role);
 
@@ -210,9 +200,9 @@ export default async function DashboardPage() {
                       Olá, {firstName}!
                     </h1>
                     <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-                      Bem-vindo ao painel principal. Use esta página como ponto
-                      de entrada para os módulos e atalhos rápidos deste
-                      projeto.
+                      Bem-vindo ao painel principal. Acesse os módulos mais
+                      importantes, acompanhe informações rápidas e entre direto
+                      nos fluxos do dia.
                     </p>
                   </div>
 
@@ -273,7 +263,7 @@ export default async function DashboardPage() {
               Módulos principais
             </h2>
             <p className="text-sm text-muted-foreground sm:text-base">
-              Escolha um dos módulos abaixo para continuar o trabalho.
+              Escolha um dos acessos abaixo para continuar o trabalho.
             </p>
           </div>
 
@@ -326,7 +316,7 @@ export default async function DashboardPage() {
                 Informações rápidas
               </CardTitle>
               <CardDescription>
-                Resumo objetivo para facilitar sua navegação neste projeto.
+                Resumo objetivo para facilitar sua navegação inicial.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -353,7 +343,7 @@ export default async function DashboardPage() {
                 Acesso rápido
               </CardTitle>
               <CardDescription>
-                Os módulos do projeto organizados como lista de atalho.
+                Os mesmos módulos principais organizados como lista de atalho.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-1">
