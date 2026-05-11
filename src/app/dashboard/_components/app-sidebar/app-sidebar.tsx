@@ -1,16 +1,19 @@
 "use client";
 
 import {
-  AudioWave01Icon,
-  ComputerTerminalIcon,
-  LayoutBottomIcon,
-  MapsIcon,
-  PieChartIcon,
-  RoboticIcon,
-  Settings05Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+  AudioWaveform,
+  BookOpen,
+  Bot,
+  Command,
+  Frame,
+  GalleryVerticalEnd,
+  Map as MapIcon,
+  PieChart,
+  Settings2,
+  SquareTerminal,
+} from "lucide-react";
 import type * as React from "react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +21,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useSession } from "@/lib/auth/auth-client";
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
@@ -26,47 +28,97 @@ import { SidebarLogo } from "./sidebar-logo";
 
 // This is sample data.
 const data = {
+  user: {
+    name: "Comsuporte",
+    email: "mauro@comsuporte.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
   teams: [
     {
       name: "WinERP",
-      logo: <HugeiconsIcon icon={AudioWave01Icon} strokeWidth={2} />,
+      logo: GalleryVerticalEnd,
       plan: "Distribuidora",
+    },
+    {
+      name: "Mundial Megastore",
+      logo: AudioWaveform,
+      plan: "Enterprise",
+    },
+    {
+      name: "Atacadão Eletrônico",
+      logo: Command,
+      plan: "Revenda",
     },
   ],
   navMain: [
     {
-      title: "Plataformas",
+      title: "Consultor ",
       url: "#",
-      icon: <HugeiconsIcon icon={ComputerTerminalIcon} strokeWidth={2} />,
+      icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Cupons da Myh",
-          url: "/dashboard/platforms/myh-coupons",
+          title: "Painel de Vendas",
+          url: "/dashboard/sales-dashboard",
         },
 
         {
-          title: "Elly Indica",
-          url: "/dashboard/platforms/elly-indicates",
+          title: "Novo Orçamento",
+          url: "/dashboard/order/new-budget",
+        },
+
+        {
+          title: "Lista de Pedidos",
+          url: "/dashboard/order/order-list",
+        },
+        {
+          title: "Carrinho WEB",
+          url: "/dashboard/cart/web-cart/",
         },
       ],
     },
     {
-      title: "Bots Telegram",
+      title: "Produtos",
       url: "#",
-      icon: <HugeiconsIcon icon={RoboticIcon} strokeWidth={2} />,
+      icon: BookOpen,
       items: [
         {
-          title: "Bot Links Bianca",
-          url: "/dashboard/telegram-bots/links-bianca-bot",
+          title: "Lista de Produtos",
+          url: "/dashboard/product/product-list",
         },
         {
-          title: "Bot Links Mih",
-          url: "/dashboard/telegram-bots/links-mih-bot",
+          title: "Mais Vendidos",
+          url: "/dashboard/product/products-best-selling",
+        },
+      ],
+    },
+    {
+      title: "Clientes",
+      url: "#",
+      icon: Bot,
+      items: [
+        {
+          title: "Lista de Clientes",
+          url: "/dashboard/customer/customer-list",
+        },
+
+        {
+          title: "Novo Cadastro",
+          url: "/dashboard/customer/add-customer",
+        },
+
+        {
+          title: "Clientes Premium",
+          url: "/dashboard/customer/premium-customers",
+        },
+
+        {
+          title: "Clientes Inativos",
+          url: "/dashboard/customer/inactive-customers",
         },
         {
-          title: "Bot Support Mih",
-          url: "/dashboard/telegram-bots/mih-bot-support",
+          title: "Cadastro Pendente",
+          url: "/dashboard/customer/pending-registrations",
         },
       ],
     },
@@ -74,7 +126,7 @@ const data = {
     {
       title: "Relatórios",
       url: "#",
-      icon: <HugeiconsIcon icon={Settings05Icon} strokeWidth={2} />,
+      icon: Settings2,
       items: [
         {
           title: "Painel geral",
@@ -87,30 +139,22 @@ const data = {
     {
       name: "Agenda",
       url: "/dashboard/agenda/agenda-panel",
-      icon: <HugeiconsIcon icon={LayoutBottomIcon} strokeWidth={2} />,
+      icon: Frame,
     },
     {
       name: "CRM",
       url: "/dashboard/crm",
-      icon: <HugeiconsIcon icon={PieChartIcon} strokeWidth={2} />,
+      icon: PieChart,
     },
     {
       name: "Configurações",
       url: "/dashboard/settings/",
-      icon: <HugeiconsIcon icon={MapsIcon} strokeWidth={2} />,
+      icon: MapIcon,
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session } = useSession();
-
-  const user = {
-    name: session?.user.name ?? "",
-    email: session?.user.email ?? "",
-    avatar: session?.user.image ?? "",
-  };
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -121,7 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
