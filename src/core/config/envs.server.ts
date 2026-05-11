@@ -8,6 +8,7 @@ const serverEnvsSchema = z.object({
   PORT: z.coerce.number().positive(),
   EXTERNAL_API_MAIN_URL: z.string().url(),
   EXTERNAL_API_ASSETS_URL: z.string().url(),
+  SYSTEM_CLIENT_ID: z.coerce.number().positive(),
   APP_ID: z.coerce.number().positive(),
   STORE_ID: z.coerce.number().positive(),
   DATABASE_HOST: z.string().min(1),
@@ -25,6 +26,9 @@ const serverEnvsSchema = z.object({
   RESEND_API_KEY: z.string().min(1),
   EMAIL_SENDER_NAME: z.string().min(1),
   EMAIL_SENDER_ADDRESS: z.string().email(),
+  REVALIDATE_SECRET: z.string().min(1),
+  WEBHOOK_REVALIDATE_URL1: z.string().url().optional(),
+  WEBHOOK_REVALIDATE_URL2: z.string().url().optional(),
 });
 
 export const serverEnvs = parseEnv(serverEnvsSchema, process.env, {
