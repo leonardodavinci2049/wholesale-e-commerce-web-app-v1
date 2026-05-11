@@ -25,6 +25,9 @@ const serverEnvsSchema = z.object({
   RESEND_API_KEY: z.string().min(1),
   EMAIL_SENDER_NAME: z.string().min(1),
   EMAIL_SENDER_ADDRESS: z.string().email(),
+  REVALIDATE_SECRET: z.string().min(1),
+  WEBHOOK_REVALIDATE_URL1: z.string().url().optional(),
+  WEBHOOK_REVALIDATE_URL2: z.string().url().optional(),
 });
 
 export const serverEnvs = parseEnv(serverEnvsSchema, process.env, {
