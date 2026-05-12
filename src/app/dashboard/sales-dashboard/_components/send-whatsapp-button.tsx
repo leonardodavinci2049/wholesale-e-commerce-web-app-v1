@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { publicEnvs } from "@/core/config";
 import { useUserData } from "@/hooks/use-user-data";
 import type {
   UIOrderCustomer,
@@ -25,7 +26,6 @@ import type {
   UIOrderSalesSummary,
 } from "@/services/api-main/order-sales/transformers/transformers";
 import { formatCurrency } from "@/utils/common-utils";
-import { publicEnvs } from "@/core/config";
 
 interface SendWhatsAppButtonProps {
   summary: UIOrderSalesSummary | null;

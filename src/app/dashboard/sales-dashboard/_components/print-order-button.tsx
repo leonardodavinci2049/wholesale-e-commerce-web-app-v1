@@ -15,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { publicEnvs } from "@/core/config/envs.client";
 import type {
   UIOrderCustomer,
   UIOrderDashboardDetails,
@@ -22,7 +23,6 @@ import type {
   UIOrderSalesSummary,
 } from "@/services/api-main/order-sales/transformers/transformers";
 import { formatCurrency } from "@/utils/common-utils";
-import { publicEnvs } from "@/core/config/envs.client";
 
 interface PrintOrderButtonProps {
   summary: UIOrderSalesSummary | null;
