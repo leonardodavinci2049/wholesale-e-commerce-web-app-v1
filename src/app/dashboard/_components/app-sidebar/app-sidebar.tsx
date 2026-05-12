@@ -52,7 +52,7 @@ const data = {
   ],
   navMain: [
     {
-      title: "Catalogo de produtos ",
+      title: "Inciar Orçamento",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
