@@ -4,7 +4,6 @@ import { parseEnv } from "@/core/config/env-validation";
 
 const publicEnvsSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url(),
-  NEXT_PUBLIC_EXTERNAL_PATH_IMAGES_URL: z.string().url(),
   NEXT_PUBLIC_DEVELOPER_NAME: z.string().min(1),
   NEXT_PUBLIC_DEVELOPER_URL: z.string().url(),
   NEXT_PUBLIC_COMPANY_NAME: z.string().min(1),
@@ -26,8 +25,6 @@ export const publicEnvs = parseEnv(
   publicEnvsSchema,
   {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_EXTERNAL_PATH_IMAGES_URL:
-      process.env.NEXT_PUBLIC_EXTERNAL_PATH_IMAGES_URL,
     NEXT_PUBLIC_DEVELOPER_NAME: process.env.NEXT_PUBLIC_DEVELOPER_NAME,
     NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL,
     NEXT_PUBLIC_COMPANY_NAME: process.env.NEXT_PUBLIC_COMPANY_NAME,

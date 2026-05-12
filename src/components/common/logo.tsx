@@ -16,7 +16,7 @@ export default function Logo({
     return (
       <div
         className={cn(
-          "relative flex size-16 items-center justify-center overflow-hidden rounded-full border-4 border-white/85 bg-white/20 shadow-[0_12px_24px_-10px_rgb(168_85_247_/_0.45)] ring-1 ring-pink-200/70 backdrop-blur-sm sm:size-[4.5rem]",
+          "relative flex size-16 items-center justify-center overflow-hidden rounded-full border-4 border-white/85 bg-white/20 shadow-[0_12px_24px_-10px_rgb(168_85_247/0.45)] ring-1 ring-pink-200/70 backdrop-blur-sm sm:size-18",
           className,
         )}
       >
@@ -24,6 +24,7 @@ export default function Logo({
           src="/images/logo/logo-header.png"
           alt={`${process.env.NEXT_PUBLIC_COMPANY_NAME || "Logo"} Logo`}
           fill
+          loading="eager"
           sizes="72px"
           className={cn("object-cover object-center", imageClassName)}
         />
@@ -43,6 +44,7 @@ export default function Logo({
         alt={`${process.env.NEXT_PUBLIC_COMPANY_NAME || "Logo"} Logo`}
         width={200}
         height={64}
+        loading="eager"
         className={cn("h-16 w-auto sm:h-20", imageClassName)}
       />
     </div>
