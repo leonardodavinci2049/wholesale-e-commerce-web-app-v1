@@ -52,33 +52,24 @@ const data = {
   ],
   navMain: [
     {
-      title: "Consultor ",
+      title: "Inciar Orçamento",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
-        {
-          title: "Painel de Vendas",
-          url: "/dashboard/sales-dashboard",
-        },
-
         {
           title: "Novo Orçamento",
           url: "/dashboard/order/new-budget",
         },
 
         {
-          title: "Lista de Pedidos",
+          title: "Meus Pedidos",
           url: "/dashboard/order/order-list",
-        },
-        {
-          title: "Carrinho WEB",
-          url: "/dashboard/cart/web-cart/",
         },
       ],
     },
     {
-      title: "Produtos",
+      title: "Tabela de Produtos",
       url: "#",
       icon: BookOpen,
       items: [
@@ -89,36 +80,6 @@ const data = {
         {
           title: "Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
-        },
-      ],
-    },
-    {
-      title: "Clientes",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Lista de Clientes",
-          url: "/dashboard/customer/customer-list",
-        },
-
-        {
-          title: "Novo Cadastro",
-          url: "/dashboard/customer/add-customer",
-        },
-
-        {
-          title: "Clientes Premium",
-          url: "/dashboard/customer/premium-customers",
-        },
-
-        {
-          title: "Clientes Inativos",
-          url: "/dashboard/customer/inactive-customers",
-        },
-        {
-          title: "Cadastro Pendente",
-          url: "/dashboard/customer/pending-registrations",
         },
       ],
     },

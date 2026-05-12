@@ -1,0 +1,130 @@
+import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { createLogger } from "@/core/logger";
+import { getAuthContext } from "@/server/auth-context";
+import {
+  getOrderDashboard,
+  type UIOrderDashboard,
+} from "@/services/api-main/order-sales/order-sales-cached-service";
+import { CustomerSection } from "./_components/customer-section";
+import { HeaderOrderSection } from "./_components/header-order-section";
+import { OrderActionsSection } from "./_components/order-actions-section";
+import { OrderEditSection } from "./_components/order-edit-section";
+import { OrderItemsSection } from "./_components/order-items-section";
+import { OrderLoadErrorState } from "./_components/order-load-error-state";
+import { OrderSummarySection } from "./_components/order-summary-section";
+import { OrderTabsSection } from "./_components/order-tabs-section";
+import { PurchaseDetailsSection } from "./_components/purchase-details-section";
+
+const logger = createLogger("dashboard-pdv-page");
+
+interface PdvPageProps {
+  searchParams: Promise<{ orderId?: string }>;
+}
+
+export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
+  const params = await searchParams;
+  const orderId = params.orderId ? Number(params.orderId) : 0;
+
+  let dashboardData: UIOrderDashboard | null = null;
+
+  try {
+    const { apiContext } = await getAuthContext();
+    dashboardData =
+      (await getOrderDashboard(orderId, {
+        ...apiContext,
+        sellerId: apiContext.pe_person_id,
+        typeBusiness: 1,
+      })) ?? null;
+  } catch (error) {
+    logger.error("Erro ao carregar dados do pedido:", error);
+  }
+
+  const errorMessage = dashboardData?.error ?? null;
+  const shouldShowErrorState = Boolean(errorMessage) || !dashboardData?.details;
+
+  return (
+    <div className="relative flex min-h-screen flex-col bg-background">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-105 bg-[radial-gradient(circle_at_top_left,var(--tw-gradient-stops))] from-primary/10 via-background to-transparent" />
+
+      <SiteHeaderWithBreadcrumb
+        title="PDV"
+        breadcrumbItems={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "PDV", isActive: true },
+        ]}
+      />
+
+      <div className="relative flex flex-1 flex-col overflow-hidden">
+        <div className="flex-1 overflow-auto">
+          <div className="mx-auto flex w-full max-w-350 flex-col gap-4 px-4 pb-6 pt-4 md:px-6 md:pb-8">
+            {shouldShowErrorState ? (
+              <OrderLoadErrorState
+                errorMessage={errorMessage}
+                orderId={orderId > 0 ? orderId : undefined}
+              />
+            ) : (
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(360px,420px)] xl:grid-cols-[minmax(0,2fr)_minmax(380px,450px)]">
+                <main className="order-1 flex min-w-0 flex-col gap-4">
+                  <HeaderOrderSection
+                    details={dashboardData?.details ?? null}
+                    customerName={dashboardData?.customer?.customerName ?? null}
+                  />
+                  <OrderTabsSection
+                    cartContent={
+                      <OrderItemsSection
+                        items={dashboardData?.items ?? []}
+                        orderStatusId={
+                          dashboardData?.details?.orderStatusId ?? 0
+                        }
+                        orderId={dashboardData?.details?.orderId ?? 0}
+                        customerId={dashboardData?.details?.customerId ?? 0}
+                        sellerId={dashboardData?.details?.sellerId ?? 0}
+                        paymentFormId={
+                          dashboardData?.details?.paymentFormId ?? 0
+                        }
+                      />
+                    }
+                    purchaseDetailsContent={
+                      <PurchaseDetailsSection
+                        details={dashboardData?.details ?? null}
+                      />
+                    }
+                    customerDetailsContent={
+                      <CustomerSection
+                        customer={dashboardData?.customer ?? null}
+                        orderId={dashboardData?.details?.orderId ?? orderId}
+                        orderStatusId={
+                          dashboardData?.details?.orderStatusId ?? 0
+                        }
+                      />
+                    }
+                    orderEditContent={
+                      <OrderEditSection
+                        details={dashboardData?.details ?? null}
+                      />
+                    }
+                  />
+                </main>
+
+                <aside className="order-2 min-w-0">
+                  <div className="space-y-4 xl:sticky xl:top-4">
+                    <OrderSummarySection
+                      summary={dashboardData?.summary ?? null}
+                    />
+                    <OrderActionsSection
+                      summary={dashboardData?.summary ?? null}
+                      details={dashboardData?.details ?? null}
+                      items={dashboardData?.items ?? []}
+                      customer={dashboardData?.customer ?? null}
+                      orderStatusId={dashboardData?.details?.orderStatusId ?? 0}
+                    />
+                  </div>
+                </aside>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
