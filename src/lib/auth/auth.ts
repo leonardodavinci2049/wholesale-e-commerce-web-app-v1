@@ -36,6 +36,12 @@ export const auth = betterAuth({
         input: false,
         fieldName: "personId",
       },
+      sellerId: {
+        type: "number",
+        required: false,
+        input: false,
+        fieldName: "sellerId",
+      },
     },
   },
   emailAndPassword: {

@@ -9,6 +9,7 @@ interface UserData {
   id?: string;
   role?: string;
   personId?: number | null;
+  sellerId?: number | null;
 }
 
 export function useUserData(): {
@@ -27,6 +28,7 @@ export function useUserData(): {
           `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name || "User")}&background=0f172a&color=fff`,
         id: session.user.id,
         personId: session.user.personId,
+        sellerId: session.user.sellerId,
       }
     : null;
 
