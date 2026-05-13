@@ -1,7 +1,6 @@
 "use client";
 
 import Form from "next/form";
-import Link from "next/link";
 import { useActionState, useEffect, useId } from "react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -111,12 +110,12 @@ export function LoginForm({
         <GoogleButton /> */}
       </div>
 
-      <div className="text-center text-sm">
+      {/*       <div className="text-center text-sm">
         Ainda não tem cadastro?{" "}
         <Link href="/sign-up" className="underline underline-offset-4">
           Cadastre-se
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
