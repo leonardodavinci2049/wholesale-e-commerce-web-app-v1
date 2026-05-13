@@ -57,6 +57,11 @@ const data = {
       isActive: true,
       items: [
         {
+          title: "Novo Orçamento v2",
+          url: "/dashboard/order/new-budget-v2",
+        },
+
+        {
           title: "Novo Orçamento",
           url: "/dashboard/order/new-budget",
         },
