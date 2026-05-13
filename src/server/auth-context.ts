@@ -40,7 +40,7 @@ export async function getAuthContext(): Promise<AuthContext> {
       pe_user_id: session.user.id ?? "0",
       pe_user_name: session.user.name ?? "",
       pe_user_role: session.user.role ?? "admin",
-      pe_person_id: 0,
+      pe_person_id: session.user.personId ?? 0,
     },
   };
 }
