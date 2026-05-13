@@ -18,7 +18,6 @@ interface MobileBottomBarProps {
   children?: React.ReactNode;
   itemCount: number;
   orderId?: number;
-  customerId?: number;
   nextStep?: number;
   nextLabel?: string;
   disabled?: boolean;
@@ -28,7 +27,6 @@ export function MobileBottomBar({
   children,
   itemCount,
   orderId,
-  customerId,
   nextStep,
   nextLabel,
   disabled,
@@ -40,7 +38,6 @@ export function MobileBottomBar({
   if (orderId && nextStep) {
     params.set("step", String(nextStep));
     params.set("orderId", String(orderId));
-    if (customerId) params.set("customerId", String(customerId));
   }
   const href = `/dashboard/order/new-budget?${params.toString()}`;
   const itemLabel = itemCount === 1 ? "item" : "itens";

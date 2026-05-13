@@ -18,7 +18,6 @@ interface ProductAddButtonProps {
   productName: string;
   storeStock: number;
   orderId?: number;
-  customerId: number;
 }
 
 export function ProductAddButton({
@@ -26,7 +25,6 @@ export function ProductAddButton({
   productName,
   storeStock,
   orderId,
-  customerId,
 }: ProductAddButtonProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -68,7 +66,6 @@ export function ProductAddButton({
       if (nextOrderId) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("step", String(BUDGET_FLOW_STEPS.cart));
-        params.set("customerId", String(customerId));
         params.set("orderId", String(nextOrderId));
         router.replace(`/dashboard/order/new-budget?${params.toString()}`);
       } else {
@@ -77,7 +74,7 @@ export function ProductAddButton({
     } else if (state?.success === false) {
       toast.error(state.message);
     }
-  }, [state, searchParams, customerId, router]);
+  }, [state, searchParams, router]);
 
   return (
     <div className="flex items-center gap-2">
@@ -122,7 +119,6 @@ export function ProductAddButton({
 
       <form action={formAction} className="ml-auto">
         <input type="hidden" name="orderId" value={orderId ?? ""} />
-        <input type="hidden" name="customerId" value={customerId} />
         <input type="hidden" name="productId" value={productId} />
         <input type="hidden" name="quantity" value={safeQuantity} />
         <Button

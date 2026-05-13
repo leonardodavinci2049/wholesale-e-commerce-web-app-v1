@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
+import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { CACHE_TAGS } from "@/lib/cache-config";
 import { getAuthContext } from "@/server/auth-context";
@@ -15,12 +16,15 @@ export async function addItemAction(
   formData: FormData,
 ): Promise<ActionState> {
   try {
-    const { apiContext } = await getAuthContext();
+    const { session, apiContext } = await getAuthContext();
 
     const orderId = Number(formData.get("orderId"));
-    const customerId = Number(formData.get("customerId"));
     const productId = Number(formData.get("productId"));
     const quantity = Number(formData.get("quantity"));
+
+    const customerId = session.user.personId ?? 0;
+    const sellerId = session.user.sellerId ?? 0;
+    const typeBusiness = serverEnvs.TYPE_BUSINESS;
 
     if (!customerId || !productId || !quantity || quantity < 1) {
       return {
@@ -34,8 +38,8 @@ export async function addItemAction(
     if (!targetOrderId) {
       const createOrderResponse = await orderOperationsServiceApi.createOrder({
         pe_customer_id: customerId,
-        pe_seller_id: apiContext.pe_person_id,
-        pe_business_type: 1,
+        pe_seller_id: sellerId,
+        pe_business_type: typeBusiness,
         pe_payment_form_id: 1,
         pe_location_id: 1,
         pe_notes: "PDV ONLINE",
@@ -57,11 +61,11 @@ export async function addItemAction(
     await orderOperationsServiceApi.addItem({
       pe_order_id: targetOrderId,
       pe_customer_id: customerId,
-      pe_seller_id: apiContext.pe_person_id,
+      pe_seller_id: sellerId,
       pe_product_id: productId,
       pe_product_quantity: quantity,
       pe_payment_form_id: 1,
-      pe_business_type: 1,
+      pe_business_type: typeBusiness,
       pe_notes: "PDV ONLINE",
       ...apiContext,
     });

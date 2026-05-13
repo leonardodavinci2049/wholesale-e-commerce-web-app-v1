@@ -22,7 +22,6 @@ export function StepProducts({
   orderDashboard,
   search,
   orderId,
-  customerId,
   flagStock,
   productLimit,
 }: StepProductsProps) {
@@ -43,7 +42,6 @@ export function StepProducts({
           <ProductSearchInput
             defaultValue={search}
             orderId={orderId}
-            customerId={customerId}
             flagStock={flagStock}
           />
         </div>
@@ -53,11 +51,7 @@ export function StepProducts({
         <div className="space-y-4">
           {search ? (
             <div className="flex flex-col gap-4">
-              <ProductList
-                products={products}
-                orderId={orderId}
-                customerId={customerId}
-              />
+              <ProductList products={products} orderId={orderId} />
 
               <ProductLoadMore
                 currentLimit={productLimit}
@@ -90,7 +84,6 @@ export function StepProducts({
             <StepNavigation
               nextStep={BUDGET_FLOW_STEPS.payment}
               orderId={orderId}
-              customerId={customerId}
               disabled={cartItems.length === 0}
               nextLabel="Selecionar Pagamento"
             />

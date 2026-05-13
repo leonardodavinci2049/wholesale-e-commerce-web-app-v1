@@ -1,10 +1,7 @@
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import {
-  getCustomerById,
-  getCustomers,
-} from "@/services/api-main/customer-general/customer-general-cached-service";
 import { getOrderDashboard } from "@/services/api-main/order-sales/order-sales-cached-service";
 import { searchProductsPdv } from "@/services/api-main/product-pdv/product-pdv-cached-service";
 
@@ -13,7 +10,6 @@ const logger = createLogger("new-budget-page");
 import { BudgetStepper } from "./_components/budget-stepper";
 import { CartItemsList } from "./_components/cart-items-list";
 import { MobileBottomBar } from "./_components/mobile-bottom-bar";
-import { StepCustomerSelect } from "./_components/step-customer-select";
 import { StepPayment } from "./_components/step-payment";
 import { StepProducts } from "./_components/step-products";
 import { StepSummary } from "./_components/step-summary";
@@ -23,52 +19,41 @@ interface NewBudgetPageProps {
   searchParams: Promise<{
     step?: string;
     search?: string;
-    customerId?: string;
     orderId?: string;
     flagStock?: string;
     limit?: string;
-    customerLimit?: string;
   }>;
 }
 
 export default async function NewBudgetPage({
   searchParams,
 }: NewBudgetPageProps) {
-  const { apiContext } = await getAuthContext();
+  const { session, apiContext } = await getAuthContext();
+
+  const customerId = session.user.personId ?? 0;
+  const sellerId = session.user.sellerId ?? 0;
+  const typeBusiness = serverEnvs.TYPE_BUSINESS;
+
   const dashboardParams = {
     ...apiContext,
-    sellerId: apiContext.pe_person_id,
-    typeBusiness: 1,
+    sellerId,
+    typeBusiness,
   };
 
   const params = await searchParams;
   const step = normalizeBudgetStep(Number(params.step));
   const search = params.search ?? "";
-  const customerId = params.customerId ? Number(params.customerId) : undefined;
   const orderId = params.orderId ? Number(params.orderId) : undefined;
   const flagStock = params.flagStock === "0" ? 0 : 1;
   const DEFAULT_PRODUCT_LIMIT = 20;
   const productLimit = params.limit
     ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
     : DEFAULT_PRODUCT_LIMIT;
-  const DEFAULT_CUSTOMER_LIMIT = 50;
-  const customerLimit = params.customerLimit
-    ? Math.max(DEFAULT_CUSTOMER_LIMIT, Number(params.customerLimit))
-    : DEFAULT_CUSTOMER_LIMIT;
 
-  let customers: Awaited<ReturnType<typeof getCustomers>> = [];
   let products: Awaited<ReturnType<typeof searchProductsPdv>> = [];
   let orderDashboard: Awaited<ReturnType<typeof getOrderDashboard>>;
 
-  if (step === BUDGET_FLOW_STEPS.customer && search) {
-    customers = await getCustomers({
-      search,
-      qtRegistros: customerLimit,
-      ...apiContext,
-    });
-  }
-
-  if (step === BUDGET_FLOW_STEPS.cart && customerId) {
+  if (step === BUDGET_FLOW_STEPS.cart) {
     if (search) {
       products = await searchProductsPdv({
         search,
@@ -104,21 +89,8 @@ export default async function NewBudgetPage({
     }
   }
 
-  const effectiveCustomerId =
-    customerId ?? orderDashboard?.customer?.customerId;
-
-  let customerName: string | undefined;
-  if (effectiveCustomerId && step >= BUDGET_FLOW_STEPS.cart) {
-    if (orderDashboard?.customer?.customerName) {
-      customerName = orderDashboard.customer.customerName;
-    } else {
-      const customerData = await getCustomerById(
-        effectiveCustomerId,
-        apiContext,
-      );
-      customerName = customerData?.customer.name;
-    }
-  }
+  const customerName =
+    orderDashboard?.customer?.customerName ?? session.user.name ?? undefined;
 
   const cartItems = orderDashboard?.items ?? [];
   const summary = orderDashboard?.summary;
@@ -141,36 +113,24 @@ export default async function NewBudgetPage({
         <div className="mx-auto flex w-full max-w-350 flex-col gap-6">
           <BudgetStepper
             currentStep={step}
-            customerId={effectiveCustomerId}
+            customerId={customerId}
             customerName={customerName}
             orderId={orderId}
           >
-            {step === BUDGET_FLOW_STEPS.customer && (
-              <StepCustomerSelect
-                customers={customers}
-                search={search}
-                customerLimit={customerLimit}
-              />
-            )}
-
-            {step === BUDGET_FLOW_STEPS.cart && effectiveCustomerId && (
+            {step === BUDGET_FLOW_STEPS.cart && (
               <StepProducts
                 products={products}
                 orderDashboard={orderDashboard}
                 search={search}
                 orderId={orderId}
-                customerId={effectiveCustomerId}
+                customerId={customerId}
                 flagStock={flagStock}
                 productLimit={productLimit}
               />
             )}
 
             {step === BUDGET_FLOW_STEPS.payment && orderId && (
-              <StepPayment
-                orderDashboard={orderDashboard}
-                orderId={orderId}
-                customerId={effectiveCustomerId}
-              />
+              <StepPayment orderDashboard={orderDashboard} orderId={orderId} />
             )}
 
             {step === BUDGET_FLOW_STEPS.summary && orderId && (
@@ -183,7 +143,6 @@ export default async function NewBudgetPage({
       <MobileBottomBar
         itemCount={cartItems.length}
         orderId={orderId}
-        customerId={effectiveCustomerId}
         nextStep={showCartNextButton ? BUDGET_FLOW_STEPS.payment : undefined}
         nextLabel={showCartNextButton ? "Selecionar Pagamento" : undefined}
         disabled={showCartNextButton ? cartItems.length === 0 : undefined}

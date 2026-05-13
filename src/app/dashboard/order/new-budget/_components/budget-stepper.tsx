@@ -19,11 +19,6 @@ import { BUDGET_FLOW_STEPS } from "../budget-flow";
 
 const STEPS = [
   {
-    routeStep: BUDGET_FLOW_STEPS.customer,
-    label: "Cliente",
-    icon: UserSearch,
-  },
-  {
     routeStep: BUDGET_FLOW_STEPS.cart,
     label: "Carrinho",
     icon: Package,
@@ -69,19 +64,17 @@ export function BudgetStepper({
       params.set("step", String(step));
       params.delete("search");
 
-      if (customerId) params.set("customerId", String(customerId));
       if (orderId) params.set("orderId", String(orderId));
 
       startTransition(() => {
         router.push(`/dashboard/order/new-budget?${params.toString()}`);
       });
     },
-    [searchParams, customerId, orderId, router],
+    [searchParams, orderId, router],
   );
 
   const canNavigateToStep = (step: (typeof STEPS)[number]["routeStep"]) => {
-    if (step === BUDGET_FLOW_STEPS.customer) return !orderId;
-    if (step === BUDGET_FLOW_STEPS.cart) return !!customerId;
+    if (step === BUDGET_FLOW_STEPS.cart) return true;
     if (step === BUDGET_FLOW_STEPS.payment) return !!orderId;
     if (step === BUDGET_FLOW_STEPS.summary) return !!orderId;
     return false;
@@ -106,8 +99,7 @@ export function BudgetStepper({
                 const isCompleted = index < currentStepIndex;
                 const isCurrent = index === currentStepIndex;
                 const isClickable = canNavigateToStep(step.routeStep);
-                const isLocked =
-                  step.routeStep === BUDGET_FLOW_STEPS.customer && !!orderId;
+                const isLocked = false;
                 const Icon = step.icon;
 
                 return (
@@ -193,7 +185,7 @@ export function BudgetStepper({
             </ol>
           </nav>
 
-          {currentStepIndex > 0 && customerId && (
+          {customerId && (
             <div className="flex items-center gap-1.5 border-t border-border/40 pt-1.5 text-xs text-muted-foreground">
               <UserSearch className="h-3 w-3 shrink-0" />
               <span className="font-medium">#{customerId}</span>
