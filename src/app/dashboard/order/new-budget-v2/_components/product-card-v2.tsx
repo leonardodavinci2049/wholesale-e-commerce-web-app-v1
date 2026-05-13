@@ -1,6 +1,7 @@
 import { Package } from "lucide-react";
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { UIProductPdv } from "@/services/api-main/product-pdv/transformers/transformers";
 import { formatCurrency } from "@/utils/common-utils";
@@ -32,18 +33,28 @@ export function ProductCardV2({ product, orderId }: ProductCardV2Props) {
           </span>
         )}
 
-        {isOnSale && (
+        {!inStock && (
+          <span className="absolute right-2 top-2 z-10 rounded-md bg-red-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+            Sem estoque
+          </span>
+        )}
+        {inStock && isOnSale && (
           <span className="absolute right-2 top-2 z-10 rounded-md bg-amber-400 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-950">
             Oferta
           </span>
         )}
-        {!isOnSale && isLaunch && (
+        {inStock && !isOnSale && isLaunch && (
           <span className="absolute right-2 top-2 z-10 rounded-md bg-emerald-500 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
             Novo
           </span>
         )}
 
-        <div className="relative flex h-full w-full items-center justify-center">
+        <div
+          className={cn(
+            "relative flex h-full w-full items-center justify-center",
+            !inStock && "opacity-45 grayscale",
+          )}
+        >
           {validImage ? (
             <Image
               src={validImage}
@@ -59,15 +70,13 @@ export function ProductCardV2({ product, orderId }: ProductCardV2Props) {
       </div>
 
       <div className="flex flex-1 flex-col gap-1 px-2.5 py-2">
-        <p className="line-clamp-2 min-h-[2.25rem] text-[12px] font-semibold leading-snug text-foreground">
+        <p className="line-clamp-2 min-h-9 text-[12px] font-semibold leading-snug text-foreground">
           {product.name}
         </p>
 
-        {product.label && (
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            {product.label}
-          </p>
-        )}
+        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+          SKU: {product.sku}
+        </p>
 
         <p
           className={cn(
@@ -75,7 +84,7 @@ export function ProductCardV2({ product, orderId }: ProductCardV2Props) {
             inStock ? "text-foreground" : "text-muted-foreground line-through",
           )}
         >
-          {formatCurrency(Number(product.productValue ?? product.retailPrice))}
+          {formatCurrency(Number(product.wholesalePrice))}
         </p>
       </div>
 
@@ -88,9 +97,15 @@ export function ProductCardV2({ product, orderId }: ProductCardV2Props) {
             orderId={orderId}
           />
         ) : (
-          <div className="flex h-9 items-center justify-center rounded-md bg-zinc-200/70 text-[11px] font-semibold uppercase tracking-wider text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-            Avisar qnd chegar
-          </div>
+          <Button
+            type="button"
+            size="sm"
+            className="h-9 w-full cursor-not-allowed rounded-md bg-zinc-200/70 text-[11px] font-semibold uppercase tracking-wider text-zinc-600 hover:bg-zinc-200/70 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            disabled
+            aria-label={`${product.name} sem estoque`}
+          >
+            Sem estoque
+          </Button>
         )}
       </div>
     </div>

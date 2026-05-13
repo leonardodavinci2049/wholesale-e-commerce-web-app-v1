@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Minus, Plus, Send } from "lucide-react";
+import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -73,8 +73,8 @@ export function ProductAddButtonV2({
   }, [state, searchParams, router, orderId]);
 
   return (
-    <div className="flex items-center gap-1.5">
-      <div className="flex items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5">
+    <div className="flex items-center justify-between gap-1.5">
+      <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5">
         <Button
           type="button"
           variant="ghost"
@@ -111,25 +111,27 @@ export function ProductAddButtonV2({
         </Button>
       </div>
 
-      <form action={formAction} className="flex-1">
+      <form action={formAction} className="shrink-0">
         <input type="hidden" name="orderId" value={orderId ?? ""} />
         <input type="hidden" name="productId" value={productId} />
         <input type="hidden" name="quantity" value={safeQuantity} />
         <Button
           type="submit"
-          size="sm"
-          className="h-7 w-full gap-1 rounded-md bg-blue-600 px-2 text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-blue-700"
+          size="icon-sm"
+          className="h-7 w-8 rounded-md bg-blue-600 text-white transition-all hover:bg-blue-700 active:scale-[0.98]"
           disabled={isPending || storeStock < 1}
           aria-label={`Adicionar ${safeQuantity} unidade(s) de ${productName} ao carrinho`}
         >
           {isPending ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            <>
-              <Plus className="h-3 w-3" strokeWidth={3} />
-              Adicionar
-              <Send className="ml-0.5 h-3 w-3" />
-            </>
+            <span className="relative">
+              <ShoppingCart className="h-3.5 w-3.5" />
+              <Plus
+                className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-white text-blue-600"
+                strokeWidth={3}
+              />
+            </span>
           )}
         </Button>
       </form>
