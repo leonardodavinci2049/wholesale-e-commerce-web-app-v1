@@ -21,7 +21,6 @@ interface MobileCartSheetProps {
   children: React.ReactNode;
   itemCount: number;
   orderId?: number;
-  customerId?: number;
   nextStep: number;
   nextLabel: string;
   disabled: boolean;
@@ -31,7 +30,6 @@ export function MobileCartSheet({
   children,
   itemCount,
   orderId,
-  customerId,
   nextStep,
   nextLabel,
   disabled,
@@ -43,7 +41,6 @@ export function MobileCartSheet({
   if (orderId) {
     params.set("step", String(nextStep));
     params.set("orderId", String(orderId));
-    if (customerId) params.set("customerId", String(customerId));
   }
   const href = `/dashboard/order/new-budget?${params.toString()}`;
   const itemLabel = itemCount === 1 ? "item" : "itens";

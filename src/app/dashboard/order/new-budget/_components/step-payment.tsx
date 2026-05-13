@@ -9,14 +9,9 @@ import { PaymentMethodSelect } from "./payment-method-select";
 interface StepPaymentProps {
   orderDashboard: UIOrderDashboard | undefined;
   orderId: number;
-  customerId?: number;
 }
 
-export function StepPayment({
-  orderDashboard,
-  orderId,
-  customerId,
-}: StepPaymentProps) {
+export function StepPayment({ orderDashboard, orderId }: StepPaymentProps) {
   const summary = orderDashboard?.summary;
   const items = orderDashboard?.items ?? [];
   const selectedPaymentId = orderDashboard?.details?.paymentFormId;
@@ -27,7 +22,7 @@ export function StepPayment({
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary/80">
-              Etapa 3
+              Etapa 2
             </p>
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -99,7 +94,7 @@ export function StepPayment({
         </Card>
       </div>
 
-      <CloseOrderButton orderId={orderId} customerId={customerId} />
+      <CloseOrderButton orderId={orderId} />
     </div>
   );
 }

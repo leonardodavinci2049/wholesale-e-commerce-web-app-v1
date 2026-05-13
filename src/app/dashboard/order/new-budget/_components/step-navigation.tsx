@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 interface StepNavigationProps {
   nextStep: number;
   orderId: number;
-  customerId?: number;
   disabled?: boolean;
   nextLabel: string;
 }
@@ -16,14 +15,12 @@ interface StepNavigationProps {
 export function StepNavigation({
   nextStep,
   orderId,
-  customerId,
   disabled,
   nextLabel,
 }: StepNavigationProps) {
   const params = new URLSearchParams();
   params.set("step", String(nextStep));
   params.set("orderId", String(orderId));
-  if (customerId) params.set("customerId", String(customerId));
 
   const href = `/dashboard/order/new-budget?${params.toString()}`;
 

@@ -7,14 +7,9 @@ import { ProductDetailDialog } from "./product-detail-dialog";
 interface ProductCardProps {
   product: UIProductPdv;
   orderId?: number;
-  customerId: number;
 }
 
-export function ProductCard({
-  product,
-  orderId,
-  customerId,
-}: ProductCardProps) {
+export function ProductCard({ product, orderId }: ProductCardProps) {
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card shadow-xs transition-all hover:shadow-sm dark:bg-zinc-900/80">
       <div className="flex items-start gap-2.5 p-2.5 sm:gap-3 sm:p-3">
@@ -54,7 +49,6 @@ export function ProductCard({
           productName={product.name}
           storeStock={product.storeStock}
           orderId={orderId}
-          customerId={customerId}
         />
       </div>
     </div>

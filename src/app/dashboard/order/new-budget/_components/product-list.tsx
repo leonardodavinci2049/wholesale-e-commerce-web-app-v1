@@ -6,14 +6,9 @@ import { ProductCard } from "./product-card";
 interface ProductListProps {
   products: UIProductPdv[];
   orderId?: number;
-  customerId: number;
 }
 
-export function ProductList({
-  products,
-  orderId,
-  customerId,
-}: ProductListProps) {
+export function ProductList({ products, orderId }: ProductListProps) {
   if (products.length === 0) {
     return (
       <div className="flex min-h-[260px] flex-col items-center justify-center rounded-[24px] border border-dashed border-border/70 bg-muted/15 px-6 text-center">
@@ -41,12 +36,7 @@ export function ProductList({
     <div className="pb-4">
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
         {sortedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            orderId={orderId}
-            customerId={customerId}
-          />
+          <ProductCard key={product.id} product={product} orderId={orderId} />
         ))}
       </div>
     </div>

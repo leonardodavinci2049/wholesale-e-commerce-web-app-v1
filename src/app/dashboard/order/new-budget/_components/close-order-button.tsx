@@ -9,19 +9,12 @@ import { BUDGET_FLOW_STEPS } from "../budget-flow";
 
 interface CloseOrderButtonProps {
   orderId: number;
-  customerId?: number;
 }
 
-export function CloseOrderButton({
-  orderId,
-  customerId,
-}: CloseOrderButtonProps) {
+export function CloseOrderButton({ orderId }: CloseOrderButtonProps) {
   const params = new URLSearchParams();
   params.set("step", String(BUDGET_FLOW_STEPS.summary));
   params.set("orderId", String(orderId));
-  if (customerId) {
-    params.set("customerId", String(customerId));
-  }
   const href = `/dashboard/order/new-budget?${params.toString()}`;
 
   return (

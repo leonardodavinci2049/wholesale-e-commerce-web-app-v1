@@ -13,14 +13,12 @@ import { BUDGET_FLOW_STEPS } from "../budget-flow";
 interface ProductSearchInputProps {
   defaultValue: string;
   orderId?: number;
-  customerId: number;
   flagStock: number;
 }
 
 export function ProductSearchInput({
   defaultValue,
   orderId,
-  customerId,
   flagStock,
 }: ProductSearchInputProps) {
   const router = useRouter();
@@ -39,7 +37,6 @@ export function ProductSearchInput({
     (overrides?: { search?: string; flagStock?: number }) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set("step", String(BUDGET_FLOW_STEPS.cart));
-      params.set("customerId", String(customerId));
 
       if (orderId) {
         params.set("orderId", String(orderId));
@@ -65,7 +62,7 @@ export function ProductSearchInput({
 
       return params;
     },
-    [searchParams, orderId, customerId],
+    [searchParams, orderId],
   );
 
   const handleSearch = useCallback(

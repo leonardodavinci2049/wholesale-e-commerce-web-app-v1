@@ -25,7 +25,7 @@ export function StepSummary({ orderDashboard, orderId }: StepSummaryProps) {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary/80">
-              Etapa 4
+              Etapa 3
             </p>
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">

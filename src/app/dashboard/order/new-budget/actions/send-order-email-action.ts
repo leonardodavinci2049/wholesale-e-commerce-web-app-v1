@@ -1,5 +1,6 @@
 "use server";
 
+import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
 import { orderOperationsServiceApi } from "@/services/api-main/order-operations";
@@ -12,7 +13,7 @@ export async function sendOrderEmailAction(
   formData: FormData,
 ): Promise<ActionState> {
   try {
-    const { apiContext } = await getAuthContext();
+    const { session, apiContext } = await getAuthContext();
 
     const orderId = Number(formData.get("orderId"));
     if (!orderId) {
@@ -24,8 +25,8 @@ export async function sendOrderEmailAction(
 
     await orderOperationsServiceApi.sendByEmail({
       pe_order_id: orderId,
-      pe_seller_id: apiContext.pe_person_id,
-      pe_business_type: 1,
+      pe_seller_id: session.user.sellerId ?? 0,
+      pe_business_type: serverEnvs.TYPE_BUSINESS,
       ...apiContext,
     });
 
