@@ -28,6 +28,16 @@ export const auth = betterAuth({
   secret: serverEnvs.BETTER_AUTH_SECRET,
   trustedOrigins: [serverEnvs.BETTER_AUTH_URL],
   database: databasePool,
+  user: {
+    additionalFields: {
+      personId: {
+        type: "number",
+        required: false,
+        input: false,
+        fieldName: "personId",
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
