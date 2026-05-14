@@ -1,5 +1,4 @@
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth/auth";
 import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with-breadcrumb";
@@ -13,15 +12,6 @@ export default async function UsersPage(props: { searchParams: SearchParams }) {
   await connection();
   const searchParams = await props.searchParams;
   const session = await auth.api.getSession({ headers: await headers() });
-
-  if (session == null) return redirect("/sign-in");
-
-  const hasAccess = await auth.api.userHasPermission({
-    headers: await headers(),
-    body: { permissions: { user: ["list"] } },
-  });
-
-  if (!hasAccess.success) return redirect("/");
 
   const searchTerm =
     typeof searchParams.search === "string" ? searchParams.search : undefined;
@@ -64,7 +54,7 @@ export default async function UsersPage(props: { searchParams: SearchParams }) {
         </div>
 
         <UserSearch />
-        <UserTable users={users.users} selfId={session.user.id} />
+        <UserTable users={users.users} selfId={session?.user.id ?? ""} />
       </div>
     </>
   );
