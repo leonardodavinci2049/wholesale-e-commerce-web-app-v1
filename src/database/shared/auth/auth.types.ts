@@ -69,6 +69,8 @@ export type AuthTable = (typeof AUTH_TABLES)[keyof typeof AUTH_TABLES];
  */
 export interface UserEntity extends RowDataPacket {
   id: string;
+  personId?: number | null;
+  sellerId?: number | null;
   name: string;
   email: string;
   emailVerified: boolean;
@@ -444,6 +446,8 @@ export function isRowDataPacketArray(
 export function mapUserEntityToDto(entity: UserEntity): User {
   return {
     id: entity.id,
+    personId: entity.personId ?? null,
+    sellerId: entity.sellerId ?? null,
     name: entity.name,
     email: entity.email,
     emailVerified: Boolean(entity.emailVerified),

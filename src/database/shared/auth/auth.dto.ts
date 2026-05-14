@@ -3,6 +3,8 @@
  */
 export interface User {
   id: string;
+  personId?: number | null;
+  sellerId?: number | null;
   name: string;
   email: string;
   emailVerified: boolean;
