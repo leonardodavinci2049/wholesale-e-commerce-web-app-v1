@@ -166,7 +166,7 @@ async function findUserById(params: {
 
     const query = `
       SELECT 
-        id, name, email, emailVerified, image, 
+        id,personId,  sellerId, name, email, emailVerified, image, 
         createdAt, updatedAt, twoFactorEnabled, 
         role, banned, banReason, banExpires
       FROM ${AUTH_TABLES.USER}

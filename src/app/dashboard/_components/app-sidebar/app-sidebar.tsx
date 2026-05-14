@@ -10,6 +10,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  Users,
 } from "lucide-react";
 import type * as React from "react";
 
@@ -20,6 +21,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useSession } from "@/lib/auth/auth-client";
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
@@ -65,13 +67,20 @@ const data = {
           title: "Novo Orçamento",
           url: "/dashboard/order/new-budget",
         },
-
+      ],
+    },
+    {
+      title: "Minhas Compras",
+      url: "#",
+      icon: BookOpen,
+      items: [
         {
-          title: "Meus Pedidos",
+          title: "Lista de Pedidos",
           url: "/dashboard/order/order-list",
         },
       ],
     },
+
     {
       title: "Tabela de Produtos",
       url: "#",
@@ -119,13 +128,18 @@ const data = {
     {
       name: "Usuários",
       url: "/dashboard/users/",
-      icon: MapIcon,
+      icon: Users,
     },
-
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession();
+  const isAdmin = session?.user.role === "admin";
+  const projects = isAdmin
+    ? data.projects
+    : data.projects.filter((item) => item.name !== "Usuários");
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -133,7 +147,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
