@@ -53,6 +53,8 @@ export const CACHE_TAGS = {
   promoLinksByAppAndType: (clientId: string, appId: string, typeId: string) =>
     `promo-links-client-${clientId}-app-${appId}-type-${typeId}`,
 
+  account: (userId: string) => `account-${userId}`,
+
   // CRM dynamic tags
   crmLead: (id: string) => `crm-lead-${id}`,
   crmLeadsByOrg: (orgId: string) => `crm-leads-org-${orgId}`,
@@ -86,6 +88,9 @@ export const CACHE_TAGS = {
   navigation: "navigation",
   banners: "banners",
   footer: "footer",
+
+  users: "users",
+  accounts: "accounts",
   organizations: "organizations",
   organizationMetaCollection: "organization-meta-collection",
   userMetaCollection: "user-meta-collection",
