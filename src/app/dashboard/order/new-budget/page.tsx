@@ -2,37 +2,51 @@ import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-hea
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
+import { getBrands } from "@/services/api-main/brand/brand-cached-service";
 import { getOrderDashboard } from "@/services/api-main/order-sales/order-sales-cached-service";
-import { searchProductsPdv } from "@/services/api-main/product-pdv/product-pdv-cached-service";
+import {
+  getProductsPdv,
+  searchProductsPdv,
+} from "@/services/api-main/product-pdv/product-pdv-cached-service";
 
-const logger = createLogger("new-budget-page");
+import { BrandFilterBar } from "./_components/brand-filter-bar";
+import { CartSummaryPanel } from "./_components/cart-summary-panel";
+import { MobileCartFab } from "./_components/mobile-cart-fab";
+import { ProductGrid } from "./_components/product-grid";
+import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
+import { ProductSearchBar } from "./_components/product-search-bar";
 
-import { BudgetStepper } from "./_components/budget-stepper";
-import { CartItemsList } from "./_components/cart-items-list";
-import { MobileBottomBar } from "./_components/mobile-bottom-bar";
-import { StepPayment } from "./_components/step-payment";
-import { StepProducts } from "./_components/step-products";
-import { StepSummary } from "./_components/step-summary";
-import { BUDGET_FLOW_STEPS, normalizeBudgetStep } from "./budget-flow";
+const logger = createLogger("new-budget-v2-page");
 
-interface NewBudgetPageProps {
+const DEFAULT_PRODUCT_LIMIT = 50;
+
+interface NewBudgetV2PageProps {
   searchParams: Promise<{
-    step?: string;
     search?: string;
     orderId?: string;
+    brandId?: string;
     flagStock?: string;
     limit?: string;
   }>;
 }
 
-export default async function NewBudgetPage({
+export default async function NewBudgetV2Page({
   searchParams,
-}: NewBudgetPageProps) {
+}: NewBudgetV2PageProps) {
   const { session, apiContext } = await getAuthContext();
 
   const customerId = session.user.personId ?? 0;
   const sellerId = session.user.sellerId ?? 0;
   const typeBusiness = serverEnvs.TYPE_BUSINESS;
+
+  const params = await searchParams;
+  const search = params.search?.trim() ?? "";
+  const orderId = params.orderId ? Number(params.orderId) : undefined;
+  const brandId = params.brandId ? Number(params.brandId) : undefined;
+  const flagStock = params.flagStock === "0" ? 0 : 1;
+  const productLimit = params.limit
+    ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
+    : DEFAULT_PRODUCT_LIMIT;
 
   const dashboardParams = {
     ...apiContext,
@@ -40,63 +54,49 @@ export default async function NewBudgetPage({
     typeBusiness,
   };
 
-  const params = await searchParams;
-  const step = normalizeBudgetStep(Number(params.step));
-  const search = params.search ?? "";
-  const orderId = params.orderId ? Number(params.orderId) : undefined;
-  const flagStock = params.flagStock === "0" ? 0 : 1;
-  const DEFAULT_PRODUCT_LIMIT = 20;
-  const productLimit = params.limit
-    ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
-    : DEFAULT_PRODUCT_LIMIT;
-
-  let products: Awaited<ReturnType<typeof searchProductsPdv>> = [];
-  let orderDashboard: Awaited<ReturnType<typeof getOrderDashboard>>;
-
-  if (step === BUDGET_FLOW_STEPS.cart) {
-    if (search) {
-      products = await searchProductsPdv({
+  const productsPromise = search
+    ? searchProductsPdv({
         search,
         customerId,
         flagStock,
-        limit: Math.max(50, productLimit),
+        limit: productLimit,
+        ...apiContext,
+      })
+    : getProductsPdv({
+        brandId,
+        flagStock,
+        recordsQuantity: productLimit,
         ...apiContext,
       });
-    }
 
-    if (orderId) {
-      try {
-        orderDashboard = await getOrderDashboard(orderId, dashboardParams);
-      } catch (error) {
-        logger.error("Erro ao carregar dashboard do pedido (cart):", error);
-      }
-    }
-  }
+  const brandsPromise = getBrands({
+    inactive: 0,
+    limit: 50,
+    ...apiContext,
+  });
 
-  if (step === BUDGET_FLOW_STEPS.payment && orderId) {
-    try {
-      orderDashboard = await getOrderDashboard(orderId, dashboardParams);
-    } catch (error) {
-      logger.error("Erro ao carregar dashboard do pedido (payment):", error);
-    }
-  }
+  const orderDashboardPromise = orderId
+    ? getOrderDashboard(orderId, dashboardParams).catch((error) => {
+        logger.error("Erro ao carregar dashboard do pedido (v2):", error);
+        return undefined;
+      })
+    : Promise.resolve(undefined);
 
-  if (step === BUDGET_FLOW_STEPS.summary && orderId) {
-    try {
-      orderDashboard = await getOrderDashboard(orderId, dashboardParams);
-    } catch (error) {
-      logger.error("Erro ao carregar dashboard do pedido (summary):", error);
-    }
-  }
-
-  const customerName =
-    orderDashboard?.customer?.customerName ?? session.user.name ?? undefined;
+  const [products, brands, orderDashboard] = await Promise.all([
+    productsPromise.catch((error) => {
+      logger.error("Erro ao carregar produtos (v2):", error);
+      return [];
+    }),
+    brandsPromise.catch((error) => {
+      logger.error("Erro ao carregar marcas (v2):", error);
+      return [];
+    }),
+    orderDashboardPromise,
+  ]);
 
   const cartItems = orderDashboard?.items ?? [];
   const summary = orderDashboard?.summary;
-  const hasCartItems = cartItems.length > 0;
-
-  const showCartNextButton = step === BUDGET_FLOW_STEPS.cart;
+  const selectedPaymentId = orderDashboard?.details?.paymentFormId;
 
   return (
     <div className="flex flex-1 flex-col">
@@ -105,60 +105,60 @@ export default async function NewBudgetPage({
         breadcrumbItems={[
           { label: "Dashboard", href: "/dashboard" },
           { label: "Vendas", href: "#" },
-          { label: "Novo Orçamento", isActive: true },
+          { label: "Novo Orçamento (v2)", isActive: true },
         ]}
       />
 
-      <main className="flex flex-1 flex-col gap-6 p-4 pt-0 lg:p-6 lg:pt-0">
-        <div className="mx-auto flex w-full max-w-350 flex-col gap-6">
-          <BudgetStepper
-            currentStep={step}
-            customerId={customerId}
-            customerName={customerName}
-            orderId={orderId}
-          >
-            {step === BUDGET_FLOW_STEPS.cart && (
-              <StepProducts
-                products={products}
-                orderDashboard={orderDashboard}
-                search={search}
+      <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
+        <div className="mx-auto grid w-full max-w-350 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Marcas
+              </p>
+              <BrandFilterBar brands={brands} selectedBrandId={brandId} />
+            </section>
+
+            <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Busca rápida
+              </p>
+              <ProductSearchBar defaultValue={search} flagStock={flagStock} />
+            </section>
+
+            <p className="px-1 text-xs text-muted-foreground">
+              Lista sincronizada. Escolha os itens e confirme pelo WhatsApp.
+            </p>
+
+            <ProductGrid products={products} orderId={orderId} />
+
+            <ProductLoadMoreV2
+              currentLimit={productLimit}
+              totalLoaded={products.length}
+            />
+          </div>
+
+          <aside className="hidden xl:block">
+            <div className="sticky top-4">
+              <CartSummaryPanel
+                items={cartItems}
+                summary={summary}
                 orderId={orderId}
-                customerId={customerId}
-                flagStock={flagStock}
-                productLimit={productLimit}
+                selectedPaymentId={selectedPaymentId}
               />
-            )}
-
-            {step === BUDGET_FLOW_STEPS.payment && orderId && (
-              <StepPayment orderDashboard={orderDashboard} orderId={orderId} />
-            )}
-
-            {step === BUDGET_FLOW_STEPS.summary && orderId && (
-              <StepSummary orderDashboard={orderDashboard} orderId={orderId} />
-            )}
-          </BudgetStepper>
+            </div>
+          </aside>
         </div>
       </main>
 
-      <MobileBottomBar
-        itemCount={cartItems.length}
-        orderId={orderId}
-        nextStep={showCartNextButton ? BUDGET_FLOW_STEPS.payment : undefined}
-        nextLabel={showCartNextButton ? "Selecionar Pagamento" : undefined}
-        disabled={showCartNextButton ? cartItems.length === 0 : undefined}
-      >
-        <CartItemsList
+      <MobileCartFab itemCount={cartItems.length}>
+        <CartSummaryPanel
           items={cartItems}
           summary={summary}
           orderId={orderId}
-          variant="mobile"
-          emptyMessage={
-            hasCartItems
-              ? "Nenhum item adicionado."
-              : "Selecione um produto para iniciar o carrinho."
-          }
+          selectedPaymentId={selectedPaymentId}
         />
-      </MobileBottomBar>
+      </MobileCartFab>
     </div>
   );
 }

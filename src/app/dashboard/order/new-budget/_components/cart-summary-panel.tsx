@@ -1,6 +1,5 @@
 import { ShoppingCart } from "lucide-react";
 
-import { PaymentMethodSelect } from "@/app/dashboard/order/new-budget/_components/payment-method-select";
 import { Separator } from "@/components/ui/separator";
 import type {
   UIOrderDashboardItem,
@@ -9,6 +8,7 @@ import type {
 import { formatCurrency } from "@/utils/common-utils";
 
 import { CartItemsListV2 } from "./cart-items-list-v2";
+import { PaymentMethodSelect } from "./payment-method-select";
 import { ViewBudgetButton } from "./view-budget-button";
 
 interface CartSummaryPanelProps {
