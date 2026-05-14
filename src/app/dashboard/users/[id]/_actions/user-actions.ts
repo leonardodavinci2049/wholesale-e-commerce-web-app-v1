@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
 
 export type DeleteUserActionState = {
@@ -26,26 +27,13 @@ export async function deleteUserAction(
     };
   }
 
+  let deletedUser: unknown;
+
   try {
-    const deletedUser = await auth.api.removeUser({
+    deletedUser = await auth.api.removeUser({
       body: { userId },
       headers: await headers(),
     });
-
-    if (!deletedUser) {
-      return {
-        success: false,
-        message: "Failed to delete user",
-      };
-    }
-
-    revalidatePath("/dashboard/users");
-    revalidatePath(`/dashboard/users/${userId}`);
-
-    return {
-      success: true,
-      message: "User deleted successfully",
-    };
   } catch (error) {
     const e = error as Error;
     return {
@@ -53,4 +41,14 @@ export async function deleteUserAction(
       message: e.message || "Failed to delete user",
     };
   }
+
+  if (!deletedUser) {
+    return {
+      success: false,
+      message: "Failed to delete user",
+    };
+  }
+
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
 }

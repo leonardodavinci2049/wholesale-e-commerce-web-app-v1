@@ -1,8 +1,7 @@
 "use client";
 
 import { AlertCircle, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useActionState, useState } from "react";
+import { useActionState, useId, useState } from "react";
 import { LoadingSwap } from "@/components/auth/loading-swap";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -33,37 +32,13 @@ interface UserDeletionProps {
 }
 
 export function UserDeletion({ userId, userName }: UserDeletionProps) {
-  const router = useRouter();
+  const formId = useId();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const [state, formAction] = useActionState<DeleteUserActionState, FormData>(
-    deleteUserAction,
-    { success: false, message: "" },
-  );
-
-  async function handleSubmit(formData: FormData) {
-    setIsDeleting(true);
-    formData.set("userId", userId);
-
-    const form = document.createElement("form");
-    form.action = "/dashboard/users/[id]/_actions/user-actions";
-    form.method = "POST";
-
-    const result = await fetch("/dashboard/users/[id]/_actions/user-actions", {
-      method: "POST",
-      body: formData,
-    });
-
-    const response = await result.json();
-    setIsDeleting(false);
-
-    if (response.success) {
-      setIsDialogOpen(false);
-      router.push("/dashboard/users");
-      router.refresh();
-    }
-  }
+  const [state, formAction, isDeleting] = useActionState<
+    DeleteUserActionState,
+    FormData
+  >(deleteUserAction, { success: false, message: "" });
 
   return (
     <Card className="border border-destructive">
@@ -85,7 +60,7 @@ export function UserDeletion({ userId, userName }: UserDeletionProps) {
             </AlertDescription>
           </Alert>
 
-          <form action={formAction}>
+          <form id={formId} action={formAction}>
             <input type="hidden" name="userId" value={userId} />
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -114,15 +89,10 @@ export function UserDeletion({ userId, userName }: UserDeletionProps) {
                     Cancelar
                   </Button>
                   <Button
+                    form={formId}
                     type="submit"
                     variant="destructive"
                     disabled={isDeleting}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const formData = new FormData();
-                      formData.set("userId", userId);
-                      handleSubmit(formData);
-                    }}
                   >
                     <LoadingSwap isLoading={isDeleting}>
                       Confirmar Exclusão
