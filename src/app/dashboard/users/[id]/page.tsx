@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
@@ -11,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { auth } from "@/lib/auth/auth";
 import { AccountService } from "@/services/db/account/account.service";
 import { SessionService } from "@/services/db/session/session.service";
 import { UserAuthService } from "@/services/db/user/user.service";
@@ -27,6 +29,7 @@ type Params = Promise<{ id: string }>;
 export default async function UserPage({ params }: { params: Params }) {
   await connection();
   const { id } = await params;
+  const session = await auth.api.getSession({ headers: await headers() });
 
   const userResponse = await UserAuthService.findUserById({ userId: id });
   const user = userResponse.data;
@@ -114,6 +117,7 @@ export default async function UserPage({ params }: { params: Params }) {
 
             <TabsContent value="excluir" className="pt-4">
               <UserDeletion
+                isCurrentUser={user.id === session?.user.id}
                 userId={user.id}
                 userName={user.name || "Usuário"}
               />

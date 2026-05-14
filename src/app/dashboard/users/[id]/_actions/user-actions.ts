@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
 
 export type DeleteUserActionState = {
@@ -17,6 +18,16 @@ export async function deleteUserAction(
   formData: FormData,
 ): Promise<DeleteUserActionState> {
   const userId = formData.get("userId");
+  const requestHeaders = await headers();
+
+  const session = await auth.api.getSession({ headers: requestHeaders });
+
+  if (!session) {
+    return {
+      success: false,
+      message: "Não autenticado",
+    };
+  }
 
   if (typeof userId !== "string") {
     return {
@@ -26,26 +37,20 @@ export async function deleteUserAction(
     };
   }
 
-  try {
-    const deletedUser = await auth.api.removeUser({
-      body: { userId },
-      headers: await headers(),
-    });
-
-    if (!deletedUser) {
-      return {
-        success: false,
-        message: "Failed to delete user",
-      };
-    }
-
-    revalidatePath("/dashboard/users");
-    revalidatePath(`/dashboard/users/${userId}`);
-
+  if (userId === session.user.id) {
     return {
-      success: true,
-      message: "User deleted successfully",
+      success: false,
+      message: "Você não pode excluir o usuário logado.",
     };
+  }
+
+  let deletedUser: unknown;
+
+  try {
+    deletedUser = await auth.api.removeUser({
+      body: { userId },
+      headers: requestHeaders,
+    });
   } catch (error) {
     const e = error as Error;
     return {
@@ -53,4 +58,14 @@ export async function deleteUserAction(
       message: e.message || "Failed to delete user",
     };
   }
+
+  if (!deletedUser) {
+    return {
+      success: false,
+      message: "Failed to delete user",
+    };
+  }
+
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
 }
