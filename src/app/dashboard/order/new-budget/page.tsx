@@ -13,8 +13,10 @@ import { BrandFilterBar } from "./_components/brand-filter-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
 import { MobileCartFab } from "./_components/mobile-cart-fab";
 import { ProductGrid } from "./_components/product-grid";
+import { ProductList } from "./_components/product-list";
 import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
 import { ProductSearchBar } from "./_components/product-search-bar";
+import { ProductViewSwitcher } from "./_components/product-view-switcher";
 
 const logger = createLogger("new-budget-v2-page");
 
@@ -130,7 +132,10 @@ export default async function NewBudgetV2Page({
               Lista sincronizada. Escolha os itens e confirme pelo WhatsApp.
             </p>
 
-            <ProductGrid products={products} orderId={orderId} />
+            <ProductViewSwitcher
+              grid={<ProductGrid products={products} orderId={orderId} />}
+              list={<ProductList products={products} orderId={orderId} />}
+            />
 
             <ProductLoadMoreV2
               currentLimit={productLimit}
