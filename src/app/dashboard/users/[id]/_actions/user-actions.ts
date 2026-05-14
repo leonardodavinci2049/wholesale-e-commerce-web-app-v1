@@ -18,6 +18,16 @@ export async function deleteUserAction(
   formData: FormData,
 ): Promise<DeleteUserActionState> {
   const userId = formData.get("userId");
+  const requestHeaders = await headers();
+
+  const session = await auth.api.getSession({ headers: requestHeaders });
+
+  if (!session) {
+    return {
+      success: false,
+      message: "Não autenticado",
+    };
+  }
 
   if (typeof userId !== "string") {
     return {
@@ -27,12 +37,19 @@ export async function deleteUserAction(
     };
   }
 
+  if (userId === session.user.id) {
+    return {
+      success: false,
+      message: "Você não pode excluir o usuário logado.",
+    };
+  }
+
   let deletedUser: unknown;
 
   try {
     deletedUser = await auth.api.removeUser({
       body: { userId },
-      headers: await headers(),
+      headers: requestHeaders,
     });
   } catch (error) {
     const e = error as Error;

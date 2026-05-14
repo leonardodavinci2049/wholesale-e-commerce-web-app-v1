@@ -4,6 +4,8 @@ import { Loader2, Search, UserPlus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,6 +23,29 @@ import {
   addCustomerAsUserAction,
   searchCustomersAction,
 } from "../_forms/add-customer-user";
+
+function getCustomerInitials(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function truncateCustomerName(name: string, maxLength = 50) {
+  if (name.length <= maxLength) {
+    return name;
+  }
+
+  return `${name.slice(0, maxLength).trimEnd()}...`;
+}
+
+function getCustomerTypeBadgeClassName(customerType: string) {
+  return customerType.toUpperCase() === "ATACADO"
+    ? "bg-green-100 text-green-800 hover:bg-green-100"
+    : "bg-orange-100 text-orange-800 hover:bg-orange-100";
+}
 
 export function AddCustomerUserDialog() {
   const [open, setOpen] = useState(false);
@@ -84,7 +109,7 @@ export function AddCustomerUserDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button>
           <UserPlus className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Adicionar Usuário</span>
           <span className="sm:hidden">Adicionar</span>
@@ -120,24 +145,50 @@ export function AddCustomerUserDialog() {
                 Nenhum cliente encontrado
               </div>
             ) : (
-              <ul className="divide-y">
+              <ul className="divide-y pr-4">
                 {customers.map((customer) => (
                   <li
                     key={customer.customerId}
-                    className="flex items-center justify-between gap-4 p-3 hover:bg-muted/50"
+                    className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 p-3 hover:bg-muted/50"
                   >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium">{customer.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">
-                        {customer.email || "Sem e-mail"}
-                        {customer.cpf
-                          ? ` • CPF: ${customer.cpf}`
-                          : customer.cnpj
-                            ? ` • CNPJ: ${customer.cnpj}`
-                            : ""}
-                      </p>
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage
+                          src={
+                            customer.imagePath ||
+                            "/images/user/default-user-image.jpeg"
+                          }
+                          alt={customer.name}
+                        />
+                        <AvatarFallback>
+                          {getCustomerInitials(customer.name)}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <p className="truncate font-medium">
+                          {customer.customerId} -{" "}
+                          {truncateCustomerName(customer.name)}
+                        </p>
+
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                          <Badge
+                            className={getCustomerTypeBadgeClassName(
+                              customer.customerType || "",
+                            )}
+                          >
+                            {customer.customerType || "-"}
+                          </Badge>
+                          <span>{customer.personType || "-"}</span>
+                        </div>
+
+                        <p className="truncate text-xs text-muted-foreground">
+                          {customer.email || "Sem e-mail"}
+                        </p>
+                      </div>
                     </div>
                     <Button
+                      className="shrink-0"
                       type="button"
                       size="sm"
                       onClick={() => handleAdd(customer)}

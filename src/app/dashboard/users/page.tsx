@@ -53,7 +53,6 @@ export default async function UsersPage(props: { searchParams: SearchParams }) {
           </div>
           <div className="flex items-center gap-2">
             <AddCustomerUserDialog />
-            <CreateUserDialog />
           </div>
         </div>
 

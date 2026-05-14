@@ -27,11 +27,16 @@ import {
 } from "../_actions/user-actions";
 
 interface UserDeletionProps {
+  isCurrentUser: boolean;
   userId: string;
   userName: string;
 }
 
-export function UserDeletion({ userId, userName }: UserDeletionProps) {
+export function UserDeletion({
+  isCurrentUser,
+  userId,
+  userName,
+}: UserDeletionProps) {
   const formId = useId();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -55,8 +60,15 @@ export function UserDeletion({ userId, userName }: UserDeletionProps) {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Atenção</AlertTitle>
             <AlertDescription>
-              Ao excluir o usuário <strong>{userName}</strong>, todos os dados
-              associados a ele serão removidos permanentemente do sistema.
+              {isCurrentUser ? (
+                "Você não pode excluir a própria conta enquanto está logado."
+              ) : (
+                <>
+                  Ao excluir o usuário <strong>{userName}</strong>, todos os
+                  dados associados a ele serão removidos permanentemente do
+                  sistema.
+                </>
+              )}
             </AlertDescription>
           </Alert>
 
@@ -65,7 +77,11 @@ export function UserDeletion({ userId, userName }: UserDeletionProps) {
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="destructive" className="w-full">
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  disabled={isCurrentUser}
+                >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Excluir Usuário Permanentemente
                 </Button>
@@ -92,7 +108,7 @@ export function UserDeletion({ userId, userName }: UserDeletionProps) {
                     form={formId}
                     type="submit"
                     variant="destructive"
-                    disabled={isDeleting}
+                    disabled={isCurrentUser || isDeleting}
                   >
                     <LoadingSwap isLoading={isDeleting}>
                       Confirmar Exclusão
