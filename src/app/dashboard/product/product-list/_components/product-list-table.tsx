@@ -130,29 +130,13 @@ export function ProductListTable({ products }: ProductListTableProps) {
                     )}
                   </div>
 
-                  <div className="mt-1.5 flex items-center justify-between gap-1 overflow-hidden whitespace-nowrap text-[10px] leading-none tabular-nums">
-                    <div className="min-w-0 flex items-center gap-0.5">
+                  <div className="mt-1.5 flex items-center overflow-hidden whitespace-nowrap text-[10px] leading-none tabular-nums">
+                    <div className="min-w-0 flex items-center gap-1">
                       <span className="shrink-0 text-muted-foreground">
-                        Var.
-                      </span>
-                      <span className="min-w-0 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                        {formatPrice(product.retailPrice)}
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex items-center gap-0.5">
-                      <span className="shrink-0 text-muted-foreground">
-                        Rev.
+                        Atacado
                       </span>
                       <span className="min-w-0 text-[10px] font-semibold text-blue-600 dark:text-blue-400">
                         {formatPrice(product.wholesalePrice)}
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex items-center gap-0.5">
-                      <span className="shrink-0 text-muted-foreground">
-                        Corp.
-                      </span>
-                      <span className="min-w-0 text-[10px] font-semibold text-orange-600 dark:text-orange-400">
-                        {formatPrice(product.corporatePrice)}
                       </span>
                     </div>
                   </div>
@@ -173,9 +157,7 @@ export function ProductListTable({ products }: ProductListTableProps) {
               <TableHead>Produto</TableHead>
               <TableHead className="w-62.5 max-w-62.5">Categorias</TableHead>
               <TableHead className="w-24">Estoque</TableHead>
-              <TableHead className="w-24">Varejo</TableHead>
               <TableHead className="w-24">Atacado</TableHead>
-              <TableHead className="w-24">Corp.</TableHead>
               <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -236,18 +218,8 @@ export function ProductListTable({ products }: ProductListTableProps) {
                   )}
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                    {formatPrice(product.retailPrice)}
-                  </span>
-                </TableCell>
-                <TableCell>
                   <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                     {formatPrice(product.wholesalePrice)}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
-                    {formatPrice(product.corporatePrice)}
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
