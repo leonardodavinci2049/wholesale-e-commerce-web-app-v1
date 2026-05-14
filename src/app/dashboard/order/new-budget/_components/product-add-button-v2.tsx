@@ -4,28 +4,27 @@ import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { addItemAction } from "../actions/add-item-action";
-import { BUDGET_FLOW_STEPS } from "../budget-flow";
 
+const ROUTE = "/dashboard/order/new-budget-v2";
 const ADD_ITEM_SUCCESS_TOAST_DURATION_MS = 1000;
 
-interface ProductAddButtonProps {
+interface ProductAddButtonV2Props {
   productId: number;
   productName: string;
   storeStock: number;
   orderId?: number;
 }
 
-export function ProductAddButton({
+export function ProductAddButtonV2({
   productId,
   productName,
   storeStock,
   orderId,
-}: ProductAddButtonProps) {
+}: ProductAddButtonV2Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [quantity, setQuantity] = useState("1");
@@ -48,7 +47,6 @@ export function ProductAddButton({
       });
       return;
     }
-
     setQuantity(String(safeQuantity + 1));
   }
 
@@ -63,34 +61,32 @@ export function ProductAddButton({
       setQuantity("1");
 
       const nextOrderId = Number(state.data?.orderId);
-      if (nextOrderId) {
+      if (nextOrderId && nextOrderId !== orderId) {
         const params = new URLSearchParams(searchParams.toString());
-        params.set("step", String(BUDGET_FLOW_STEPS.cart));
         params.set("orderId", String(nextOrderId));
-        router.replace(`/dashboard/order/new-budget?${params.toString()}`);
+        router.replace(`${ROUTE}?${params.toString()}`, { scroll: false });
       } else {
         router.refresh();
       }
     } else if (state?.success === false) {
       toast.error(state.message);
     }
-  }, [state, searchParams, router]);
+  }, [state, searchParams, router, orderId]);
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex items-center gap-1 rounded-full border border-border/50 bg-background/50 p-1 shadow-xs">
+    <div className="flex items-center justify-between gap-1.5">
+      <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5">
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="h-7 w-7 rounded-full bg-background"
+          className="h-7 w-6 rounded-sm"
           disabled={isPending || safeQuantity <= 1}
           onClick={handleDecrement}
           aria-label={`Diminuir quantidade de ${productName}`}
         >
           <Minus className="h-3 w-3" strokeWidth={2.5} />
         </Button>
-
         <Input
           type="number"
           inputMode="numeric"
@@ -100,15 +96,14 @@ export function ProductAddButton({
           aria-label={`Quantidade de ${productName}`}
           onBlur={() => setQuantity(String(safeQuantity))}
           onChange={(event) => setQuantity(event.target.value)}
-          className="h-7 w-12 border-0 bg-transparent px-0 text-center text-sm shadow-none focus-visible:ring-0"
+          className="h-7 w-8 border-0 bg-transparent px-0 text-center text-xs shadow-none focus-visible:ring-0"
           disabled={isPending}
         />
-
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="h-7 w-7 rounded-full bg-background"
+          className="h-7 w-6 rounded-sm"
           disabled={isPending || safeQuantity >= storeStock}
           onClick={handleIncrement}
           aria-label={`Aumentar quantidade de ${productName}`}
@@ -117,24 +112,24 @@ export function ProductAddButton({
         </Button>
       </div>
 
-      <form action={formAction} className="ml-auto">
+      <form action={formAction} className="shrink-0">
         <input type="hidden" name="orderId" value={orderId ?? ""} />
         <input type="hidden" name="productId" value={productId} />
         <input type="hidden" name="quantity" value={safeQuantity} />
         <Button
           type="submit"
-          size="icon"
-          className="h-9 w-9 rounded-xl transition-all active:scale-[0.98]"
+          size="icon-sm"
+          className="h-7 w-8 rounded-md bg-blue-600 text-white transition-all hover:bg-blue-700 active:scale-[0.98]"
           disabled={isPending || storeStock < 1}
           aria-label={`Adicionar ${safeQuantity} unidade(s) de ${productName} ao carrinho`}
         >
           {isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
             <span className="relative">
-              <ShoppingCart className="h-4 w-4" />
+              <ShoppingCart className="h-3.5 w-3.5" />
               <Plus
-                className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-primary text-primary-foreground"
+                className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-white text-blue-600"
                 strokeWidth={3}
               />
             </span>

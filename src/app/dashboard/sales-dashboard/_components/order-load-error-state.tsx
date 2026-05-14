@@ -44,7 +44,7 @@ export function OrderLoadErrorState({
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild className="w-full sm:w-auto">
-              <Link href="/dashboard/order/new-budget">
+              <Link href="/dashboard/order/new-budget-v2">
                 <Plus className="size-4" />
                 Novo orçamento
               </Link>

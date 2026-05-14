@@ -1,9 +1,10 @@
 import { Package } from "lucide-react";
 import Image from "next/image";
 
-import { CartItemActions } from "@/app/dashboard/order/new-budget/_components/cart-item-actions";
 import type { UIOrderDashboardItem } from "@/services/api-main/order-sales/transformers/transformers";
 import { formatCurrency } from "@/utils/common-utils";
+
+import { CartItemActions } from "./cart-item-actions";
 
 interface CartItemRowV2Props {
   item: UIOrderDashboardItem;
