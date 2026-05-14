@@ -17,30 +17,10 @@ export function ProductViewPricing({ product }: ProductViewPricingProps) {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col">
-          <span className="text-sm text-muted-foreground">Varejo</span>
+          <span className="text-sm text-muted-foreground">Atacado</span>
           <span className="text-3xl font-bold text-primary">
-            {formatCurrency(Number(product.retailPrice) || 0)}
+            {formatCurrency(Number(product.wholesalePrice) || 0)}
           </span>
-        </div>
-
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-8 pt-2 border-t">
-          {Number(product.wholesalePrice) > 0 && (
-            <div className="flex flex-col">
-              <span className="text-sm text-muted-foreground">Atacado</span>
-              <span className="text-lg font-semibold">
-                {formatCurrency(Number(product.wholesalePrice) || 0)}
-              </span>
-            </div>
-          )}
-
-          {Number(product.corporatePrice) > 0 && (
-            <div className="flex flex-col">
-              <span className="text-sm text-muted-foreground">Corporativo</span>
-              <span className="text-lg font-semibold">
-                {formatCurrency(Number(product.corporatePrice) || 0)}
-              </span>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>
