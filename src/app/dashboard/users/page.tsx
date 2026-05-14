@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { connection } from "next/server";
 import { auth } from "@/lib/auth/auth";
 import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with-breadcrumb";
-import { CreateUserDialog } from "./_components/create-user-dialog";
+import { AddCustomerUserDialog } from "./_components/add-customer-user-dialog";
 import { UserSearch } from "./_components/user-search";
 import { UserTable } from "./_components/user-table";
 
@@ -50,7 +50,9 @@ export default async function UsersPage(props: { searchParams: SearchParams }) {
               Gerencie contas de usuário, funções e permissões.
             </p>
           </div>
-          <CreateUserDialog />
+          <div className="flex items-center gap-2">
+            <AddCustomerUserDialog />
+          </div>
         </div>
 
         <UserSearch />
