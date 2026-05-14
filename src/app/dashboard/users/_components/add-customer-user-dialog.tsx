@@ -21,6 +21,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import type { UICustomerListItem } from "@/services/api-main/customer-general/transformers/transformers";
 import {
   addCustomerAsUserAction,
+  getCustomerUserValidationMessage,
   searchCustomersAction,
 } from "../_forms/add-customer-user";
 
@@ -88,6 +89,13 @@ export function AddCustomerUserDialog() {
   }, [open]);
 
   function handleAdd(customer: UICustomerListItem) {
+    const validationMessage = getCustomerUserValidationMessage(customer);
+
+    if (validationMessage) {
+      toast.error(validationMessage);
+      return;
+    }
+
     setPendingId(customer.customerId);
     startTransition(async () => {
       const formData = new FormData();
@@ -156,7 +164,7 @@ export function AddCustomerUserDialog() {
                         <AvatarImage
                           src={
                             customer.imagePath ||
-                            "/images/user/default-user-image.jpeg"
+                            "/images/user/default-user-image.png"
                           }
                           alt={customer.name}
                         />

@@ -3,7 +3,6 @@ import { connection } from "next/server";
 import { auth } from "@/lib/auth/auth";
 import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with-breadcrumb";
 import { AddCustomerUserDialog } from "./_components/add-customer-user-dialog";
-import { CreateUserDialog } from "./_components/create-user-dialog";
 import { UserSearch } from "./_components/user-search";
 import { UserTable } from "./_components/user-table";
 

@@ -12,6 +12,7 @@ import {
   getCustomers,
 } from "@/services/api-main/customer-general/customer-general-cached-service";
 import type { UICustomerListItem } from "@/services/api-main/customer-general/transformers/transformers";
+import { getCustomerUserValidationMessage } from "./customer-user-rules";
 import { addCustomerUserSchema } from "./schema";
 
 export type AddCustomerUserState = {
@@ -92,8 +93,14 @@ export async function addCustomerAsUserAction(
     if (!name) {
       return { success: false, message: "Cliente sem nome cadastrado" };
     }
-    if (!email) {
-      return { success: false, message: "Cliente sem e-mail cadastrado" };
+
+    const validationMessage = getCustomerUserValidationMessage({
+      customerTypeId: customer.customerTypeId,
+      email,
+    });
+
+    if (validationMessage) {
+      return { success: false, message: validationMessage };
     }
 
     const existing = await dbService.selectExecute<ExistingUserRow>(
