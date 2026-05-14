@@ -21,7 +21,6 @@ import { SiteHeaderWithBreadcrumb } from "../../_components/header/site-header-w
 import { UserAccountsCard } from "./_components/security/user-accounts-card";
 import { UserPasswordCard } from "./_components/security/user-password-card";
 import { UserSessionsCard } from "./_components/security/user-sessions-card";
-import { UserTwoFactorCard } from "./_components/security/user-two-factor-card";
 import { UserDeletion } from "./_components/user-deletion";
 import { UserDetailsCard } from "./_components/user-details-card";
 
@@ -110,10 +109,7 @@ export default async function UserPage({ params }: { params: Params }) {
             </TabsContent>
 
             <TabsContent value="contas" className="pt-4">
-              <div className="grid gap-6 md:grid-cols-2">
-                <UserTwoFactorCard isEnabled={user.twoFactorEnabled ?? false} />
-                <UserAccountsCard accounts={accounts} />
-              </div>
+              <UserAccountsCard accounts={accounts} />
             </TabsContent>
 
             <TabsContent value="senha" className="space-y-4 pt-4">

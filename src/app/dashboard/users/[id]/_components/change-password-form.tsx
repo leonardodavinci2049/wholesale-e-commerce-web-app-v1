@@ -28,7 +28,7 @@ type ChangePasswordForm = z.infer<typeof changePasswordSchema>;
 
 export function ChangePasswordForm() {
   const form = useForm<ChangePasswordForm>({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(changePasswordSchema as never),
     defaultValues: {
       currentPassword: "",
       newPassword: "",

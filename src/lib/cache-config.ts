@@ -90,7 +90,7 @@ export const CACHE_TAGS = {
   footer: "footer",
 
   users: "users",
-  accounts: "accounts", 
+  accounts: "accounts",
   organizations: "organizations",
   organizationMetaCollection: "organization-meta-collection",
   userMetaCollection: "user-meta-collection",

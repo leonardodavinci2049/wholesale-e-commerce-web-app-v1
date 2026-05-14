@@ -122,7 +122,7 @@ export async function getNonMemberUsers(
 ): Promise<AuthUser[]> {
   "use cache";
   cacheLife("hours");
-  cacheTag(CACHE_TAGS.users, CACHE_TAGS.members);
+  cacheTag(CACHE_TAGS.users);
 
   try {
     const response = await UserAuthService.findNonMemberUsers({
@@ -171,7 +171,7 @@ export async function getUsersExcludingIds(
 export async function getUsersWithoutAnyOrganization(): Promise<AuthUser[]> {
   "use cache";
   cacheLife("hours");
-  cacheTag(CACHE_TAGS.users, CACHE_TAGS.members);
+  cacheTag(CACHE_TAGS.users);
 
   try {
     const response = await UserAuthService.findUsersWithoutAnyOrganization();

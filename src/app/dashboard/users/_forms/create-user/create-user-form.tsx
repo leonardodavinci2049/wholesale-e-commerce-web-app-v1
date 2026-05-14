@@ -34,7 +34,9 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema) as Resolver<CreateUserInput>,
+    resolver: zodResolver(
+      createUserSchema as never,
+    ) as Resolver<CreateUserInput>,
     defaultValues: {
       name: "",
       email: "",

@@ -35,7 +35,7 @@ export function ProfileUpdateForm({
 }) {
   const router = useRouter();
   const form = useForm<ProfileUpdateForm>({
-    resolver: zodResolver(profileUpdateSchema),
+    resolver: zodResolver(profileUpdateSchema as never),
     defaultValues: user,
   });
 
