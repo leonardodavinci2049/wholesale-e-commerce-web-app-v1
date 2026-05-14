@@ -1,6 +1,5 @@
-import { CalendarIcon, Fingerprint, Mail, Shield, User } from "lucide-react";
+import { CalendarIcon, User } from "lucide-react";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { User as UserType } from "@/database/shared/auth/auth.types";
+import { EditableUserField } from "./editable-user-field";
 
 interface UserDetailsCardProps {
   user: UserType;
@@ -22,15 +22,18 @@ interface DetailItemProps {
 }
 
 function DetailItem({ label, value, icon: Icon, className }: DetailItemProps) {
+  const displayValue =
+    value === null || value === undefined || value === "" ? "N/A" : value;
+
   return (
-    <div className="flex flex-col space-y-1.5 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors min-h-[80px] justify-center">
+    <div className="flex flex-col space-y-1.5 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors min-h-20 justify-center">
       <span className="text-xs font-medium text-muted-foreground flex items-center gap-2 uppercase tracking-wider mb-auto">
         <Icon className="h-3.5 w-3.5" /> {label}
       </span>
       <div
         className={`font-semibold text-lg leading-tight truncate ${className}`}
       >
-        {value || "N/A"}
+        {displayValue}
       </div>
     </div>
   );
@@ -63,23 +66,43 @@ export function UserDetailsCard({ user }: UserDetailsCardProps) {
         </div>
       </CardHeader>
       <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <DetailItem label="Nome" value={user.name} icon={User} />
+        <EditableUserField
+          userId={user.id}
+          field="name"
+          label="Nome"
+          value={user.name}
+        />
 
-        <DetailItem label="Email" value={user.email} icon={Mail} />
+        <EditableUserField
+          userId={user.id}
+          field="email"
+          label="Email"
+          value={user.email}
+          inputType="email"
+        />
 
-        <div className="flex flex-col space-y-1.5 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors min-h-[80px] justify-center">
-          <span className="text-xs font-medium text-muted-foreground flex items-center gap-2 uppercase tracking-wider mb-auto">
-            <Shield className="h-3.5 w-3.5" /> Função
-          </span>
-          <div>
-            <Badge variant="outline">{user.role}</Badge>
-          </div>
-        </div>
+        <EditableUserField
+          userId={user.id}
+          field="role"
+          label="Função"
+          value={user.role}
+        />
 
-        <DetailItem
-          label="ID do Usuário"
-          value={user.id}
-          icon={Fingerprint}
+        <EditableUserField
+          userId={user.id}
+          field="personId"
+          label="ID Cliente"
+          value={user.personId}
+          inputType="number"
+          className="font-mono text-sm"
+        />
+
+        <EditableUserField
+          userId={user.id}
+          field="sellerId"
+          label="ID Vendedor"
+          value={user.sellerId}
+          inputType="number"
           className="font-mono text-sm"
         />
 
