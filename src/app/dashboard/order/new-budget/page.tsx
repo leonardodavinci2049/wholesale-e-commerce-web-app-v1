@@ -18,7 +18,7 @@ import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
 import { ProductSearchBar } from "./_components/product-search-bar";
 import { ProductViewSwitcher } from "./_components/product-view-switcher";
 
-const logger = createLogger("new-budget-v2-page");
+const logger = createLogger("new-budget-page");
 
 const DEFAULT_PRODUCT_LIMIT = 50;
 
