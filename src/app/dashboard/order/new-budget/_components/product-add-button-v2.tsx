@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 
 import { addItemAction } from "../actions/add-item-action";
 
-const ROUTE = "/dashboard/order/new-budget-v2";
+const ROUTE = "/dashboard/order/new-budget";
 const ADD_ITEM_SUCCESS_TOAST_DURATION_MS = 1000;
 
 interface ProductAddButtonV2Props {
