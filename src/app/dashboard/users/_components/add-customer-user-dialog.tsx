@@ -115,15 +115,15 @@ export function AddCustomerUserDialog() {
           <span className="sm:hidden">Adicionar</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
+      <DialogContent className="max-w-[calc(100%-0.75rem)] gap-4 rounded-2xl p-3 sm:max-w-2xl sm:gap-6 sm:rounded-4xl sm:p-6">
+        <DialogHeader className="pr-10">
           <DialogTitle>Adicionar Usuário a partir de Cliente</DialogTitle>
           <DialogDescription>
             Pesquise e selecione um cliente para criar um usuário do sistema.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -135,24 +135,24 @@ export function AddCustomerUserDialog() {
             />
           </div>
 
-          <ScrollArea className="h-[400px] rounded-md border">
+          <ScrollArea className="h-[min(400px,calc(100vh-13rem))] rounded-md border">
             {isLoading ? (
-              <div className="flex h-[400px] items-center justify-center">
+              <div className="flex h-full items-center justify-center">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
             ) : customers.length === 0 ? (
-              <div className="flex h-[400px] items-center justify-center text-sm text-muted-foreground">
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                 Nenhum cliente encontrado
               </div>
             ) : (
-              <ul className="divide-y pr-4">
+              <ul className="divide-y pr-2 sm:pr-4">
                 {customers.map((customer) => (
                   <li
                     key={customer.customerId}
-                    className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 p-3 hover:bg-muted/50"
+                    className="grid gap-2 p-2 hover:bg-muted/50 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4 sm:p-3"
                   >
                     <div className="flex min-w-0 flex-1 items-center gap-3">
-                      <Avatar className="h-12 w-12">
+                      <Avatar className="h-10 w-10 shrink-0 sm:h-12 sm:w-12">
                         <AvatarImage
                           src={
                             customer.imagePath ||
@@ -166,12 +166,14 @@ export function AddCustomerUserDialog() {
                       </Avatar>
 
                       <div className="min-w-0 flex-1 space-y-1">
-                        <p className="truncate font-medium">
-                          {customer.customerId} -{" "}
+                        <p className="wrap-anywhere font-medium leading-snug sm:truncate">
                           {truncateCustomerName(customer.name)}
                         </p>
 
-                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                          <span className="font-medium">
+                            ID: {customer.customerId}
+                          </span>
                           <Badge
                             className={getCustomerTypeBadgeClassName(
                               customer.customerType || "",
@@ -188,7 +190,7 @@ export function AddCustomerUserDialog() {
                       </div>
                     </div>
                     <Button
-                      className="shrink-0"
+                      className="w-full shrink-0 sm:w-auto"
                       type="button"
                       size="sm"
                       onClick={() => handleAdd(customer)}
