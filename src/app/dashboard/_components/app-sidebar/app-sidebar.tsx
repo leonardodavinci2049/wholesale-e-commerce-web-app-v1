@@ -116,6 +116,12 @@ const data = {
       url: "/dashboard/settings/",
       icon: MapIcon,
     },
+    {
+      name: "Usuários",
+      url: "/dashboard/users/",
+      icon: MapIcon,
+    },
+
   ],
 };
 
