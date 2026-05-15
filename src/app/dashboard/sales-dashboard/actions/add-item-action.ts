@@ -48,6 +48,7 @@ export async function addItemAction(params: {
       pe_notes: "",
     });
 
+    revalidateTag(CACHE_TAGS.orderSale(String(validated.orderId)), "seconds");
     revalidateTag(CACHE_TAGS.orderItems, "seconds");
     revalidateTag(CACHE_TAGS.orderSales, "seconds");
 

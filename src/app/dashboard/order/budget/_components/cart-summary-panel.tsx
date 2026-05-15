@@ -35,6 +35,11 @@ export function CartSummaryPanel({
           <div className="flex flex-col">
             <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Seu Orçamento
+              {summary?.orderId ? (
+                <span className="ml-2 normal-case tracking-normal text-foreground">
+                  #{summary.orderId}
+                </span>
+              ) : null}
             </span>
             <span className="text-sm font-semibold text-foreground">
               Carrinho

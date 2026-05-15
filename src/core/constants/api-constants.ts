@@ -311,6 +311,7 @@ export const ORDER_SALES_ENDPOINTS = {
   FIND_CO_SELLER_ID: "/order-sales/v2/order-find-co-seller-id",
   FIND_CO_SUMMARY_ID: "/order-sales/v2/order-find-co-summary-id",
   FIND_CART_ID: "/order-sales/v2/order-find-cart-id",
+  FIND_ORDER_ID: "/order-sales/v2/order-find-order-id",
   FIND_DASHBOARD_ID: "/order-sales/v2/order-find-dashboard-id",
   FIND_EQUIPMENT_ID: "/order-sales/v2/order-find-equipment-id",
 } as const;

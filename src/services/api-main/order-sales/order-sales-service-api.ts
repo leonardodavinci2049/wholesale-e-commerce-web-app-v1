@@ -240,7 +240,7 @@ export class OrderSalesServiceApi extends BaseApiService {
 
       if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
         logger.warn(
-          `Cart não encontrado para os parâmetros: orderId=${params.pe_order_id}, sellerId=${params.pe_id_seller}`,
+          `Cart não encontrado para os parâmetros: orderId=${params.pe_order_id}, customerId=${params.pe_id_customer}`,
         );
         return null;
       }
@@ -256,6 +256,40 @@ export class OrderSalesServiceApi extends BaseApiService {
       return response;
     } catch (error) {
       logger.error("Erro ao buscar cart do pedido", error);
+      throw error;
+    }
+  }
+
+  async findOrderId(
+    params: OrderSalesDashboardRequest,
+  ): Promise<OrderFindDashboardIdResponse | null> {
+    try {
+      const validatedParams = OrderSalesDashboardSchema.parse(params);
+      const requestBody = this.buildBasePayload(validatedParams);
+
+      const response = await this.post<OrderFindDashboardIdResponse>(
+        ORDER_SALES_ENDPOINTS.FIND_ORDER_ID,
+        requestBody,
+      );
+
+      if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
+        logger.warn(
+          `Order não encontrado para os parâmetros: orderId=${params.pe_order_id}, customerId=${params.pe_id_customer}`,
+        );
+        return null;
+      }
+
+      if (isApiError(response.statusCode)) {
+        throw new OrderSalesError(
+          response.message || "Erro ao buscar order do pedido",
+          "ORDER_SALES_ORDER_ERROR",
+          response.statusCode,
+        );
+      }
+
+      return response;
+    } catch (error) {
+      logger.error("Erro ao buscar order do pedido", error);
       throw error;
     }
   }
