@@ -6,6 +6,7 @@ import { useCallback, useRef, useTransition } from "react";
 
 import { Input } from "@/components/ui/input";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
+import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
 import { BudgetCategoryFilterSheet } from "./budget-category-filter-sheet";
 import { BudgetGeneralFilterSheet } from "./budget-general-filter-sheet";
@@ -17,6 +18,8 @@ interface ProductSearchBarProps {
   flagStock: number;
   brands: UIBrand[];
   selectedBrandId?: number;
+  categories: UITaxonomyMenuItem[];
+  selectedTaxonomyId?: number;
 }
 
 export function ProductSearchBar({
@@ -24,6 +27,8 @@ export function ProductSearchBar({
   flagStock,
   brands,
   selectedBrandId,
+  categories,
+  selectedTaxonomyId,
 }: ProductSearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -76,7 +81,10 @@ export function ProductSearchBar({
       </div>
 
       <div className="hidden gap-2 sm:ml-auto sm:flex">
-        <BudgetCategoryFilterSheet />
+        <BudgetCategoryFilterSheet
+          categories={categories}
+          selectedTaxonomyId={selectedTaxonomyId}
+        />
         <BudgetGeneralFilterSheet
           brands={brands}
           selectedBrandId={selectedBrandId}

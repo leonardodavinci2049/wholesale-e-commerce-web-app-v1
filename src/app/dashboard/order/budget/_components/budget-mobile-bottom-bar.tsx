@@ -15,6 +15,7 @@ import {
 } from "@/components/common/mobile-bottom-bar";
 import { publicEnvs } from "@/core/config/envs.client";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
+import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
 import { BudgetCategoryFilterPanel } from "./budget-category-filter-panel";
 import { BudgetGeneralFilterPanel } from "./budget-general-filter-panel";
@@ -25,6 +26,8 @@ interface BudgetMobileBottomBarProps {
   flagStock: number;
   brands: UIBrand[];
   selectedBrandId?: number;
+  categories: UITaxonomyMenuItem[];
+  selectedTaxonomyId?: number;
 }
 
 const WHATSAPP_MESSAGE = "Olá Gostaria tirar dúvidas sobre produtos";
@@ -40,6 +43,8 @@ export function BudgetMobileBottomBar({
   flagStock,
   brands,
   selectedBrandId,
+  categories,
+  selectedTaxonomyId,
 }: BudgetMobileBottomBarProps) {
   const whatsappUrl = buildWhatsappUrl(
     publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
@@ -60,7 +65,10 @@ export function BudgetMobileBottomBar({
         label="Categorias"
         sheetTitle="Categorias"
       >
-        <BudgetCategoryFilterPanel />
+        <BudgetCategoryFilterPanel
+          categories={categories}
+          selectedTaxonomyId={selectedTaxonomyId}
+        />
       </MobileBottomBarSheet>
 
       <MobileBottomBarSheet
