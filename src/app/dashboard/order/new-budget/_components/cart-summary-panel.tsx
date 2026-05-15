@@ -34,7 +34,7 @@ export function CartSummaryPanel({
           <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           <div className="flex flex-col">
             <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Seu pedido
+              Seu Orçamento
             </span>
             <span className="text-sm font-semibold text-foreground">
               Carrinho
