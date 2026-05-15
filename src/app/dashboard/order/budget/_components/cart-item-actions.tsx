@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ export function CartItemActions({
   showDeleteButton = true,
   showQuantityControls = true,
 }: CartItemActionsProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const isDecrementDisabled = isPending || quantity <= 1;
@@ -44,7 +46,10 @@ export function CartItemActions({
 
       if (!result.success) {
         toast.error(result.message);
+        return;
       }
+
+      router.refresh();
     });
   }
 
@@ -69,6 +74,7 @@ export function CartItemActions({
       }
 
       toast.success(result.message);
+      router.refresh();
     });
   }
 
