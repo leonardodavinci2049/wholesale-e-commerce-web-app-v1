@@ -8,7 +8,7 @@ import { getAuthContext } from "@/server/auth-context";
 import { orderItemsServiceApi } from "@/services/api-main/order-items";
 import { OrderItemsError } from "@/services/api-main/order-items/types/order-items-types";
 
-const logger = createLogger("new-budget-update-quantity-action");
+const logger = createLogger("budget-update-quantity-action");
 
 const UpdateQuantitySchema = z.object({
   orderItemId: z.number().int().positive(),

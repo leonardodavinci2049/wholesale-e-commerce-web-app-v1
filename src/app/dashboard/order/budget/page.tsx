@@ -18,11 +18,11 @@ import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
 import { ProductSearchBar } from "./_components/product-search-bar";
 import { ProductViewSwitcher } from "./_components/product-view-switcher";
 
-const logger = createLogger("new-budget-page");
+const logger = createLogger("budget-page");
 
 const DEFAULT_PRODUCT_LIMIT = 50;
 
-interface NewBudgetV2PageProps {
+interface BudgetPageProps {
   searchParams: Promise<{
     search?: string;
     orderId?: string;
@@ -32,9 +32,7 @@ interface NewBudgetV2PageProps {
   }>;
 }
 
-export default async function NewBudgetV2Page({
-  searchParams,
-}: NewBudgetV2PageProps) {
+export default async function BudgetPage({ searchParams }: BudgetPageProps) {
   const { session, apiContext } = await getAuthContext();
 
   const customerId = session.user.personId ?? 0;

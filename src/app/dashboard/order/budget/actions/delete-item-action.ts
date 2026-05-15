@@ -8,7 +8,7 @@ import { getAuthContext } from "@/server/auth-context";
 import { orderItemsServiceApi } from "@/services/api-main/order-items";
 import { OrderItemsError } from "@/services/api-main/order-items/types/order-items-types";
 
-const logger = createLogger("new-budget-delete-item-action");
+const logger = createLogger("budget-delete-item-action");
 
 const DeleteItemSchema = z.object({
   movementId: z.number().int().positive(),

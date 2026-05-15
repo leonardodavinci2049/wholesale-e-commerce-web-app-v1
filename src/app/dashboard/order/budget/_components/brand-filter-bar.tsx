@@ -11,7 +11,7 @@ interface BrandFilterBarProps {
   selectedBrandId?: number;
 }
 
-const ROUTE = "/dashboard/order/new-budget";
+const ROUTE = "/dashboard/order/budget";
 
 export function BrandFilterBar({
   brands,
