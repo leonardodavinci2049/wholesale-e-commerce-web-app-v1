@@ -338,6 +338,53 @@ export async function getOrderDashboard(
   }
 }
 
+export async function getOrderCart(
+  orderId: number,
+  params: BaseParams & { sellerId?: number } = {},
+): Promise<UIOrderDashboard | undefined> {
+  "use cache";
+  cacheLife("quarter");
+  cacheTag(CACHE_TAGS.orderSale(String(orderId)), CACHE_TAGS.orderSales);
+
+  try {
+    const response = await orderSalesServiceApi.findCartId({
+      pe_order_id: orderId,
+      pe_id_seller: params.sellerId,
+      pe_type_business: params.typeBusiness,
+      pe_user_id: params.pe_user_id,
+      pe_user_name: params.pe_user_name,
+      pe_user_role: params.pe_user_role,
+      pe_person_id: params.pe_person_id,
+    });
+
+    if (!response) {
+      return undefined;
+    }
+
+    const summary = orderSalesServiceApi.extractDashboardSummary(response);
+    const details = orderSalesServiceApi.extractDashboardDetails(response);
+    const items = orderSalesServiceApi.extractDashboardItems(response);
+    const customer = orderSalesServiceApi.extractDashboardCustomer(response);
+
+    return {
+      summary: summary ? transformSummaryEntity(summary) : null,
+      details: details ? transformDashboardDetailsEntity(details) : null,
+      items: items.map(transformDashboardItemEntity),
+      customer: customer ? transformCustomerEntity(customer) : null,
+    };
+  } catch (error) {
+    if (error instanceof ApiConnectionError) {
+      logger.warn(
+        `Cart do pedido ${orderId} indisponivel por falha de conexao com a API`,
+      );
+    } else {
+      logger.error(`Erro ao buscar cart do pedido ${orderId}:`, error);
+    }
+
+    throw error;
+  }
+}
+
 export async function getOrderEquipment(
   orderId: number,
   params: BaseParams = {},
