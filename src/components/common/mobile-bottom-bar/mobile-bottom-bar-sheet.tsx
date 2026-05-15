@@ -5,6 +5,7 @@ import { type ReactNode, useState } from "react";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -72,6 +73,9 @@ export function MobileBottomBarSheet({
         >
           <SheetHeader className="border-b border-border/60 p-4">
             <SheetTitle className="text-base">{sheetTitle ?? label}</SheetTitle>
+            <SheetDescription className="sr-only">
+              {sheetTitle ?? label}
+            </SheetDescription>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto p-4">
             {hasContent
