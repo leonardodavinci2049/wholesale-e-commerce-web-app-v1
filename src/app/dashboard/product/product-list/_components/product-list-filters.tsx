@@ -335,7 +335,7 @@ export function ProductListFilters({
                           htmlFor="stock-filter"
                           className="cursor-pointer text-sm font-medium"
                         >
-                          Apenas em estoque
+                          Apenas em estoquexxx
                         </label>
                         <Switch
                           checked={filters.onlyInStock}

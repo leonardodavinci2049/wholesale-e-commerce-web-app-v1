@@ -16,7 +16,8 @@ import {
 import { publicEnvs } from "@/core/config/envs.client";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 
-import { BudgetFilterPanel } from "./budget-filter-panel";
+import { BudgetCategoryFilterPanel } from "./budget-category-filter-panel";
+import { BudgetGeneralFilterPanel } from "./budget-general-filter-panel";
 
 interface BudgetMobileBottomBarProps {
   cartItemCount: number;
@@ -59,15 +60,15 @@ export function BudgetMobileBottomBar({
         label="Categorias"
         sheetTitle="Categorias"
       >
-        {null}
+        <BudgetCategoryFilterPanel />
       </MobileBottomBarSheet>
 
       <MobileBottomBarSheet
         icon={<Filter className="h-5 w-5" />}
-        label="Filtro"
-        sheetTitle="Filtros"
+        label="Filtro geral"
+        sheetTitle="Filtro geral"
       >
-        <BudgetFilterPanel
+        <BudgetGeneralFilterPanel
           brands={brands}
           selectedBrandId={selectedBrandId}
           flagStock={flagStock}
