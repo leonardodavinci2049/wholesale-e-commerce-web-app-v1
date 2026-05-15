@@ -19,7 +19,7 @@ interface BudgetFilterPanelProps {
   stockSwitchId?: string;
 }
 
-export function BudgetFilterPanel({
+export function BudgetGeneralFilterPanel({
   brands,
   selectedBrandId,
   flagStock,

@@ -1,21 +1,14 @@
 "use client";
 
-import { Filter, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useRef, useTransition } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 
-import { BudgetFilterPanel } from "./budget-filter-panel";
+import { BudgetCategoryFilterSheet } from "./budget-category-filter-sheet";
+import { BudgetGeneralFilterSheet } from "./budget-general-filter-sheet";
 
 const ROUTE = "/dashboard/order/budget";
 
@@ -82,35 +75,14 @@ export function ProductSearchBar({
         />
       </div>
 
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            className="hidden gap-2 sm:ml-auto sm:inline-flex"
-            aria-label="Abrir filtros"
-          >
-            <Filter className="size-4" aria-hidden="true" />
-            <span>Filtros</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent
-          side="right"
-          aria-describedby={undefined}
-          className="flex w-[92vw] max-w-md flex-col gap-0 p-0"
-        >
-          <SheetHeader className="border-b border-border/60 p-4">
-            <SheetTitle className="text-base">Filtros</SheetTitle>
-          </SheetHeader>
-          <div className="flex-1 overflow-y-auto p-4">
-            <BudgetFilterPanel
-              brands={brands}
-              selectedBrandId={selectedBrandId}
-              flagStock={flagStock}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      <div className="hidden gap-2 sm:ml-auto sm:flex">
+        <BudgetCategoryFilterSheet />
+        <BudgetGeneralFilterSheet
+          brands={brands}
+          selectedBrandId={selectedBrandId}
+          flagStock={flagStock}
+        />
+      </div>
     </div>
   );
 }
