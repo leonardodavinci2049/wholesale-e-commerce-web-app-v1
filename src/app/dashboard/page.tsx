@@ -33,8 +33,8 @@ import { SiteHeaderWithBreadcrumb } from "./_components/header/site-header-with-
 
 const modules = [
   {
-    title: "Painel de Vendas",
-    description: "Inicie novas vendas e acompanhe o fluxo de caixa.",
+    title: "Painel de Compras",
+    description: "Inicie novas compras e acompanhe o fluxo de caixa.",
     href: "/dashboard/sales-dashboard",
     icon: Store,
     color: "text-blue-500",

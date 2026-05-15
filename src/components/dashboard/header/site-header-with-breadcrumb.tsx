@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { HeaderMiniCart } from "@/app/dashboard/_components/header/header-mini-cart";
 import { HeaderNavUser } from "@/components/dashboard/header/header-nav-user";
 import ModeToggle from "@/components/theme/mode-toggle";
 import {
@@ -67,6 +68,14 @@ export function SiteHeaderWithBreadcrumb({
         {/* Title for smaller screens */}
         <h1 className="text-base font-medium md:hidden">{title}</h1>
         <div className="ml-auto flex items-center gap-2">
+          <Suspense
+            fallback={
+              <div className="bg-muted/30 h-9 w-9 animate-pulse rounded-full" />
+            }
+          >
+            <HeaderMiniCart />
+          </Suspense>
+
           <Suspense>
             <ModeToggle />
           </Suspense>

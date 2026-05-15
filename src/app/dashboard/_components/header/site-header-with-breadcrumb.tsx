@@ -15,6 +15,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth/auth";
 
 import { NavUser } from "../app-sidebar/nav-user";
+import { HeaderMiniCart } from "./header-mini-cart";
 
 interface SiteHeaderWithBreadcrumbProps {
   title?: string;
@@ -81,6 +82,14 @@ export async function SiteHeaderWithBreadcrumb({
         {/* Title for smaller screens */}
         <h1 className="text-base font-medium md:hidden">{title}</h1>
         <div className="ml-auto flex items-center gap-2">
+          <Suspense
+            fallback={
+              <div className="bg-muted/30 h-9 w-9 animate-pulse rounded-full" />
+            }
+          >
+            <HeaderMiniCart />
+          </Suspense>
+
           <Suspense>
             <ModeToggle />
           </Suspense>
