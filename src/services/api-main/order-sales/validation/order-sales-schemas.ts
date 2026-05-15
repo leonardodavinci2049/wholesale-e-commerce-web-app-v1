@@ -16,6 +16,7 @@ export const OrderSalesFindByIdSchema = z.object({
 export const OrderSalesDashboardSchema = z.object({
   ...baseContextSchema,
   pe_order_id: z.number().int().optional(),
+  pe_id_customer: z.number().int().optional(),
   pe_id_seller: z.number().int().optional(),
   pe_type_business: z.number().int().optional(),
 });

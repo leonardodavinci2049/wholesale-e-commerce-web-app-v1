@@ -27,6 +27,7 @@ export interface OrderSalesFindByIdRequest extends OrderSalesBaseRequest {
 
 export interface OrderSalesDashboardRequest extends OrderSalesBaseRequest {
   pe_order_id?: number;
+  pe_id_customer?: number;
   pe_id_seller?: number;
   pe_type_business?: number;
 }

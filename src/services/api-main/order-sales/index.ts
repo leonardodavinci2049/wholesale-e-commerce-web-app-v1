@@ -1,4 +1,19 @@
 export {
+  getFindOrder,
+  getOrderCarrier,
+  getOrderCart,
+  getOrderCustomer,
+  getOrderDelivery,
+  getOrderEquipment,
+  getOrderHistory,
+  getOrderNf,
+  getOrderPgForma,
+  getOrderProtocol,
+  getOrderSeller,
+  getOrderSummary,
+} from "./order-sales-cached-service";
+
+export {
   OrderSalesServiceApi,
   orderSalesServiceApi,
 } from "./order-sales-service-api";

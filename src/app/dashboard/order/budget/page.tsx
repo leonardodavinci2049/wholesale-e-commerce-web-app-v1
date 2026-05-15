@@ -3,7 +3,7 @@ import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
 import { getBrands } from "@/services/api-main/brand/brand-cached-service";
-import { getOrderDashboard } from "@/services/api-main/order-sales/order-sales-cached-service";
+import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
 import {
   getProductsPdv,
   searchProductsPdv,
@@ -36,7 +36,6 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
   const { session, apiContext } = await getAuthContext();
 
   const customerId = session.user.personId ?? 0;
-  const sellerId = session.user.sellerId ?? 0;
   const typeBusiness = serverEnvs.TYPE_BUSINESS;
 
   const params = await searchParams;
@@ -50,7 +49,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
 
   const dashboardParams = {
     ...apiContext,
-    sellerId,
+    customerId,
     typeBusiness,
   };
 
@@ -75,14 +74,14 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
     ...apiContext,
   });
 
-  const orderDashboardPromise = orderId
-    ? getOrderDashboard(orderId, dashboardParams).catch((error) => {
-        logger.error("Erro ao carregar dashboard do pedido (v2):", error);
-        return undefined;
-      })
-    : Promise.resolve(undefined);
+  const orderCartPromise = getOrderCart(orderId ?? 0, dashboardParams).catch(
+    (error) => {
+      logger.error("Erro ao carregar carrinho do pedido (v2):", error);
+      return undefined;
+    },
+  );
 
-  const [products, brands, orderDashboard] = await Promise.all([
+  const [products, brands, orderCart] = await Promise.all([
     productsPromise.catch((error) => {
       logger.error("Erro ao carregar produtos (v2):", error);
       return [];
@@ -91,12 +90,13 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
       logger.error("Erro ao carregar marcas (v2):", error);
       return [];
     }),
-    orderDashboardPromise,
+    orderCartPromise,
   ]);
 
-  const cartItems = orderDashboard?.items ?? [];
-  const summary = orderDashboard?.summary;
-  const selectedPaymentId = orderDashboard?.details?.paymentFormId;
+  const cartItems = orderCart?.items ?? [];
+  const summary = orderCart?.summary;
+  const selectedPaymentId = orderCart?.details?.paymentFormId;
+  const effectiveOrderId = orderCart?.details?.orderId ?? orderId;
 
   return (
     <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+5rem)] xl:pb-0">
@@ -131,8 +131,12 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
             </p>
 
             <ProductViewSwitcher
-              grid={<ProductGrid products={products} orderId={orderId} />}
-              list={<ProductList products={products} orderId={orderId} />}
+              grid={
+                <ProductGrid products={products} orderId={effectiveOrderId} />
+              }
+              list={
+                <ProductList products={products} orderId={effectiveOrderId} />
+              }
             />
 
             <ProductLoadMoreV2
@@ -146,7 +150,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
               <CartSummaryPanel
                 items={cartItems}
                 summary={summary}
-                orderId={orderId}
+                orderId={effectiveOrderId}
                 selectedPaymentId={selectedPaymentId}
               />
             </div>
@@ -160,7 +164,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
           <CartSummaryPanel
             items={cartItems}
             summary={summary}
-            orderId={orderId}
+            orderId={effectiveOrderId}
             selectedPaymentId={selectedPaymentId}
           />
         }
