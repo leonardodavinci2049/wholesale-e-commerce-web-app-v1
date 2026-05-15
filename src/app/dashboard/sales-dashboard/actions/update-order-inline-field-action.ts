@@ -13,7 +13,7 @@ const EDITABLE_ORDER_STATUS_ID = 22;
 
 const EditableOrderFieldSchema = z.object({
   orderId: z.number().int().positive(),
-  field: z.enum(["VL_FRETE", "VL_DESCONTO", "ANOTACOES"]),
+  field: z.enum(["ANOTACOES"]),
   value: z.string().max(500),
 });
 
@@ -22,34 +22,9 @@ type UpdateOrderInlineFieldResult = {
   message: string;
 };
 
-function parseDecimalValue(value: string): number | null {
-  const trimmedValue = value.trim();
-
-  if (!trimmedValue) {
-    return 0;
-  }
-
-  const sanitizedValue = trimmedValue.replace(/\s|R\$/g, "");
-  const lastCommaIndex = sanitizedValue.lastIndexOf(",");
-  const lastDotIndex = sanitizedValue.lastIndexOf(".");
-
-  const normalizedValue =
-    lastCommaIndex > lastDotIndex
-      ? sanitizedValue.replace(/\./g, "").replace(",", ".")
-      : sanitizedValue.replace(/,/g, "");
-
-  const parsedValue = Number(normalizedValue);
-
-  if (!Number.isFinite(parsedValue) || parsedValue < 0) {
-    return null;
-  }
-
-  return parsedValue;
-}
-
 export async function updateOrderInlineFieldAction(
   orderId: number,
-  field: "VL_FRETE" | "VL_DESCONTO" | "ANOTACOES",
+  field: "ANOTACOES",
   value: string,
 ): Promise<UpdateOrderInlineFieldResult> {
   try {
@@ -80,38 +55,16 @@ export async function updateOrderInlineFieldAction(
       };
     }
 
-    if (validated.field === "ANOTACOES") {
-      await orderUpdServiceApi.updateField({
-        ...apiContext,
-        pe_register_id: validated.orderId,
-        pe_field_type: 1,
-        pe_field: validated.field,
-        pe_value_str: validated.value.trim(),
-        pe_value_int: 0,
-        pe_value_numeric: 0,
-        pe_value_date: null,
-      });
-    } else {
-      const parsedNumericValue = parseDecimalValue(validated.value);
-
-      if (parsedNumericValue === null) {
-        return {
-          success: false,
-          message: "Informe um valor numerico valido para o campo selecionado",
-        };
-      }
-
-      await orderUpdServiceApi.updateField({
-        ...apiContext,
-        pe_register_id: validated.orderId,
-        pe_field_type: 3,
-        pe_field: validated.field,
-        pe_value_str: "",
-        pe_value_int: 0,
-        pe_value_numeric: parsedNumericValue,
-        pe_value_date: null,
-      });
-    }
+    await orderUpdServiceApi.updateField({
+      ...apiContext,
+      pe_register_id: validated.orderId,
+      pe_field_type: 1,
+      pe_field: validated.field,
+      pe_value_str: validated.value.trim(),
+      pe_value_int: 0,
+      pe_value_numeric: 0,
+      pe_value_date: null,
+    });
 
     revalidateTag(CACHE_TAGS.orderSale(String(validated.orderId)), "seconds");
     revalidateTag(CACHE_TAGS.orderSales, "seconds");

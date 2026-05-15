@@ -8,6 +8,7 @@ import {
   getProductsPdv,
   searchProductsPdv,
 } from "@/services/api-main/product-pdv/product-pdv-cached-service";
+import { getTaxonomyMenu } from "@/services/api-main/taxonomy-base/taxonomy-base-cached-service";
 
 import { BudgetMobileBottomBar } from "./_components/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
@@ -26,6 +27,7 @@ interface BudgetPageProps {
     search?: string;
     orderId?: string;
     brandId?: string;
+    taxonomyId?: string;
     flagStock?: string;
     limit?: string;
   }>;
@@ -41,6 +43,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
   const search = params.search?.trim() ?? "";
   const orderId = params.orderId ? Number(params.orderId) : undefined;
   const brandId = params.brandId ? Number(params.brandId) : undefined;
+  const taxonomyId = params.taxonomyId ? Number(params.taxonomyId) : undefined;
   const flagStock = params.flagStock === "0" ? 0 : 1;
   const productLimit = params.limit
     ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
@@ -62,6 +65,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
       })
     : getProductsPdv({
         brandId,
+        taxonomyId,
         flagStock,
         recordsQuantity: productLimit,
         ...apiContext,
@@ -73,6 +77,8 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
     ...apiContext,
   });
 
+  const categoriesPromise = getTaxonomyMenu(2, 0, apiContext);
+
   const orderCartPromise = getOrderCart(orderId ?? 0, dashboardParams).catch(
     (error) => {
       logger.error("Erro ao carregar carrinho do pedido (v2):", error);
@@ -80,13 +86,17 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
     },
   );
 
-  const [products, brands, orderCart] = await Promise.all([
+  const [products, brands, categories, orderCart] = await Promise.all([
     productsPromise.catch((error) => {
       logger.error("Erro ao carregar produtos (v2):", error);
       return [];
     }),
     brandsPromise.catch((error) => {
       logger.error("Erro ao carregar marcas (v2):", error);
+      return [];
+    }),
+    categoriesPromise.catch((error) => {
+      logger.error("Erro ao carregar categorias (v2):", error);
       return [];
     }),
     orderCartPromise,
@@ -120,6 +130,8 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
                 flagStock={flagStock}
                 brands={brands}
                 selectedBrandId={brandId}
+                categories={categories}
+                selectedTaxonomyId={taxonomyId}
               />
             </section>
 
@@ -156,6 +168,8 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
         flagStock={flagStock}
         brands={brands}
         selectedBrandId={brandId}
+        categories={categories}
+        selectedTaxonomyId={taxonomyId}
         cartContent={
           <CartSummaryPanel
             items={cartItems}

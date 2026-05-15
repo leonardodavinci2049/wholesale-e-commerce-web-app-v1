@@ -13,8 +13,6 @@ import {
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import { BudgetGeneralFilterPanel } from "./budget-general-filter-panel";
 
-
-
 interface BudgetGeneralFilterSheetProps {
   flagStock: number;
   brands: UIBrand[];

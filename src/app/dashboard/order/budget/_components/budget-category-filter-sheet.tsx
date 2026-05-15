@@ -10,16 +10,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
 import { BudgetCategoryFilterPanel } from "./budget-category-filter-panel";
 
-export function BudgetCategoryFilterSheet() {
+interface BudgetCategoryFilterSheetProps {
+  categories: UITaxonomyMenuItem[];
+  selectedTaxonomyId?: number;
+}
+
+export function BudgetCategoryFilterSheet({
+  categories,
+  selectedTaxonomyId,
+}: BudgetCategoryFilterSheetProps) {
+  const isActive = selectedTaxonomyId !== undefined;
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button
           type="button"
-          variant="outline"
+          variant={isActive ? "default" : "outline"}
           className="hidden gap-2 xl:inline-flex"
           aria-label="Abrir categorias"
         >
@@ -36,7 +46,10 @@ export function BudgetCategoryFilterSheet() {
           <SheetTitle className="text-base">Categorias</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto p-4">
-          <BudgetCategoryFilterPanel />
+          <BudgetCategoryFilterPanel
+            categories={categories}
+            selectedTaxonomyId={selectedTaxonomyId}
+          />
         </div>
       </SheetContent>
     </Sheet>

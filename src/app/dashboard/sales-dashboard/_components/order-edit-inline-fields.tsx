@@ -20,9 +20,10 @@ import { cn } from "@/lib/utils";
 import type { UIOrderDashboardDetails } from "@/services/api-main/order-sales/transformers/transformers";
 import { updateOrderInlineFieldAction } from "../actions/update-order-inline-field-action";
 
-type EditableFieldKey = "VL_FRETE" | "VL_DESCONTO" | "ANOTACOES";
+type OrderFieldKey = "VL_FRETE" | "VL_DESCONTO" | "ANOTACOES";
+type EditableFieldKey = "ANOTACOES";
 
-type FormValues = Record<EditableFieldKey, string>;
+type FormValues = Record<OrderFieldKey, string>;
 const EDITABLE_ORDER_STATUS_ID = 22;
 
 const PRICE_FIELDS = [
@@ -93,14 +94,10 @@ export function OrderEditInlineFields({ details }: OrderEditInlineFieldsProps) {
 
   useEffect(() => {
     if (!activeField) return;
-    const id =
-      activeField === "ANOTACOES"
-        ? "order-inline-notes"
-        : `order-inline-${activeField.toLowerCase()}`;
-    document.getElementById(id)?.focus();
+    document.getElementById("order-inline-notes")?.focus();
   }, [activeField]);
 
-  function handleValueChange(field: EditableFieldKey, value: string) {
+  function handleValueChange(field: OrderFieldKey, value: string) {
     setValues((currentValues) => ({
       ...currentValues,
       [field]: value,
@@ -242,16 +239,11 @@ export function OrderEditInlineFields({ details }: OrderEditInlineFieldsProps) {
           {PRICE_FIELDS.map((field) => {
             const Icon = field.icon;
             const inputId = `order-inline-${field.key.toLowerCase()}`;
-            const isEditing = activeField === field.key;
 
             return (
               <div
                 key={field.key}
-                className={cn(
-                  "group/order-field rounded-2xl border border-border/70 bg-muted/30 p-3 dark:bg-white/2",
-                  isEditing &&
-                    "border-primary/40 bg-primary/4 dark:bg-primary/10",
-                )}
+                className="rounded-2xl border border-border/70 bg-muted/30 p-3 dark:bg-white/2"
               >
                 <Label
                   htmlFor={inputId}
@@ -266,21 +258,12 @@ export function OrderEditInlineFields({ details }: OrderEditInlineFieldsProps) {
                     id={inputId}
                     type="text"
                     inputMode="decimal"
-                    readOnly={!isEditing}
+                    readOnly
                     value={values[field.key]}
                     placeholder="Sem valor informado"
                     className="h-10 rounded-xl border-border/70 bg-background/80 text-sm shadow-none dark:bg-background/40"
-                    onChange={(event) =>
-                      handleValueChange(field.key, event.target.value)
-                    }
                   />
-                  {!isEditing && renderActions(field.key)}
                 </div>
-                {isEditing && (
-                  <div className="mt-2 flex justify-end">
-                    {renderActions(field.key)}
-                  </div>
-                )}
               </div>
             );
           })}
