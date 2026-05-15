@@ -10,8 +10,8 @@ import {
 } from "@/services/api-main/product-pdv/product-pdv-cached-service";
 
 import { BrandFilterBar } from "./_components/brand-filter-bar";
+import { BudgetMobileBottomBar } from "./_components/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
-import { MobileCartFab } from "./_components/mobile-cart-fab";
 import { ProductGrid } from "./_components/product-grid";
 import { ProductList } from "./_components/product-list";
 import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
@@ -101,7 +101,7 @@ export default async function NewBudgetV2Page({
   const selectedPaymentId = orderDashboard?.details?.paymentFormId;
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+5rem)] xl:pb-0">
       <SiteHeaderWithBreadcrumb
         title="Novo Orçamento"
         breadcrumbItems={[
@@ -156,14 +156,17 @@ export default async function NewBudgetV2Page({
         </div>
       </main>
 
-      <MobileCartFab itemCount={cartItems.length}>
-        <CartSummaryPanel
-          items={cartItems}
-          summary={summary}
-          orderId={orderId}
-          selectedPaymentId={selectedPaymentId}
-        />
-      </MobileCartFab>
+      <BudgetMobileBottomBar
+        cartItemCount={cartItems.length}
+        cartContent={
+          <CartSummaryPanel
+            items={cartItems}
+            summary={summary}
+            orderId={orderId}
+            selectedPaymentId={selectedPaymentId}
+          />
+        }
+      />
     </div>
   );
 }

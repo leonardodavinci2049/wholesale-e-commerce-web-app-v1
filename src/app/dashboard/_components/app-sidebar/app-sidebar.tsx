@@ -59,7 +59,12 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Novo Orçamento",
+          title: "Orçamento/Pedido",
+          url: "/dashboard/sales-dashboard",
+        },
+
+        {
+          title: "Carrinho",
           url: "/dashboard/order/new-budget",
         },
       ],
