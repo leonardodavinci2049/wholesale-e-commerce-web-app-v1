@@ -11,9 +11,14 @@ import { ProductAddButtonV2 } from "./product-add-button-v2";
 interface ProductCardV2Props {
   product: UIProductPdv;
   orderId?: number;
+  imageLoading?: "eager" | "lazy";
 }
 
-export function ProductCardV2({ product, orderId }: ProductCardV2Props) {
+export function ProductCardV2({
+  product,
+  orderId,
+  imageLoading = "lazy",
+}: ProductCardV2Props) {
   const validImage =
     product.imagePath &&
     (product.imagePath.startsWith("/") || product.imagePath.startsWith("http"))
@@ -60,6 +65,7 @@ export function ProductCardV2({ product, orderId }: ProductCardV2Props) {
               src={validImage}
               alt={product.name}
               fill
+              loading={imageLoading}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               className="object-contain p-2"
             />

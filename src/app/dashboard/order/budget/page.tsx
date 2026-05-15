@@ -9,7 +9,6 @@ import {
   searchProductsPdv,
 } from "@/services/api-main/product-pdv/product-pdv-cached-service";
 
-import { BrandFilterBar } from "./_components/brand-filter-bar";
 import { BudgetMobileBottomBar } from "./_components/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
 import { ProductGrid } from "./_components/product-grid";
@@ -114,21 +113,15 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
           <div className="flex min-w-0 flex-col gap-4">
             <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
               <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Marcas
-              </p>
-              <BrandFilterBar brands={brands} selectedBrandId={brandId} />
-            </section>
-
-            <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Busca rápida
               </p>
-              <ProductSearchBar defaultValue={search} flagStock={flagStock} />
+              <ProductSearchBar
+                defaultValue={search}
+                flagStock={flagStock}
+                brands={brands}
+                selectedBrandId={brandId}
+              />
             </section>
-
-            <p className="px-1 text-xs text-muted-foreground">
-              Lista sincronizada. Escolha os itens e confirme pelo WhatsApp.
-            </p>
 
             <ProductViewSwitcher
               grid={
@@ -160,6 +153,9 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
 
       <BudgetMobileBottomBar
         cartItemCount={cartItems.length}
+        flagStock={flagStock}
+        brands={brands}
+        selectedBrandId={brandId}
         cartContent={
           <CartSummaryPanel
             items={cartItems}
