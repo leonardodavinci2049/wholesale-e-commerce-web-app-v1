@@ -2,7 +2,7 @@ import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-hea
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
 import {
-  getOrderDashboard,
+  getFindOrder,
   type UIOrderDashboard,
 } from "@/services/api-main/order-sales/order-sales-cached-service";
 import { CustomerSection } from "./_components/customer-section";
@@ -28,11 +28,11 @@ export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
   let dashboardData: UIOrderDashboard | null = null;
 
   try {
-    const { apiContext } = await getAuthContext();
+    const { apiContext, session } = await getAuthContext();
     dashboardData =
-      (await getOrderDashboard(orderId, {
+      (await getFindOrder(orderId, {
         ...apiContext,
-        sellerId: apiContext.pe_person_id,
+        customerId: session.user.personId ?? 0,
         typeBusiness: 1,
       })) ?? null;
   } catch (error) {
