@@ -65,7 +65,7 @@ const data = {
 
         {
           title: "Carrinho",
-          url: "/dashboard/order/new-budget",
+          url: "/dashboard/order/budget",
         },
       ],
     },

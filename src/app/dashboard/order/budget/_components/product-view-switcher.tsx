@@ -5,7 +5,7 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const STORAGE_KEY = "new-budget:product-view-mode";
+const STORAGE_KEY = "budget:product-view-mode";
 
 type ViewMode = "grid" | "list";
 
