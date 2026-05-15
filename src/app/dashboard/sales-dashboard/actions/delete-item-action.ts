@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { z } from "zod";
 import { createLogger } from "@/core/logger";
 import { CACHE_TAGS } from "@/lib/cache-config";
@@ -11,6 +11,7 @@ import { OrderItemsError } from "@/services/api-main/order-items/types/order-ite
 const logger = createLogger("sales-dashboard-delete-item-action");
 
 const DeleteItemSchema = z.object({
+  orderId: z.number().int().positive(),
   movementId: z.number().int().positive(),
 });
 
@@ -19,11 +20,12 @@ type DeleteItemActionResult = {
   message: string;
 };
 
-export async function deleteItemAction(
-  movementId: number,
-): Promise<DeleteItemActionResult> {
+export async function deleteItemAction(params: {
+  orderId: number;
+  movementId: number;
+}): Promise<DeleteItemActionResult> {
   try {
-    const validated = DeleteItemSchema.parse({ movementId });
+    const validated = DeleteItemSchema.parse(params);
     const { apiContext } = await getAuthContext();
 
     await orderItemsServiceApi.deleteOrderItem({
@@ -31,8 +33,9 @@ export async function deleteItemAction(
       pe_movement_id: validated.movementId,
     });
 
+    updateTag(CACHE_TAGS.orderSale(String(validated.orderId)));
+    updateTag(CACHE_TAGS.orderSales);
     revalidateTag(CACHE_TAGS.orderItems, "seconds");
-    revalidateTag(CACHE_TAGS.orderSales, "seconds");
 
     return {
       success: true,

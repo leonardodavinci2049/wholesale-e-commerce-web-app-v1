@@ -1,21 +1,25 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteItemAction } from "../actions/delete-item-action";
 
 interface DeleteItemButtonProps {
+  orderId: number;
   movementId: number;
   productName: string;
 }
 
 export function DeleteItemButton({
+  orderId,
   movementId,
   productName,
 }: DeleteItemButtonProps) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function handleDelete() {
     toast.warning(`Excluir "${productName}"?`, {
@@ -24,9 +28,10 @@ export function DeleteItemButton({
         label: "Excluir",
         onClick: () => {
           startTransition(async () => {
-            const result = await deleteItemAction(movementId);
+            const result = await deleteItemAction({ orderId, movementId });
             if (result.success) {
               toast.success(result.message);
+              router.refresh();
             } else {
               toast.error(result.message);
             }

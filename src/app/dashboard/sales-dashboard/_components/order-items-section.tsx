@@ -120,6 +120,7 @@ export function OrderItemsSection({
                   <div className="col-span-2 flex items-center justify-end gap-1 sm:hidden">
                     <ItemDetailDialog item={item} isEditable={isEditable} />
                     <DeleteItemButton
+                      orderId={orderId}
                       movementId={item.movementId}
                       productName={item.product}
                     />
@@ -159,6 +160,7 @@ export function OrderItemsSection({
                   <div className="col-span-1 hidden items-center justify-end gap-1 sm:flex">
                     <ItemDetailDialog item={item} isEditable={isEditable} />
                     <DeleteItemButton
+                      orderId={orderId}
                       movementId={item.movementId}
                       productName={item.product}
                     />

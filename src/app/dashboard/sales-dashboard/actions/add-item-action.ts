@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { z } from "zod";
 import { createLogger } from "@/core/logger";
 import { CACHE_TAGS } from "@/lib/cache-config";
@@ -48,9 +48,9 @@ export async function addItemAction(params: {
       pe_notes: "",
     });
 
-    revalidateTag(CACHE_TAGS.orderSale(String(validated.orderId)), "seconds");
+    updateTag(CACHE_TAGS.orderSale(String(validated.orderId)));
+    updateTag(CACHE_TAGS.orderSales);
     revalidateTag(CACHE_TAGS.orderItems, "seconds");
-    revalidateTag(CACHE_TAGS.orderSales, "seconds");
 
     return {
       success: true,
