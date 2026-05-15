@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -56,6 +57,9 @@ export function ItemDetailDialog({
         <DialogContent className="max-w-[92vw] sm:max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-base">Detalhe do item</DialogTitle>
+            <DialogDescription className="sr-only">
+              Visualize a imagem, valores e quantidade do item selecionado.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="flex flex-col items-center gap-4">

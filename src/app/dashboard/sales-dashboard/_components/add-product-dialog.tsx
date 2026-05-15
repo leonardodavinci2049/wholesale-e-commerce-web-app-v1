@@ -2,6 +2,7 @@
 
 import { Loader2, Package, Plus, Search } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   cloneElement,
   isValidElement,
@@ -18,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -53,6 +55,7 @@ export function AddProductDialog({
   const [isSearching, setIsSearching] = useState(false);
   const [isAdding, startAddTransition] = useTransition();
   const [addingProductId, setAddingProductId] = useState<number | null>(null);
+  const router = useRouter();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isEditable = orderStatusId === EDITABLE_ORDER_STATUS_ID;
@@ -110,6 +113,7 @@ export function AddProductDialog({
       if (result.success) {
         toast.success(result.message);
         setOpen(false);
+        router.refresh();
       } else {
         toast.error(result.message);
       }
@@ -135,6 +139,10 @@ export function AddProductDialog({
             <DialogTitle className="text-xl font-semibold tracking-tight">
               Buscar Produto
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Pesquise produtos pelo nome, referencia, modelo ou etiqueta e
+              adicione o item ao pedido.
+            </DialogDescription>
             <div className="relative">
               <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input

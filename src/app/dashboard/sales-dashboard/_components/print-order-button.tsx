@@ -230,12 +230,10 @@ export function PrintOrderButton({
   customer,
 }: PrintOrderButtonProps) {
   const [open, setOpen] = useState(false);
-
-  // Ensure absolute URL for the print window (about:blank can't resolve relative paths)
-  const logoSrc = `${window.location.origin}${LOGO_PATH}`;
   const companyName = publicEnvs.NEXT_PUBLIC_COMPANY_NAME ?? "";
 
   const handlePrint = useCallback(() => {
+    const logoSrc = `${window.location.origin}${LOGO_PATH}`;
     const html = buildPrintHtml({
       summary,
       details,
@@ -263,7 +261,7 @@ export function PrintOrderButton({
     });
 
     setOpen(false);
-  }, [summary, details, items, customer, logoSrc, companyName]);
+  }, [summary, details, items, customer, companyName]);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>

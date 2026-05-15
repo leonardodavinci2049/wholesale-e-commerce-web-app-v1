@@ -4,7 +4,12 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ItemImagePreviewProps {
   src: string;
@@ -35,6 +40,9 @@ export function ItemImagePreview({
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">{alt}</DialogTitle>
+          <DialogDescription className="sr-only">
+            Pre-visualizacao ampliada da imagem do item selecionado.
+          </DialogDescription>
           <div className="relative overflow-hidden rounded-2xl bg-background shadow-2xl">
             <button
               type="button"
