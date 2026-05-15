@@ -14,10 +14,16 @@ import {
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
 import { publicEnvs } from "@/core/config/envs.client";
+import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
+
+import { BudgetFilterPanel } from "./budget-filter-panel";
 
 interface BudgetMobileBottomBarProps {
   cartItemCount: number;
   cartContent: ReactNode;
+  flagStock: number;
+  brands: UIBrand[];
+  selectedBrandId?: number;
 }
 
 const WHATSAPP_MESSAGE = "Olá Gostaria tirar dúvidas sobre produtos";
@@ -30,6 +36,9 @@ function buildWhatsappUrl(phone: string, message: string): string {
 export function BudgetMobileBottomBar({
   cartItemCount,
   cartContent,
+  flagStock,
+  brands,
+  selectedBrandId,
 }: BudgetMobileBottomBarProps) {
   const whatsappUrl = buildWhatsappUrl(
     publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
@@ -58,7 +67,12 @@ export function BudgetMobileBottomBar({
         label="Filtro"
         sheetTitle="Filtros"
       >
-        {null}
+        <BudgetFilterPanel
+          brands={brands}
+          selectedBrandId={selectedBrandId}
+          flagStock={flagStock}
+          stockSwitchId="mobile-stock-filter-v2"
+        />
       </MobileBottomBarSheet>
 
       <MobileBottomBarExternalLink
