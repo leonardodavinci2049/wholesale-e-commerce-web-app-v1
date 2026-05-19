@@ -80,13 +80,15 @@ export function SiteHeaderWithBreadcrumb({
             <ModeToggle />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="bg-muted/30 h-10 w-32 animate-pulse rounded-full" />
-            }
-          >
-            <HeaderNavUser />
-          </Suspense>
+          <div className="hidden md:block">
+            <Suspense
+              fallback={
+                <div className="bg-muted/30 h-10 w-32 animate-pulse rounded-full" />
+              }
+            >
+              <HeaderNavUser />
+            </Suspense>
+          </div>
         </div>
       </div>
     </header>

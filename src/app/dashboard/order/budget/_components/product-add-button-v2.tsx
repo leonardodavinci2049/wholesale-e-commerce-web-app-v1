@@ -17,6 +17,7 @@ interface ProductAddButtonV2Props {
   productName: string;
   storeStock: number;
   orderId?: number;
+  hideQuantityOnMobile?: boolean;
 }
 
 export function ProductAddButtonV2({
@@ -24,6 +25,7 @@ export function ProductAddButtonV2({
   productName,
   storeStock,
   orderId,
+  hideQuantityOnMobile,
 }: ProductAddButtonV2Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -75,7 +77,11 @@ export function ProductAddButtonV2({
 
   return (
     <div className="flex items-center justify-between gap-1.5">
-      <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5">
+      <div
+        className={`flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5 ${
+          hideQuantityOnMobile ? "hidden sm:flex" : ""
+        }`}
+      >
         <Button
           type="button"
           variant="ghost"
@@ -119,20 +125,14 @@ export function ProductAddButtonV2({
         <Button
           type="submit"
           size="icon-sm"
-          className="h-7 w-8 rounded-md bg-blue-600 text-white transition-all hover:bg-blue-700 active:scale-[0.98]"
+          className="h-7 w-8 rounded-md transition-all active:scale-[0.98]"
           disabled={isPending || storeStock < 1}
           aria-label={`Adicionar ${safeQuantity} unidade(s) de ${productName} ao carrinho`}
         >
           {isPending ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            <span className="relative">
-              <ShoppingCart className="h-3.5 w-3.5" />
-              <Plus
-                className="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full bg-white text-blue-600"
-                strokeWidth={3}
-              />
-            </span>
+            <ShoppingCart className="h-4 w-4" />
           )}
         </Button>
       </form>
