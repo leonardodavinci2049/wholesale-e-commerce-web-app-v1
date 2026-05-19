@@ -17,6 +17,7 @@ interface ProductAddButtonV2Props {
   productName: string;
   storeStock: number;
   orderId?: number;
+  hideQuantityOnMobile?: boolean;
 }
 
 export function ProductAddButtonV2({
@@ -24,6 +25,7 @@ export function ProductAddButtonV2({
   productName,
   storeStock,
   orderId,
+  hideQuantityOnMobile,
 }: ProductAddButtonV2Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -75,7 +77,11 @@ export function ProductAddButtonV2({
 
   return (
     <div className="flex items-center justify-between gap-1.5">
-      <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5">
+      <div
+        className={`flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5 ${
+          hideQuantityOnMobile ? "hidden sm:flex" : ""
+        }`}
+      >
         <Button
           type="button"
           variant="ghost"
