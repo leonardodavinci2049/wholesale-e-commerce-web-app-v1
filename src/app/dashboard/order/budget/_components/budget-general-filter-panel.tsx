@@ -28,7 +28,7 @@ export function BudgetGeneralFilterPanel({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const hasActiveFilters = selectedBrandId !== undefined || flagStock === 0;
+  const hasActiveFilters = selectedBrandId !== undefined || flagStock === 1;
 
   const handleClearFilters = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
