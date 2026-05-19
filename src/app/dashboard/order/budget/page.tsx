@@ -44,7 +44,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
   const orderId = params.orderId ? Number(params.orderId) : undefined;
   const brandId = params.brandId ? Number(params.brandId) : undefined;
   const taxonomyId = params.taxonomyId ? Number(params.taxonomyId) : undefined;
-  const flagStock = params.flagStock === "0" ? 0 : 1;
+  const flagStock = params.flagStock === "1" ? 1 : 0;
   const productLimit = params.limit
     ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
     : DEFAULT_PRODUCT_LIMIT;
@@ -57,19 +57,19 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
 
   const productsPromise = search
     ? searchProductsPdv({
-      search,
-      customerId,
-      flagStock,
-      limit: productLimit,
-      ...apiContext,
-    })
+        search,
+        customerId,
+        flagStock,
+        limit: productLimit,
+        ...apiContext,
+      })
     : getProductsPdv({
-      brandId,
-      taxonomyId,
-      flagStock,
-      recordsQuantity: productLimit,
-      ...apiContext,
-    });
+        brandId,
+        taxonomyId,
+        flagStock,
+        recordsQuantity: productLimit,
+        ...apiContext,
+      });
 
   const brandsPromise = getBrands({
     inactive: 0,

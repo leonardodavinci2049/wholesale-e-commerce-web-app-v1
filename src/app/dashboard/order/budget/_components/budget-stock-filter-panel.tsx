@@ -27,9 +27,9 @@ export function BudgetStockFilterPanel({
       const params = new URLSearchParams(searchParams.toString());
 
       if (checked) {
-        params.delete("flagStock");
+        params.set("flagStock", "1");
       } else {
-        params.set("flagStock", "0");
+        params.delete("flagStock");
       }
 
       startTransition(() => {
