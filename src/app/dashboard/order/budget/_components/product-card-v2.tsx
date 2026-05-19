@@ -23,7 +23,7 @@ export function ProductCardV2({
     product.imagePath &&
     (product.imagePath.startsWith("/") || product.imagePath.startsWith("http"))
       ? product.imagePath
-      : null;
+      : "/images/product/no-image.jpeg";
 
   const inStock = product.storeStock > 0;
   const isOnSale = product.promotion;
