@@ -57,19 +57,19 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
 
   const productsPromise = search
     ? searchProductsPdv({
-        search,
-        customerId,
-        flagStock,
-        limit: productLimit,
-        ...apiContext,
-      })
+      search,
+      customerId,
+      flagStock,
+      limit: productLimit,
+      ...apiContext,
+    })
     : getProductsPdv({
-        brandId,
-        taxonomyId,
-        flagStock,
-        recordsQuantity: productLimit,
-        ...apiContext,
-      });
+      brandId,
+      taxonomyId,
+      flagStock,
+      recordsQuantity: productLimit,
+      ...apiContext,
+    });
 
   const brandsPromise = getBrands({
     inactive: 0,
