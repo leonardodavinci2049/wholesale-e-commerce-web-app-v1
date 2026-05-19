@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Suspense } from "react";
 import { HeaderMiniCart } from "@/app/dashboard/_components/header/header-mini-cart";
 import { HeaderNavUser } from "@/components/dashboard/header/header-nav-user";
@@ -13,6 +15,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
+const HEADER_LOGO_SRC = "/images/logo/logo-sidebar.png";
+
 interface SiteHeaderWithBreadcrumbProps {
   title?: string;
   breadcrumbItems?: Array<{
@@ -23,23 +27,37 @@ interface SiteHeaderWithBreadcrumbProps {
 }
 
 export function SiteHeaderWithBreadcrumb({
-  title = "Dashboard",
   breadcrumbItems = [
     { label: "Dashboard", href: "#" },
     { label: "Analytics", isActive: true },
   ],
 }: SiteHeaderWithBreadcrumbProps) {
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="relative flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-        <SidebarTrigger className="-ml-1" />
+        <SidebarTrigger className="relative z-10 -ml-1" />
         <Separator
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
 
-        {/* Breadcrumb Section */}
-        <div className="flex items-center gap-2">
+        {/* Logo for mobile - centered */}
+        <Link
+          href="/dashboard"
+          className="absolute inset-0 flex items-center justify-center md:hidden"
+        >
+          <Image
+            src={HEADER_LOGO_SRC}
+            alt="Logo da Empresa"
+            width={180}
+            height={48}
+            priority
+            className="h-10 w-auto object-contain"
+          />
+        </Link>
+
+        {/* Breadcrumb for desktop */}
+        <div className="hidden items-center gap-2 md:flex">
           <Breadcrumb>
             <BreadcrumbList>
               {breadcrumbItems.map((item, index) => (
@@ -47,10 +65,8 @@ export function SiteHeaderWithBreadcrumb({
                   key={item.href ?? item.label}
                   className="flex items-center"
                 >
-                  {index > 0 && (
-                    <BreadcrumbSeparator className="hidden md:block" />
-                  )}
-                  <BreadcrumbItem className="hidden md:block">
+                  {index > 0 && <BreadcrumbSeparator />}
+                  <BreadcrumbItem>
                     {item.isActive ? (
                       <BreadcrumbPage>{item.label}</BreadcrumbPage>
                     ) : (
@@ -64,10 +80,7 @@ export function SiteHeaderWithBreadcrumb({
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-
-        {/* Title for smaller screens */}
-        <h1 className="text-base font-medium md:hidden">{title}</h1>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="relative z-10 ml-auto flex items-center gap-2">
           <Suspense
             fallback={
               <div className="bg-muted/30 h-9 w-9 animate-pulse rounded-full" />
