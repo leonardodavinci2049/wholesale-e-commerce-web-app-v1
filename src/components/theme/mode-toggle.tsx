@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function ModeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Only show the theme toggle after mounting to avoid hydration mismatch
@@ -36,9 +36,9 @@ export default function ModeToggle() {
       variant="ghost"
       className="w-10 rounded-full hover:bg-slate-800/50 dark:hover:bg-slate-700/50"
       aria-label="Toggle Theme"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
-      {theme === "dark" ? (
+      {resolvedTheme === "dark" ? (
         <Sun className="size-5 text-yellow-400" />
       ) : (
         <Moon className="size-5 text-black" />

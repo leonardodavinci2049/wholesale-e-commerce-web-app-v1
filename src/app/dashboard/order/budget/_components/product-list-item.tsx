@@ -1,3 +1,6 @@
+import { Package } from "lucide-react";
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { UIProductPdv } from "@/services/api-main/product-pdv/transformers/transformers";
@@ -11,19 +14,43 @@ interface ProductListItemProps {
 }
 
 export function ProductListItem({ product, orderId }: ProductListItemProps) {
+  const validImage =
+    product.imagePath &&
+    (product.imagePath.startsWith("/") || product.imagePath.startsWith("http"))
+      ? product.imagePath
+      : "/images/product/no-image.jpeg";
+
   const inStock = product.storeStock > 0;
   const isOnSale = product.promotion;
   const isLaunch = product.launch;
 
   return (
-    <li className="flex items-center gap-3 border-b border-border/50 px-2 py-2 last:border-b-0 sm:gap-4 sm:px-3">
+    <li className="flex items-center gap-2 border-b border-border px-2 py-2 last:border-b-0 sm:gap-3 sm:px-3">
+      <div className="shrink-0">
+        <div className="relative h-14 w-14 overflow-hidden rounded-md border border-border/50 bg-white sm:h-16 sm:w-16 dark:bg-zinc-100">
+          <div
+            className={cn(
+              "relative flex h-full w-full items-center justify-center",
+              !inStock && "opacity-45 grayscale",
+            )}
+          >
+            {validImage ? (
+              <Image
+                src={validImage}
+                alt={product.name}
+                fill
+                sizes="(max-width: 640px) 3.5rem, 4rem"
+                className="object-contain p-1"
+              />
+            ) : (
+              <Package className="h-6 w-6 text-zinc-300" />
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <div className="flex items-center gap-1.5">
-          {product.brand && (
-            <span className="rounded bg-zinc-200/80 px-1 py-px text-[9px] font-bold uppercase tracking-wider text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-              {product.brand}
-            </span>
-          )}
           {!inStock && (
             <span className="rounded bg-red-600 px-1 py-px text-[9px] font-bold uppercase tracking-wider text-white">
               Sem estoque
@@ -50,19 +77,35 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
           {product.name}
         </p>
 
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+        {(product.brand || product.ref) && (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+            {product.brand && (
+              <span className="rounded bg-zinc-200/80 px-1 py-px text-[9px] font-bold uppercase tracking-wider text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                {product.brand}
+              </span>
+            )}
+            {product.ref && (
+              <span className="rounded bg-zinc-200/80 px-1 py-px text-[9px] font-bold uppercase tracking-wider text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                REF: {product.ref}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between gap-x-2 mt-0.5 w-full">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            SKU: {product.sku}
+          </p>
+
           <p
             className={cn(
-              "text-sm font-bold sm:text-base",
+              "text-sm font-bold sm:text-base text-right",
               inStock
                 ? "text-foreground"
                 : "text-muted-foreground line-through",
             )}
           >
             {formatCurrency(Number(product.wholesalePrice))}
-          </p>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            SKU: {product.sku}
           </p>
         </div>
       </div>
@@ -74,6 +117,7 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
             productName={product.name}
             storeStock={product.storeStock}
             orderId={orderId}
+            hideQuantityOnMobile
           />
         ) : (
           <Button

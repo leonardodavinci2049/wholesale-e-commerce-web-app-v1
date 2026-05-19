@@ -1,9 +1,16 @@
 "use client";
 
 import { LayoutGrid, List } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useState,
+} from "react";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
+
+import { ProductSearchBar } from "./product-search-bar";
 
 const STORAGE_KEY = "budget:product-view-mode";
 
@@ -12,13 +19,16 @@ type ViewMode = "grid" | "list";
 interface ProductViewSwitcherProps {
   grid: ReactNode;
   list: ReactNode;
-  totalLabel?: string;
+  searchProps: Omit<
+    ComponentProps<typeof ProductSearchBar>,
+    "viewToggleButton"
+  >;
 }
 
 export function ProductViewSwitcher({
   grid,
   list,
-  totalLabel,
+  searchProps,
 }: ProductViewSwitcherProps) {
   const [mode, setMode] = useState<ViewMode>("grid");
   const [hydrated, setHydrated] = useState(false);
@@ -35,41 +45,46 @@ export function ProductViewSwitcher({
     setHydrated(true);
   }, []);
 
-  function handleChange(value: string) {
-    if (value !== "grid" && value !== "list") return;
-    setMode(value);
+  function toggleMode() {
+    const newMode = mode === "grid" ? "list" : "grid";
+    setMode(newMode);
     try {
-      window.localStorage.setItem(STORAGE_KEY, value);
+      window.localStorage.setItem(STORAGE_KEY, newMode);
     } catch {
       // ignore
     }
   }
 
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        {totalLabel ? (
-          <p className="text-xs text-muted-foreground">{totalLabel}</p>
-        ) : (
-          <span aria-hidden="true" />
-        )}
+  const toggleButton = hydrated ? (
+    <Button
+      variant="outline"
+      size="icon"
+      className="h-10 w-10 shrink-0"
+      onClick={toggleMode}
+      aria-label={
+        mode === "grid"
+          ? "Mudar para visualização em lista"
+          : "Mudar para visualização em grade"
+      }
+    >
+      {mode === "grid" ? (
+        <List className="h-4 w-4" />
+      ) : (
+        <LayoutGrid className="h-4 w-4" />
+      )}
+    </Button>
+  ) : (
+    <div className="h-10 w-10 shrink-0" />
+  );
 
-        <ToggleGroup
-          type="single"
-          variant="outline"
-          size="sm"
-          value={mode}
-          onValueChange={handleChange}
-          aria-label="Modo de visualização da lista de produtos"
-        >
-          <ToggleGroupItem value="grid" aria-label="Visualização em grade">
-            <LayoutGrid className="h-4 w-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="list" aria-label="Visualização em lista">
-            <List className="h-4 w-4" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
+  return (
+    <div className="flex flex-col gap-4">
+      <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Busca rápida
+        </p>
+        <ProductSearchBar {...searchProps} viewToggleButton={toggleButton} />
+      </section>
 
       {hydrated && mode === "list" ? list : grid}
     </div>
