@@ -20,6 +20,7 @@ interface ProductSearchBarProps {
   selectedBrandId?: number;
   categories: UITaxonomyMenuItem[];
   selectedTaxonomyId?: number;
+  viewToggleButton?: React.ReactNode;
 }
 
 export function ProductSearchBar({
@@ -29,6 +30,7 @@ export function ProductSearchBar({
   selectedBrandId,
   categories,
   selectedTaxonomyId,
+  viewToggleButton,
 }: ProductSearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -68,16 +70,19 @@ export function ProductSearchBar({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <div className="relative flex-1">
-        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          id="product-search-v2"
-          placeholder="Digite o modelo para consultar rápido"
-          defaultValue={defaultValue}
-          onChange={(e) => handleSearch(e.target.value)}
-          aria-label="Buscar produto"
-          className={isPending ? "pl-10 opacity-60" : "pl-10"}
-        />
+      <div className="flex flex-1 gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            id="product-search-v2"
+            placeholder="Digite o modelo para consultar rápido"
+            defaultValue={defaultValue}
+            onChange={(e) => handleSearch(e.target.value)}
+            aria-label="Buscar produto"
+            className={isPending ? "pl-10 opacity-60" : "pl-10"}
+          />
+        </div>
+        {viewToggleButton}
       </div>
 
       <div className="hidden gap-2 sm:ml-auto sm:flex">

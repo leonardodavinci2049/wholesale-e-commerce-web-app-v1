@@ -16,7 +16,7 @@ interface ProductListItemProps {
 export function ProductListItem({ product, orderId }: ProductListItemProps) {
   const validImage =
     product.imagePath &&
-      (product.imagePath.startsWith("/") || product.imagePath.startsWith("http"))
+    (product.imagePath.startsWith("/") || product.imagePath.startsWith("http"))
       ? product.imagePath
       : "/images/product/no-image.jpeg";
 
@@ -25,7 +25,7 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
   const isLaunch = product.launch;
 
   return (
-    <li className="flex items-center gap-2 border-b border-border/50 px-2 py-2 last:border-b-0 sm:gap-3 sm:px-3">
+    <li className="flex items-center gap-2 border-b border-border px-2 py-2 last:border-b-0 sm:gap-3 sm:px-3">
       <div className="shrink-0">
         <div className="relative h-14 w-14 overflow-hidden rounded-md border border-border/50 bg-white sm:h-16 sm:w-16 dark:bg-zinc-100">
           <div
@@ -92,14 +92,14 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
           </div>
         )}
 
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mt-0.5">
+        <div className="flex items-center justify-between gap-x-2 mt-0.5 w-full">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
             SKU: {product.sku}
           </p>
 
           <p
             className={cn(
-              "text-sm font-bold sm:text-base",
+              "text-sm font-bold sm:text-base text-right",
               inStock
                 ? "text-foreground"
                 : "text-muted-foreground line-through",

@@ -100,6 +100,7 @@ export async function SiteHeaderWithBreadcrumb({
             }
           >
             <NavUser user={user} />
+            
           </Suspense>
         </div>
       </div>

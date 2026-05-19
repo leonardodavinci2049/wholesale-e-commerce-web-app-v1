@@ -15,7 +15,6 @@ import { CartSummaryPanel } from "./_components/cart-summary-panel";
 import { ProductGrid } from "./_components/product-grid";
 import { ProductList } from "./_components/product-list";
 import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
-import { ProductSearchBar } from "./_components/product-search-bar";
 import { ProductViewSwitcher } from "./_components/product-view-switcher";
 
 const logger = createLogger("budget-page");
@@ -121,21 +120,15 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
       <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
         <div className="mx-auto grid w-full max-w-350 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
           <div className="flex min-w-0 flex-col gap-4">
-            <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Busca rápida
-              </p>
-              <ProductSearchBar
-                defaultValue={search}
-                flagStock={flagStock}
-                brands={brands}
-                selectedBrandId={brandId}
-                categories={categories}
-                selectedTaxonomyId={taxonomyId}
-              />
-            </section>
-
             <ProductViewSwitcher
+              searchProps={{
+                defaultValue: search,
+                flagStock,
+                brands,
+                selectedBrandId: brandId,
+                categories,
+                selectedTaxonomyId: taxonomyId,
+              }}
               grid={
                 <ProductGrid products={products} orderId={effectiveOrderId} />
               }

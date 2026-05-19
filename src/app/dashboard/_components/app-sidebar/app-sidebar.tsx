@@ -29,11 +29,6 @@ import { SidebarLogo } from "./sidebar-logo";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "Comsuporte",
-    email: "mauro@comsuporte.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "WinERP",
@@ -140,6 +135,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ? data.projects
     : data.projects.filter((item) => item.name !== "Usuários");
 
+  const user = {
+    name: session?.user.name ?? "",
+    email: session?.user.email ?? "",
+    avatar: session?.user.image ?? "",
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -150,7 +151,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

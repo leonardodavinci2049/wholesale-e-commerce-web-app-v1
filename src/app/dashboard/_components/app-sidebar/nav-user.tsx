@@ -100,6 +100,7 @@ export function NavUser({
                     src={resolveAvatar(user.avatar)}
                     alt={user.name}
                   />
+                  
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
