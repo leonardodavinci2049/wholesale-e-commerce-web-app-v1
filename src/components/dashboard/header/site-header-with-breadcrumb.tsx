@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { HeaderBudgetControls } from "./header-budget-controls";
 
 const HEADER_LOGO_SRC = "/images/logo/logo-sidebar.png";
 
@@ -41,11 +42,8 @@ export function SiteHeaderWithBreadcrumb({
           className="mx-2 data-[orientation=vertical]:h-4"
         />
 
-        {/* Logo for mobile - centered */}
-        <Link
-          href="/dashboard"
-          className="absolute inset-0 flex items-center justify-center md:hidden"
-        >
+        {/* Logo for mobile - left aligned */}
+        <Link href="/dashboard" className="flex items-center md:hidden">
           <Image
             src={HEADER_LOGO_SRC}
             alt="Logo da Empresa"
@@ -81,6 +79,10 @@ export function SiteHeaderWithBreadcrumb({
           </Breadcrumb>
         </div>
         <div className="relative z-10 ml-auto flex items-center gap-2">
+          <Suspense>
+            <HeaderBudgetControls />
+          </Suspense>
+
           <Suspense
             fallback={
               <div className="bg-muted/30 h-9 w-9 animate-pulse rounded-full" />

@@ -45,6 +45,19 @@ export function ProductViewSwitcher({
     setHydrated(true);
   }, []);
 
+  useEffect(() => {
+    const handleModeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<ViewMode>;
+      if (customEvent.detail === "grid" || customEvent.detail === "list") {
+        setMode(customEvent.detail);
+      }
+    };
+    window.addEventListener("budget-view-mode-change", handleModeChange);
+    return () => {
+      window.removeEventListener("budget-view-mode-change", handleModeChange);
+    };
+  }, []);
+
   function toggleMode() {
     const newMode = mode === "grid" ? "list" : "grid";
     setMode(newMode);
@@ -53,6 +66,9 @@ export function ProductViewSwitcher({
     } catch {
       // ignore
     }
+    window.dispatchEvent(
+      new CustomEvent("budget-view-mode-change", { detail: newMode }),
+    );
   }
 
   const toggleButton = hydrated ? (
@@ -79,7 +95,7 @@ export function ProductViewSwitcher({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
+      <section className="hidden sm:block rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
         <ProductSearchBar {...searchProps} viewToggleButton={toggleButton} />
       </section>
 

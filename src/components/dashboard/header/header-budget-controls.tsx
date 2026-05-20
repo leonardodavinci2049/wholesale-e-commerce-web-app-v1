@@ -1,0 +1,194 @@
+"use client";
+
+import { LayoutGrid, List, Search, X } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const BUDGET_ROUTE = "/dashboard/order/budget";
+const STORAGE_KEY = "budget:product-view-mode";
+type ViewMode = "grid" | "list";
+
+export function HeaderBudgetControls() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [mode, setMode] = useState<ViewMode>("grid");
+  const [hydrated, setHydrated] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Hydrate mode from localStorage
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored === "list" || stored === "grid") {
+        setMode(stored);
+      }
+    } catch {
+      // ignore storage access errors (private mode, etc.)
+    }
+    setHydrated(true);
+  }, []);
+
+  // Listen to external view mode changes
+  useEffect(() => {
+    const handleModeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<ViewMode>;
+      if (customEvent.detail === "grid" || customEvent.detail === "list") {
+        setMode(customEvent.detail);
+      }
+    };
+    window.addEventListener("budget-view-mode-change", handleModeChange);
+    return () => {
+      window.removeEventListener("budget-view-mode-change", handleModeChange);
+    };
+  }, []);
+
+  // Function to toggle mode
+  const toggleMode = () => {
+    const newMode = mode === "grid" ? "list" : "grid";
+    setMode(newMode);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, newMode);
+    } catch {
+      // ignore
+    }
+    // Dispatch event to sync other switcher components
+    window.dispatchEvent(
+      new CustomEvent("budget-view-mode-change", { detail: newMode }),
+    );
+  };
+
+  const currentSearchValue = searchParams.get("search") ?? "";
+
+  const buildSearchParams = useCallback(
+    (searchValue: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      const trimmed = searchValue.trim();
+
+      if (trimmed) {
+        params.set("search", trimmed);
+      } else {
+        params.delete("search");
+      }
+
+      params.delete("limit");
+
+      return params;
+    },
+    [searchParams],
+  );
+
+  const handleSearch = useCallback(
+    (value: string) => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        const params = buildSearchParams(value);
+        startTransition(() => {
+          router.push(`${BUDGET_ROUTE}?${params.toString()}`, {
+            scroll: false,
+          });
+        });
+      }, 400);
+    },
+    [buildSearchParams, router],
+  );
+
+  // Close search on escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Check if we are on the budget route
+  if (pathname !== BUDGET_ROUTE) {
+    return null;
+  }
+
+  return (
+    <div className="flex items-center gap-1 sm:hidden">
+      {/* Search Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-9 w-9 rounded-full hover:bg-muted/60"
+        onClick={() => setIsSearchOpen(!isSearchOpen)}
+        aria-label={isSearchOpen ? "Fechar busca" : "Abrir busca"}
+      >
+        {isSearchOpen ? (
+          <X className="h-5 w-5 text-foreground animate-in fade-in zoom-in duration-200" />
+        ) : (
+          <Search className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+        )}
+      </Button>
+
+      {/* View Switcher Button */}
+      {hydrated ? (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 rounded-full hover:bg-muted/60"
+          onClick={toggleMode}
+          aria-label={
+            mode === "grid"
+              ? "Mudar para visualização em lista"
+              : "Mudar para visualização em grade"
+          }
+        >
+          {mode === "grid" ? (
+            <List className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+          ) : (
+            <LayoutGrid className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+          )}
+        </Button>
+      ) : (
+        <div className="h-9 w-9" />
+      )}
+
+      {/* Floating Search Bar */}
+      {isSearchOpen && (
+        <div className="fixed top-[var(--header-height,3.5rem)] left-1/2 -translate-x-1/2 z-50 w-[50vw] min-w-[280px] max-w-[600px] border border-border/60 bg-background/95 backdrop-blur-md p-3 shadow-md rounded-b-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="relative">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="header-product-search-v2"
+              placeholder="Digite o modelo para consultar rápido"
+              key={currentSearchValue}
+              defaultValue={currentSearchValue}
+              onChange={(e) => handleSearch(e.target.value)}
+              aria-label="Buscar produto"
+              className={isPending ? "pl-10 opacity-60 pr-10" : "pl-10 pr-10"}
+              autoFocus
+            />
+            {currentSearchValue && (
+              <button
+                type="button"
+                onClick={() => {
+                  const input = document.getElementById(
+                    "header-product-search-v2",
+                  ) as HTMLInputElement;
+                  if (input) {
+                    input.value = "";
+                    handleSearch("");
+                  }
+                }}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
