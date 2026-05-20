@@ -32,7 +32,7 @@ export function ProductList({ products, orderId }: ProductListProps) {
   );
 
   return (
-    <ul className="overflow-hidden rounded-xl border border-border/60 bg-card text-card-foreground shadow-xs dark:bg-zinc-900/80">
+    <ul className="flex flex-col gap-2 sm:gap-3">
       {sorted.map((product) => (
         <ProductListItem key={product.id} product={product} orderId={orderId} />
       ))}

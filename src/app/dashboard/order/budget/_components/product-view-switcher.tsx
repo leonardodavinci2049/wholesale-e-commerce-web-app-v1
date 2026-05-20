@@ -80,9 +80,6 @@ export function ProductViewSwitcher({
   return (
     <div className="flex flex-col gap-4">
       <section className="rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          Busca rápida
-        </p>
         <ProductSearchBar {...searchProps} viewToggleButton={toggleButton} />
       </section>
 
