@@ -28,21 +28,21 @@ export function CartItemRowV2({ item }: CartItemRowV2Props) {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-start justify-between gap-2">
-          <p className="line-clamp-2 text-xs font-semibold leading-tight text-foreground">
-            {item.product}
+        <p className="line-clamp-2 text-xs font-semibold leading-tight text-foreground">
+          {item.product}
+        </p>
+
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            Unit.:{" "}
+            <span className="font-semibold text-foreground">
+              {formatCurrency(Number(item.unitValue))}
+            </span>
           </p>
           <p className="shrink-0 text-sm font-bold text-foreground">
             {formatCurrency(Number(item.totalValue))}
           </p>
         </div>
-
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-          Tela:{" "}
-          <span className="font-semibold text-foreground">
-            {formatCurrency(Number(item.unitValue))}
-          </span>
-        </p>
 
         <div className="mt-1 flex items-center justify-between gap-2">
           <CartItemActions
