@@ -32,19 +32,14 @@ export function CartSummaryPanel({
       <header className="flex items-center justify-between gap-2 border-b border-border/50 px-4 py-3">
         <div className="flex items-center gap-2">
           <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          <div className="flex flex-col">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Seu Orçamento
-              {summary?.orderId ? (
-                <span className="ml-2 normal-case tracking-normal text-foreground">
-                  #{summary.orderId}
-                </span>
-              ) : null}
-            </span>
-            <span className="text-sm font-semibold text-foreground">
-              Carrinho
-            </span>
-          </div>
+          <span className="text-sm font-semibold text-foreground">
+            Carrinho
+            {summary?.orderId ? (
+              <span className="ml-2 text-xs font-semibold text-muted-foreground">
+                #{summary.orderId}
+              </span>
+            ) : null}
+          </span>
         </div>
         {itemCount > 0 && (
           <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-semibold text-white">

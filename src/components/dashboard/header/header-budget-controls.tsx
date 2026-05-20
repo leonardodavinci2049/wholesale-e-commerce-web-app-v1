@@ -3,11 +3,13 @@
 import { LayoutGrid, List, Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const BUDGET_ROUTE = "/dashboard/order/budget";
 const STORAGE_KEY = "budget:product-view-mode";
+const SEARCH_PANEL_CONTAINER_ID = "budget-search-panel-container";
 type ViewMode = "grid" | "list";
 
 export function HeaderBudgetControls() {
@@ -19,7 +21,12 @@ export function HeaderBudgetControls() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mode, setMode] = useState<ViewMode>("grid");
   const [hydrated, setHydrated] = useState(false);
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setPortalTarget(document.getElementById(SEARCH_PANEL_CONTAINER_ID));
+  }, []);
 
   // Hydrate mode from localStorage
   useEffect(() => {
@@ -154,41 +161,44 @@ export function HeaderBudgetControls() {
         <div className="h-9 w-9" />
       )}
 
-      {/* Floating Search Bar */}
-      {isSearchOpen && (
-        <div className="fixed top-[var(--header-height,3.5rem)] left-1/2 -translate-x-1/2 z-50 w-[50vw] min-w-[280px] max-w-[600px] border border-border/60 bg-background/95 backdrop-blur-md p-3 shadow-md rounded-b-2xl animate-in slide-in-from-top-2 duration-200">
-          <div className="relative">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              id="header-product-search-v2"
-              placeholder="Digite o modelo para consultar rápido"
-              key={currentSearchValue}
-              defaultValue={currentSearchValue}
-              onChange={(e) => handleSearch(e.target.value)}
-              aria-label="Buscar produto"
-              className={isPending ? "pl-10 opacity-60 pr-10" : "pl-10 pr-10"}
-              autoFocus
-            />
-            {currentSearchValue && (
-              <button
-                type="button"
-                onClick={() => {
-                  const input = document.getElementById(
-                    "header-product-search-v2",
-                  ) as HTMLInputElement;
-                  if (input) {
-                    input.value = "";
-                    handleSearch("");
-                  }
-                }}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Search Panel via portal */}
+      {isSearchOpen &&
+        portalTarget &&
+        createPortal(
+          <div className="w-full border-b bg-background px-4 py-3 animate-in slide-in-from-top-2 duration-200">
+            <div className="relative mx-auto max-w-350">
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="header-product-search-v2"
+                placeholder="Digite o modelo para consultar rápido"
+                key={currentSearchValue}
+                defaultValue={currentSearchValue}
+                onChange={(e) => handleSearch(e.target.value)}
+                aria-label="Buscar produto"
+                className={isPending ? "pl-10 opacity-60 pr-10" : "pl-10 pr-10"}
+                autoFocus
+              />
+              {currentSearchValue && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const input = document.getElementById(
+                      "header-product-search-v2",
+                    ) as HTMLInputElement;
+                    if (input) {
+                      input.value = "";
+                      handleSearch("");
+                    }
+                  }}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>,
+          portalTarget,
+        )}
     </div>
   );
 }
