@@ -34,7 +34,7 @@ export function SiteHeaderWithBreadcrumb({
   ],
 }: SiteHeaderWithBreadcrumbProps) {
   return (
-    <header className="relative flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="sticky top-0 z-40 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) md:relative md:bg-transparent md:backdrop-blur-none">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="relative z-10 -ml-1" />
         <Separator
