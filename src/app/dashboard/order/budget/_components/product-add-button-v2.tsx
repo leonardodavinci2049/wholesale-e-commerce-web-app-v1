@@ -6,6 +6,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 import { addItemAction } from "../actions/add-item-action";
 
@@ -76,22 +77,26 @@ export function ProductAddButtonV2({
   }, [state, searchParams, router, orderId]);
 
   return (
-    <div className="flex items-center justify-between gap-1.5">
+    <div className="flex items-center justify-between gap-2">
       <div
-        className={`flex shrink-0 items-center gap-0.5 rounded-md border border-border/60 bg-background/70 px-0.5 ${
-          hideQuantityOnMobile ? "hidden sm:flex" : ""
-        }`}
+        className={cn(
+          "flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-100/80 p-0.5 dark:bg-zinc-800/60",
+          hideQuantityOnMobile ? "hidden sm:flex" : "flex",
+        )}
       >
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="h-7 w-6 rounded-sm"
+          className="h-7 w-7 rounded-full hover:bg-zinc-200/60 dark:hover:bg-zinc-700/60 transition-colors"
           disabled={isPending || safeQuantity <= 1}
           onClick={handleDecrement}
           aria-label={`Diminuir quantidade de ${productName}`}
         >
-          <Minus className="h-3 w-3" strokeWidth={2.5} />
+          <Minus
+            className="h-3.5 w-3.5 text-zinc-600 dark:text-zinc-400"
+            strokeWidth={2.5}
+          />
         </Button>
         <Input
           type="number"
@@ -102,19 +107,22 @@ export function ProductAddButtonV2({
           aria-label={`Quantidade de ${productName}`}
           onBlur={() => setQuantity(String(safeQuantity))}
           onChange={(event) => setQuantity(event.target.value)}
-          className="h-7 w-8 border-0 bg-transparent px-0 text-center text-xs shadow-none focus-visible:ring-0"
+          className="h-7 w-8 border-0 bg-transparent p-0 text-center text-xs font-semibold shadow-none focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           disabled={isPending}
         />
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="h-7 w-6 rounded-sm"
+          className="h-7 w-7 rounded-full hover:bg-zinc-200/60 dark:hover:bg-zinc-700/60 transition-colors"
           disabled={isPending || safeQuantity >= storeStock}
           onClick={handleIncrement}
           aria-label={`Aumentar quantidade de ${productName}`}
         >
-          <Plus className="h-3 w-3" strokeWidth={2.5} />
+          <Plus
+            className="h-3.5 w-3.5 text-zinc-600 dark:text-zinc-400"
+            strokeWidth={2.5}
+          />
         </Button>
       </div>
 
@@ -125,14 +133,14 @@ export function ProductAddButtonV2({
         <Button
           type="submit"
           size="icon-sm"
-          className="h-7 w-8 rounded-md transition-all active:scale-[0.98]"
+          className="h-8 w-8 rounded-full bg-blue-600 text-white shadow-sm shadow-blue-500/10 transition-all hover:bg-blue-500 hover:shadow-md hover:shadow-blue-500/25 active:scale-90 dark:bg-blue-600 dark:hover:bg-blue-500"
           disabled={isPending || storeStock < 1}
           aria-label={`Adicionar ${safeQuantity} unidade(s) de ${productName} ao carrinho`}
         >
           {isPending ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin text-white" />
           ) : (
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingCart className="h-4 w-4 text-white" />
           )}
         </Button>
       </form>
