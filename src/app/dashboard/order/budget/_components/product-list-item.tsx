@@ -25,8 +25,8 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
   const isLaunch = product.launch;
 
   return (
-    <li className="flex items-center gap-2 border-b border-border px-2 py-2 last:border-b-0 sm:gap-3 sm:px-3">
-      <div className="shrink-0">
+    <li className="flex items-start gap-2 border-b border-border px-2 py-2 last:border-b-0 sm:gap-3 sm:px-3">
+      <div className="shrink-0 pt-0.5">
         <div className="relative h-14 w-14 overflow-hidden rounded-md border border-border/50 bg-white sm:h-16 sm:w-16 dark:bg-zinc-100">
           <div
             className={cn(
@@ -77,7 +77,7 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
           {product.name}
         </p>
 
-        {(product.brand || product.ref) && (
+        {(product.brand || product.ref || product.sku) && (
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
             {product.brand && (
               <span className="rounded bg-zinc-200/80 px-1 py-px text-[9px] font-bold uppercase tracking-wider text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
@@ -89,17 +89,18 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
                 REF: {product.ref}
               </span>
             )}
+            {product.sku && (
+              <span className="rounded bg-zinc-200/80 px-1 py-px text-[9px] font-bold uppercase tracking-wider text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                SKU: {product.sku}
+              </span>
+            )}
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-x-2 mt-0.5 w-full">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            SKU: {product.sku}
-          </p>
-
+        <div className="flex items-center justify-between gap-x-2 mt-2 w-full">
           <p
             className={cn(
-              "text-sm font-bold sm:text-base text-right",
+              "text-sm font-bold sm:text-base text-left",
               inStock
                 ? "text-foreground"
                 : "text-muted-foreground line-through",
@@ -107,29 +108,28 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
           >
             {formatCurrency(Number(product.wholesalePrice))}
           </p>
-        </div>
-      </div>
 
-      <div className="shrink-0">
-        {inStock ? (
-          <ProductAddButtonV2
-            productId={product.id}
-            productName={product.name}
-            storeStock={product.storeStock}
-            orderId={orderId}
-            hideQuantityOnMobile
-          />
-        ) : (
-          <Button
-            type="button"
-            size="sm"
-            className="h-9 cursor-not-allowed rounded-md bg-zinc-200/70 px-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-600 hover:bg-zinc-200/70 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
-            disabled
-            aria-label={`${product.name} sem estoque`}
-          >
-            Indisponível
-          </Button>
-        )}
+          <div className="shrink-0">
+            {inStock ? (
+              <ProductAddButtonV2
+                productId={product.id}
+                productName={product.name}
+                storeStock={product.storeStock}
+                orderId={orderId}
+              />
+            ) : (
+              <Button
+                type="button"
+                size="sm"
+                className="h-8 cursor-not-allowed rounded-md bg-zinc-200/70 px-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-600 hover:bg-zinc-200/70 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                disabled
+                aria-label={`${product.name} sem estoque`}
+              >
+                Indisponível
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     </li>
   );
