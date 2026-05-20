@@ -37,7 +37,6 @@ export function ProductCardV2({
             {product.brand}
           </span>
         )}
-
         {!inStock && (
           <span className="absolute right-2 top-2 z-10 rounded-md bg-red-600 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
             Sem estoque
@@ -76,13 +75,24 @@ export function ProductCardV2({
       </div>
 
       <div className="flex flex-1 flex-col gap-1 px-2.5 py-2">
-        <p className="line-clamp-2 min-h-9 text-[12px] font-semibold leading-snug text-foreground">
+        <p className="line-clamp-2 min-h-10 text-[14px] font-semibold leading-snug text-foreground">
           {product.name}
         </p>
 
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-          SKU: {product.sku}
-        </p>
+        {(product.ref || product.sku) && (
+          <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+            {product.sku && (
+              <span className="rounded-full bg-zinc-100 border border-zinc-200/30 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700/30 dark:text-zinc-400">
+                SKU: {product.sku}
+              </span>
+            )}
+            {product.ref && (
+              <span className="rounded-full bg-zinc-100 border border-zinc-200/30 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700/30 dark:text-zinc-400">
+                REF: {product.ref}
+              </span>
+            )}
+          </div>
+        )}
 
         <p
           className={cn(

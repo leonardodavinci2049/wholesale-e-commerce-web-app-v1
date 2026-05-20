@@ -70,7 +70,7 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
 
         <p
           className={cn(
-            "line-clamp-2 text-[13px] font-semibold leading-snug text-zinc-800 dark:text-zinc-150 sm:text-sm transition-colors group-hover:text-foreground",
+            "line-clamp-2 text-[14px] font-semibold leading-snug text-zinc-800 dark:text-zinc-150 transition-colors group-hover:text-foreground",
             !inStock && "text-muted-foreground",
           )}
         >
