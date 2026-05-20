@@ -76,6 +76,7 @@ export function ProductSearchBar({
           <Input
             id="product-search-v2"
             placeholder="Digite o modelo para consultar rápido"
+            key={defaultValue}
             defaultValue={defaultValue}
             onChange={(e) => handleSearch(e.target.value)}
             aria-label="Buscar produto"
