@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid } from "lucide-react";
+import { FolderTree } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,7 @@ export function BudgetCategoryFilterSheet({
           className="hidden gap-2 xl:inline-flex"
           aria-label="Abrir categorias"
         >
-          <LayoutGrid className="size-4" aria-hidden="true" />
+          <FolderTree className="size-4" aria-hidden="true" />
           <span>Categorias</span>
         </Button>
       </SheetTrigger>
