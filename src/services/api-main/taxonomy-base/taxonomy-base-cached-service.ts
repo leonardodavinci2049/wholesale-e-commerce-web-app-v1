@@ -100,7 +100,7 @@ export async function getTaxonomyMenu(
   } = {},
 ): Promise<UITaxonomyMenuItem[]> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("minutes");
   cacheTag(CACHE_TAGS.taxonomyMenu(String(typeId)), CACHE_TAGS.taxonomiesMenu);
 
   try {
