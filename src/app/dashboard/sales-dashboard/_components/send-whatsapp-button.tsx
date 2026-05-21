@@ -129,8 +129,8 @@ function buildWhatsAppMessage(params: {
 
   const itemsText = items
     .map(
-      (item, i) =>
-        `${i + 1}. ${item.product}\n   Qtd: ${item.quantity} \u00D7 ${formatCurrency(Number(item.unitValue))} = ${formatCurrency(Number(item.totalValue))}`,
+      (item) =>
+        `. ${item.product}\n     ${String(item.quantity).padStart(2, "0")} \u00D7 ${formatCurrency(Number(item.unitValue))} = ${formatCurrency(Number(item.totalValue))}`,
     )
     .join("\n");
 
