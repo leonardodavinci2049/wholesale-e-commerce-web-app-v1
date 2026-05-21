@@ -112,7 +112,8 @@ export const CACHE_TAGS = {
 // Cache life profiles (matching next.config.ts cacheLife)
 export const CACHE_PROFILES = {
   hours: "hours", // 1 hour - navigation
-  quarter: "quarter", // 15 minutes - categories menu
+  quarter: "quarter", // 15 minutes
+  minutes: "minutes", // 1 minute - categories menu
   frequent: "frequent", // 5 minutes - products
   daily: "daily", // 24 hours - footer
 } as const;

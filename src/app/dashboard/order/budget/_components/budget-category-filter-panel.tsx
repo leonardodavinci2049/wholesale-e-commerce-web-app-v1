@@ -222,11 +222,12 @@ export function BudgetCategoryFilterPanel({
                         <span className="min-w-0 flex-1 truncate">
                           {item.name}
                         </span>
-                        {typeof item.productCount === "number" && (
-                          <span className="ml-auto text-xs text-muted-foreground">
-                            {item.productCount}
-                          </span>
-                        )}
+                        {typeof item.productCount === "number" &&
+                          item.productCount > 0 && (
+                            <span className="ml-auto shrink-0 text-xs text-muted-foreground">
+                              ({item.productCount})
+                            </span>
+                          )}
                       </button>
                     </SheetClose>
                     {hasChildren && (
