@@ -40,7 +40,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>PDV - Sistema de Vendas</SidebarGroupLabel>
+      <SidebarGroupLabel>WINERP B2B - Sistema de Compras</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const hasItems = item.items && item.items.length > 0;
