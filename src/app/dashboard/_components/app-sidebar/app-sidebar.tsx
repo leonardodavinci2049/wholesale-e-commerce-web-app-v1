@@ -77,7 +77,7 @@ const data = {
     },
 
     {
-      title: "Tabela de Produtos",
+      title: "Catálogo de Produtos",
       url: "#",
       icon: BookOpen,
       items: [
@@ -88,6 +88,18 @@ const data = {
         {
           title: "Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
+        },
+      ],
+    },
+
+    {
+      title: "Minha Conta",
+      url: "#",
+      icon: BookOpen,
+      items: [
+        {
+          title: "Profile",
+          url: "/dashboard/profile",
         },
       ],
     },
