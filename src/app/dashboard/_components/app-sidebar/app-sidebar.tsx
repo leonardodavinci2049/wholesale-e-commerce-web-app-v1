@@ -2,14 +2,16 @@
 
 import {
   AudioWaveform,
-  BookOpen,
+  CalendarDays,
+  ChartColumn,
+  CircleUserRound,
+  ClipboardList,
   Command,
-  Frame,
   GalleryVerticalEnd,
-  Map as MapIcon,
+  PackageSearch,
   PieChart,
-  Settings2,
-  SquareTerminal,
+  Settings,
+  ShoppingBag,
   Users,
 } from "lucide-react";
 import type * as React from "react";
@@ -48,9 +50,9 @@ const data = {
   ],
   navMain: [
     {
-      title: "Iniciar Pedido",
+      title: "Pedido",
       url: "#",
-      icon: SquareTerminal,
+      icon: ClipboardList,
       isActive: true,
       items: [
         {
@@ -67,7 +69,7 @@ const data = {
     {
       title: "Minhas Compras",
       url: "#",
-      icon: BookOpen,
+      icon: ShoppingBag,
       items: [
         {
           title: "Lista de Pedidos",
@@ -77,9 +79,9 @@ const data = {
     },
 
     {
-      title: "Tabela de Produtos",
+      title: "Catálogo de Produtos",
       url: "#",
-      icon: BookOpen,
+      icon: PackageSearch,
       items: [
         {
           title: "Lista de Produtos",
@@ -93,9 +95,21 @@ const data = {
     },
 
     {
+      title: "Minha Conta",
+      url: "#",
+      icon: CircleUserRound,
+      items: [
+        {
+          title: "Profile",
+          url: "/dashboard/profile",
+        },
+      ],
+    },
+
+    {
       title: "Relatórios",
       url: "#",
-      icon: Settings2,
+      icon: ChartColumn,
       items: [
         {
           title: "Painel geral",
@@ -108,7 +122,7 @@ const data = {
     {
       name: "Agenda",
       url: "/dashboard/agenda/agenda-panel",
-      icon: Frame,
+      icon: CalendarDays,
     },
     {
       name: "CRM",
@@ -118,7 +132,7 @@ const data = {
     {
       name: "Configurações",
       url: "/dashboard/settings/",
-      icon: MapIcon,
+      icon: Settings,
     },
     {
       name: "Usuários",
