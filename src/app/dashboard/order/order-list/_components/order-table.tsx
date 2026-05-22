@@ -13,10 +13,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type { UIOrderReportListItem } from "@/services/api-main/order-reports/transformers/transformers";
+import type { UIOrderListItem } from "@/services/api-main/order-reports/transformers/transformers";
 
 interface OrderTableProps {
-  orders: UIOrderReportListItem[];
+  orders: UIOrderListItem[];
 }
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
@@ -179,9 +179,6 @@ export function OrderTable({ orders }: OrderTableProps) {
                 <TableHead className="font-semibold hidden lg:table-cell">
                   Financeiro
                 </TableHead>
-                <TableHead className="font-semibold hidden lg:table-cell">
-                  Tipo
-                </TableHead>
                 <TableHead className="font-semibold">Itens</TableHead>
                 <TableHead className="font-semibold text-right">
                   Desconto
@@ -248,19 +245,6 @@ export function OrderTable({ orders }: OrderTableProps) {
                       {order.financialStatus || "-"}
                     </span>
                   </TableCell>
-                  <TableCell className="hidden lg:table-cell">
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "rounded-md px-2 py-0.5 text-[10px] uppercase font-semibold tracking-wider",
-                        order.rateType === "VAREJO"
-                          ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300"
-                          : "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-300",
-                      )}
-                    >
-                      {order.rateType || "-"}
-                    </Badge>
-                  </TableCell>
                   <TableCell>
                     <span className="text-sm text-muted-foreground">
                       {order.itemCount}
@@ -284,11 +268,6 @@ export function OrderTable({ orders }: OrderTableProps) {
                   <TableCell className="hidden lg:table-cell">
                     <span className="text-sm text-muted-foreground">
                       {order.paymentForm || "-"}
-                    </span>
-                  </TableCell>
-                  <TableCell className="hidden lg:table-cell text-right">
-                    <span className="text-sm text-muted-foreground">
-                      {toCurrency(order.sellerCommissionValue)}
                     </span>
                   </TableCell>
                   <TableCell className="text-right">

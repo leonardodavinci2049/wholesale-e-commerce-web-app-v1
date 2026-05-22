@@ -3,9 +3,7 @@ import {
   CreditCard,
   MapPin,
   Package2,
-  Percent,
   Tag,
-  Truck,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -19,10 +17,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { UIOrderReportListItem } from "@/services/api-main/order-reports/transformers/transformers";
+import type { UIOrderListItem } from "@/services/api-main/order-reports/transformers/transformers";
 
 interface OrderCardProps {
-  order: UIOrderReportListItem;
+  order: UIOrderListItem;
 }
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
@@ -201,18 +199,6 @@ export function OrderCard({ order }: OrderCardProps) {
           value={order.paymentForm}
         />
         <DataPoint icon={Package2} label="Itens" value={order.itemCount} />
-
-        {order.deliveryStatus && (
-          <DataPoint
-            icon={Truck}
-            label="Entrega"
-            value={order.deliveryStatus}
-          />
-        )}
-
-        {order.rateType && (
-          <DataPoint icon={Percent} label="Taxa" value={order.rateType} />
-        )}
       </CardContent>
 
       <CardFooter className="justify-between gap-3 border-t border-border/70 p-4 pt-3 bg-muted/10 mt-auto">

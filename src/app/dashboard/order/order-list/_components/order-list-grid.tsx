@@ -1,9 +1,9 @@
-import type { UIOrderReportListItem } from "@/services/api-main/order-reports/transformers/transformers";
+import type { UIOrderListItem } from "@/services/api-main/order-reports/transformers/transformers";
 import { OrderEmptyState } from "./order-empty-state";
 import { OrderTable } from "./order-table";
 
 interface OrderListGridProps {
-  orders: UIOrderReportListItem[];
+  orders: UIOrderListItem[];
   onClearFilters?: () => void;
 }
 
