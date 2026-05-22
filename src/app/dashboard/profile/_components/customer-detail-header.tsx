@@ -1,8 +1,9 @@
-import { BadgeCheck, Calendar, Clock3, User, Sparkles } from "lucide-react";
+import { BadgeCheck, Calendar, Clock3, Sparkles, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { UICustomerDetail } from "@/services/api-main/customer-general/transformers/transformers";
+import { ProfileInlineField } from "./profile-inline-field";
 
 interface CustomerDetailHeaderProps {
   customer: UICustomerDetail;
@@ -44,20 +45,28 @@ export function CustomerDetailHeader({ customer }: CustomerDetailHeaderProps) {
       )}
     >
       {/* Background ambient light effects (luxury glassmorphism blobs using theme colors) */}
-      <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '6s' }} />
-      <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+      <div
+        className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl pointer-events-none animate-pulse"
+        style={{ animationDuration: "6s" }}
+      />
+      <div
+        className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-3xl pointer-events-none animate-pulse"
+        style={{ animationDuration: "8s" }}
+      />
 
       <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         {/* Left Side: Avatar and Quick Info */}
         <div className="flex flex-col items-center gap-5 text-center md:flex-row md:text-left">
           {/* Avatar Container with glowing active theme gradient ring */}
           <div className="relative group">
-            <div className={cn(
-              "absolute -inset-0.5 rounded-3xl bg-linear-to-tr opacity-75 blur-xs transition duration-300 group-hover:opacity-100",
-              isAtacado 
-                ? "from-primary via-accent-foreground/60 to-primary/40"
-                : "from-primary via-primary/60 to-primary/20"
-            )} />
+            <div
+              className={cn(
+                "absolute -inset-0.5 rounded-3xl bg-linear-to-tr opacity-75 blur-xs transition duration-300 group-hover:opacity-100",
+                isAtacado
+                  ? "from-primary via-accent-foreground/60 to-primary/40"
+                  : "from-primary via-primary/60 to-primary/20",
+              )}
+            />
             <Avatar className="relative h-24 w-24 shrink-0 rounded-3xl ring-4 ring-background md:h-26 md:w-26">
               <AvatarImage
                 src={customer.imagePath || "/avatars/customer.png"}
@@ -81,9 +90,13 @@ export function CustomerDetailHeader({ customer }: CustomerDetailHeaderProps) {
               <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/90 dark:bg-white/3">
                 ID #{customer.id}
               </span>
-              <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-foreground md:text-3xl lg:text-4xl">
-                {customer.name}
-              </h1>
+              <ProfileInlineField
+                customerId={customer.id}
+                field="customerName"
+                value={customer.name}
+                variant="title"
+                className="mt-1"
+              />
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
