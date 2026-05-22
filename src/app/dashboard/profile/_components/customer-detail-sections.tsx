@@ -22,6 +22,7 @@ import type {
 } from "@/services/api-main/customer-general/transformers/transformers";
 import { CustomerProfileAddressSection } from "./customer-profile-address-section";
 import { CustomerSellerCard } from "./customer-seller-card";
+import { ProfileInlineField } from "./profile-inline-field";
 
 interface CustomerDetailSectionsProps {
   customer: UICustomerDetail;
@@ -122,6 +123,70 @@ function InfoField({
   );
 }
 
+function EditableInfoField({
+  icon: Icon,
+  label,
+  customerId,
+  field,
+  value,
+  displayValue,
+  emptyText,
+  className,
+  colorScheme = "primary",
+}: {
+  icon?: React.ElementType;
+  label: string;
+  customerId: number;
+  field:
+    | "customerName"
+    | "phone"
+    | "whatsapp"
+    | "email"
+    | "companyName"
+    | "tradeName"
+    | "birthDate"
+    | "sellerId";
+  value: string;
+  displayValue?: string;
+  emptyText?: string;
+  className?: string;
+  colorScheme?: "primary" | "emerald" | "sky";
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-3.5 rounded-2xl border border-border/60 bg-background/60 p-4 transition-all duration-300 hover:border-primary/20 hover:bg-muted/20 dark:bg-card/25 dark:hover:bg-white/[0.01] shadow-2xs",
+        className,
+      )}
+    >
+      {Icon && (
+        <div
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+            colorScheme === "primary" && "bg-primary/10 text-primary",
+            colorScheme === "emerald" && "bg-emerald-500/10 text-emerald-500",
+            colorScheme === "sky" && "bg-sky-500/10 text-sky-500",
+          )}
+        >
+          <Icon className="h-4.5 w-4.5" />
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/85">
+          {label}
+        </p>
+        <ProfileInlineField
+          customerId={customerId}
+          field={field}
+          value={value}
+          displayValue={displayValue}
+          emptyText={emptyText}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function CustomerDetailSections({
   customer,
   seller,
@@ -189,10 +254,14 @@ export function CustomerDetailSections({
                     mono
                     colorScheme="primary"
                   />
-                  <InfoField
+                  <EditableInfoField
                     icon={Calendar}
                     label="Data de Nascimento"
-                    value={formatDate(customer.birthDate || null)}
+                    customerId={customer.id}
+                    field="birthDate"
+                    value={customer.birthDate || ""}
+                    displayValue={formatDate(customer.birthDate || null)}
+                    emptyText="Não informado"
                     colorScheme="primary"
                   />
                 </div>
@@ -217,15 +286,19 @@ export function CustomerDetailSections({
 
                 <div className="space-y-4">
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <InfoField
+                    <EditableInfoField
                       icon={Building2}
                       label="Razão Social"
+                      customerId={customer.id}
+                      field="companyName"
                       value={customer.companyName}
                       colorScheme="primary"
                     />
-                    <InfoField
+                    <EditableInfoField
                       icon={User}
                       label="Nome Fantasia"
+                      customerId={customer.id}
+                      field="tradeName"
                       value={customer.tradeName || ""}
                       colorScheme="primary"
                     />
@@ -287,11 +360,13 @@ export function CustomerDetailSections({
                   label="Data de Cadastro"
                   value={formatDate(customer.createdAt)}
                 />
-                <InfoField
+                <EditableInfoField
                   icon={User}
                   label="Vendedor Vinculado ID"
+                  customerId={customer.id}
+                  field="sellerId"
                   value={String(customer.sellerId)}
-                  mono
+                  colorScheme="primary"
                 />
               </div>
             </div>
@@ -311,12 +386,14 @@ export function CustomerDetailSections({
 
               {/* Grid of details & click actions */}
               <div className="grid gap-4 sm:grid-cols-3">
-                {/* Telefone Field & call action */}
                 <div className="group/item relative space-y-2">
-                  <InfoField
+                  <EditableInfoField
                     icon={Phone}
                     label="Telefone Comercial"
-                    value={formatPhone(customer.phone)}
+                    customerId={customer.id}
+                    field="phone"
+                    value={customer.phone}
+                    displayValue={formatPhone(customer.phone)}
                     colorScheme="emerald"
                   />
                   {customer.phone && (
@@ -330,12 +407,14 @@ export function CustomerDetailSections({
                   )}
                 </div>
 
-                {/* WhatsApp Field & direct message action */}
                 <div className="group/item relative space-y-2">
-                  <InfoField
+                  <EditableInfoField
                     icon={MessageCircle}
                     label="WhatsApp Principal"
-                    value={
+                    customerId={customer.id}
+                    field="whatsapp"
+                    value={customer.whatsapp || ""}
+                    displayValue={
                       hasValue(customer.whatsapp)
                         ? formatPhone(customer.whatsapp)
                         : "Não informado"
@@ -355,11 +434,12 @@ export function CustomerDetailSections({
                   )}
                 </div>
 
-                {/* E-mail Field & mail action */}
                 <div className="group/item relative space-y-2">
-                  <InfoField
+                  <EditableInfoField
                     icon={Mail}
                     label="E-mail de Notificações"
+                    customerId={customer.id}
+                    field="email"
                     value={customer.email}
                     colorScheme="emerald"
                   />
