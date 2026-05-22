@@ -32,8 +32,8 @@ function formatPhone(phone: string): string {
 
 export function CustomerSellerCard({ seller }: CustomerSellerCardProps) {
   return (
-    <Card className="rounded-2xl border-border/70 bg-gradient-to-br from-primary/5 via-background/75 to-primary/[0.02] p-5 shadow-sm dark:from-primary/10 dark:via-background/50 dark:to-primary/[0.05]">
-      <div className="mb-4 flex items-center gap-2 border-b border-border/50 pb-3">
+    <Card className="rounded-2xl border-border/70 bg-background/75 p-5 shadow-sm dark:bg-white/[0.03]">
+      <div className="mb-10 flex items-center gap-2 border-b border-border/50 pb-3">
         <User className="h-4 w-4 text-primary" />
         <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           Vendedor Associado
@@ -42,9 +42,9 @@ export function CustomerSellerCard({ seller }: CustomerSellerCardProps) {
 
       <div className="space-y-4">
         <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16 shrink-0 rounded-xl ring-2 ring-primary/10">
+          <Avatar className="h-16 w-16 shrink-0 rounded-2xl ring-2 ring-primary/10">
             <AvatarImage src={seller.imagePath} alt={seller.name} />
-            <AvatarFallback className="rounded-xl bg-primary/10 text-sm font-semibold text-primary">
+            <AvatarFallback className="rounded-2xl bg-primary/10 text-sm font-semibold text-primary">
               {getInitials(seller.name)}
             </AvatarFallback>
           </Avatar>
@@ -58,46 +58,44 @@ export function CustomerSellerCard({ seller }: CustomerSellerCardProps) {
                 ID #{seller.id}
               </Badge>
             </div>
-            <h4 className="mt-1.5 truncate text-base font-semibold text-foreground">
+            <h4 className="mt-2 truncate text-base font-semibold text-foreground">
               {seller.name}
             </h4>
           </div>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-background/50 px-3 py-2">
-            <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/70 bg-background/70 px-3 py-3 dark:bg-background/40">
+            <Phone className="h-4 w-4 shrink-0 text-foreground" />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
                 Telefone
               </p>
-              <p className="truncate text-sm font-medium text-foreground">
+              <p className="truncate text-sm text-foreground">
                 {formatPhone(seller.phone)}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-background/50 px-3 py-2">
-            <MessageCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/70 bg-background/70 px-3 py-3 dark:bg-background/40">
+            <MessageCircle className="h-4 w-4 shrink-0 text-foreground" />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
                 WhatsApp
               </p>
-              <p className="truncate text-sm font-medium text-foreground">
+              <p className="truncate text-sm text-foreground">
                 {formatPhone(seller.whatsapp)}
               </p>
             </div>
           </div>
 
-          <div className="col-span-full flex items-center gap-2 rounded-lg border border-border/50 bg-background/50 px-3 py-2">
-            <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-border/70 bg-background/70 px-3 py-3 dark:bg-background/40 sm:col-span-2">
+            <Mail className="h-4 w-4 shrink-0 text-foreground" />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
                 E-mail
               </p>
-              <p className="truncate text-sm font-medium text-foreground">
-                {seller.email}
-              </p>
+              <p className="truncate text-sm text-foreground">{seller.email}</p>
             </div>
           </div>
         </div>
