@@ -141,6 +141,7 @@ export function CustomerDetailSections({
 }: CustomerDetailSectionsProps) {
   const isPessoaFisica = customer.personTypeId === 1;
   const isPessoaJuridica = customer.personTypeId === 2;
+  const shouldShowPersonTypeSection = isPessoaFisica || isPessoaJuridica;
 
   return (
     <div className="space-y-6">
@@ -164,74 +165,88 @@ export function CustomerDetailSections({
         </div>
       </SectionCard>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <SectionCard
-          icon={FileText}
-          title="Pessoa Física"
-          accentColor="violet"
-          className={cn(!isPessoaFisica && "opacity-50")}
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <InfoField
-              icon={Hash}
-              label="CPF"
-              value={formatCpf(customer.cpf)}
-              mono
-            />
-            <InfoField
-              icon={Calendar}
-              label="Data de Nascimento"
-              value={formatDate(customer.birthDate || null)}
-            />
-          </div>
+      {shouldShowPersonTypeSection && (
+        <div className="grid gap-4">
           {isPessoaFisica && (
-            <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-violet-500/5 px-3 py-1.5 text-[11px] font-medium text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              Tipo de conta ativa: Pessoa Física
-            </div>
-          )}
-        </SectionCard>
+            <SectionCard
+              icon={FileText}
+              title="Pessoa Física"
+              accentColor="violet"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <InfoField
+                  icon={Hash}
+                  label="CPF"
+                  value={formatCpf(customer.cpf)}
+                  mono
+                />
+                <InfoField
+                  icon={Calendar}
+                  label="Data de Nascimento"
+                  value={formatDate(customer.birthDate || null)}
+                />
+              </div>
 
-        <SectionCard
-          icon={Building2}
-          title="Pessoa Jurídica"
-          accentColor="amber"
-          className={cn(!isPessoaJuridica && "opacity-50")}
-        >
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InfoField label="Razão Social" value={customer.companyName} />
-              <InfoField
-                label="Nome Fantasia"
-                value={customer.tradeName || ""}
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InfoField
-                icon={Hash}
-                label="CNPJ"
-                value={formatCnpj(customer.cnpj || "")}
-                mono
-              />
-              <InfoField
-                label="Inscrição Estadual"
-                value={
-                  hasValue(customer.stateRegistration)
-                    ? customer.stateRegistration || "Não informado"
-                    : "Não informado"
-                }
-                mono
-              />
-            </div>
-          </div>
-          {isPessoaJuridica && (
-            <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-amber-500/5 px-3 py-1.5 text-[11px] font-medium text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              Tipo de conta ativa: Pessoa Jurídica
-            </div>
+              <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-violet-500/5 px-3 py-1.5 text-[11px] font-medium text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+                <BadgeCheck className="h-3.5 w-3.5" />
+                Tipo de conta ativa: Pessoa Física
+              </div>
+            </SectionCard>
           )}
-        </SectionCard>
-      </div>
+
+          {isPessoaJuridica && (
+            <SectionCard
+              icon={Building2}
+              title="Pessoa Jurídica"
+              accentColor="amber"
+            >
+              <div className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <InfoField
+                    label="Razão Social"
+                    value={customer.companyName}
+                  />
+                  <InfoField
+                    label="Nome Fantasia"
+                    value={customer.tradeName || ""}
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <InfoField
+                    icon={Hash}
+                    label="CNPJ"
+                    value={formatCnpj(customer.cnpj || "")}
+                    mono
+                  />
+                  <InfoField
+                    label="Inscrição Estadual"
+                    value={
+                      hasValue(customer.stateRegistration)
+                        ? customer.stateRegistration || "Não informado"
+                        : "Não informado"
+                    }
+                    mono
+                  />
+                  <InfoField
+                    label="Inscrição Municipal"
+                    value={
+                      hasValue(customer.municipalRegistration)
+                        ? customer.municipalRegistration || "Não informado"
+                        : "Não informado"
+                    }
+                    mono
+                  />
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-amber-500/5 px-3 py-1.5 text-[11px] font-medium text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
+                <BadgeCheck className="h-3.5 w-3.5" />
+                Tipo de conta ativa: Pessoa Jurídica
+              </div>
+            </SectionCard>
+          )}
+        </div>
+      )}
 
       <SectionCard icon={MapPin} title="Endereço" accentColor="sky">
         <div className="space-y-4">
