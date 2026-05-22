@@ -5,7 +5,6 @@ import { getAuthContext } from "@/server/auth-context";
 import { getCustomerById } from "@/services/api-main/customer-general/customer-general-cached-service";
 import { CustomerDetailHeader } from "./_components/customer-detail-header";
 import { CustomerDetailSections } from "./_components/customer-detail-sections";
-import { CustomerSellerCard } from "./_components/customer-seller-card";
 
 export default async function ProfilePage() {
   await connection();
@@ -39,11 +38,8 @@ export default async function ProfilePage() {
         <div className="@container/main mx-auto w-full max-w-[1400px] flex-1 flex-col gap-6 px-4 lg:px-6 py-6">
           <CustomerDetailHeader customer={customer} />
 
-          <div className="grid gap-6 lg:grid-cols-[1fr,360px]">
-            <CustomerDetailSections customer={customer} />
-            <div className="space-y-6">
-              {seller && <CustomerSellerCard seller={seller} />}
-            </div>
+          <div className="space-y-6">
+            <CustomerDetailSections customer={customer} seller={seller} />
           </div>
         </div>
       </div>

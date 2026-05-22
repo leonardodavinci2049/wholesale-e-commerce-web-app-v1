@@ -62,6 +62,8 @@ function SectionCard({
 export function CustomerDetailHeader({ customer }: CustomerDetailHeaderProps) {
   const isPessoaFisica = customer.personTypeId === 1;
   const personType = isPessoaFisica ? "Pessoa Física" : "Pessoa Jurídica";
+  const customerType =
+    customer.customerTypeId === 1 ? "CLIENTE ATACADO" : "CLIENTE VAREJO";
 
   return (
     <SectionCard icon={User} title="Informações do Cliente">
@@ -101,29 +103,13 @@ export function CustomerDetailHeader({ customer }: CustomerDetailHeaderProps) {
                 {personType}
               </Badge>
 
-              {customer.accountType && (
-                <Badge
-                  variant="outline"
-                  className="rounded-full border-primary/30 bg-primary/5 px-3 text-xs font-medium text-primary"
-                >
-                  <User className="mr-1 h-3 w-3" />
-                  {customer.accountType}
-                </Badge>
-              )}
-
-              {customer.accountStatus && (
-                <Badge
-                  className={cn(
-                    "rounded-full px-3 text-xs font-medium",
-                    customer.accountStatus.toUpperCase() === "APROVADA"
-                      ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/10 dark:text-emerald-400"
-                      : "bg-amber-500/10 text-amber-600 hover:bg-amber-500/10 dark:text-amber-400",
-                  )}
-                >
-                  <BadgeCheck className="mr-1 h-3 w-3" />
-                  {customer.accountStatus}
-                </Badge>
-              )}
+              <Badge
+                variant="outline"
+                className="rounded-full border-primary/30 bg-primary/5 px-3 text-xs font-medium text-primary"
+              >
+                <User className="mr-1 h-3 w-3" />
+                {customerType}
+              </Badge>
             </div>
           </div>
         </div>
