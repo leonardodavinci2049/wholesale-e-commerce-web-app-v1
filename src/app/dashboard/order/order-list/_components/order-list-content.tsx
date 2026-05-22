@@ -3,7 +3,7 @@
 import { LoaderCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import type { UIOrderReportListItem } from "@/services/api-main/order-reports/transformers/transformers";
+import type { UIOrderListItem } from "@/services/api-main/order-reports/transformers/transformers";
 import {
   DEFAULT_ORDER_LIST_LIMIT,
   normalizeOrderListFilters,
@@ -15,7 +15,7 @@ import { OrderListGrid } from "./order-list-grid";
 import { OrderLoadMore } from "./order-load-more";
 
 interface OrderListContentProps {
-  orders: UIOrderReportListItem[];
+  orders: UIOrderListItem[];
   currentFilters: OrderListSearchParams;
   defaultFilters: OrderListFiltersValues;
 }

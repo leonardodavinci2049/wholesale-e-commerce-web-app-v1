@@ -2,7 +2,7 @@ import { connection } from "next/server";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { getSaleOrders } from "@/services/api-main/order-reports/order-reports-cached-service";
+import { getCustomerOrders } from "@/services/api-main/order-reports/order-reports-cached-service";
 import { OrderListContent } from "./_components/order-list-content";
 import {
   DEFAULT_ORDER_LIST_LIMIT,
@@ -41,13 +41,13 @@ export default async function OrderListPage(props: OrderListPageProps) {
     defaultFilters,
   );
 
-  let orders: Awaited<ReturnType<typeof getSaleOrders>> = [];
+  let orders: Awaited<ReturnType<typeof getCustomerOrders>> = [];
 
   try {
-    orders = await getSaleOrders({
+    orders = await getCustomerOrders({
       orderId: toOptionalNumber(currentFilters.orderId),
-      customerId: toOptionalNumber(currentFilters.customerId),
-      sellerId: apiContext.pe_person_id,
+      customerId: apiContext.pe_person_id,
+      sellerId: 0,
       orderStatusId: toOptionalNumber(currentFilters.orderStatusId),
       financialStatusId: toOptionalNumber(currentFilters.financialStatusId),
       locationId: toOptionalNumber(currentFilters.locationId),
@@ -59,7 +59,7 @@ export default async function OrderListPage(props: OrderListPageProps) {
       ...apiContext,
     });
   } catch (error) {
-    logger.error("Erro ao carregar pedidos de venda:", error);
+    logger.error("Erro ao carregar pedidos do cliente:", error);
   }
 
   return (
