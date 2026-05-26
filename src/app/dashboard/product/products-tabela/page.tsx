@@ -41,8 +41,8 @@ function buildRetryHref(searchParams: Record<string, string | undefined>) {
 
   const queryString = query.toString();
   return queryString
-    ? `/dashboard/product/product-list?${queryString}`
-    : "/dashboard/product/product-list";
+    ? `/dashboard/product/products-tabela?${queryString}`
+    : "/dashboard/product/products-tabela";
 }
 
 function ProductListApiUnavailableState({ retryHref }: { retryHref: string }) {
