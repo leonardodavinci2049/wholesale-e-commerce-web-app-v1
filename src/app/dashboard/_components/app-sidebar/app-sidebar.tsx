@@ -84,11 +84,20 @@ const data = {
       icon: PackageSearch,
       items: [
         {
-          title: "Lista de Produtos",
+          title: "Tabela de Produtos",
           url: "/dashboard/product/products-tabela",
         },
         {
-          title: "Mais Vendidos",
+          title: "Produtos em Promoção",
+          url: "/dashboard/product/products-on-sale",
+        },
+        {
+          title: "Produtos Lançamentos",
+          url: "/dashboard/product/products-new-releases",
+        },
+
+        {
+          title: "Produtos Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
         },
       ],
