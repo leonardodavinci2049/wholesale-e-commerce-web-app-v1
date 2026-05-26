@@ -85,7 +85,7 @@ const data = {
       items: [
         {
           title: "Lista de Produtos",
-          url: "/dashboard/product/product-list",
+          url: "/dashboard/product/products-tabela",
         },
         {
           title: "Mais Vendidos",

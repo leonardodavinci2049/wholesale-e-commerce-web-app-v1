@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-const PRODUCT_LIST_FALLBACK_ROUTE = "/dashboard/product/product-list";
+const PRODUCT_LIST_FALLBACK_ROUTE = "/dashboard/product/products-tabela";
 
 export function BackToProductListButton() {
   const router = useRouter();

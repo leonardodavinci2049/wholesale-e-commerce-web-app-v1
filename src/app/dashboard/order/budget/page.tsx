@@ -13,7 +13,7 @@ import { getTaxonomyMenu } from "@/services/api-main/taxonomy-base/taxonomy-base
 import { BudgetMobileBottomBar } from "./_components/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
 import { ProductGrid } from "./_components/product-grid";
-import { ProductList } from "./_components/product-list";
+import { ProductList } from "./_components/products-tabela";
 import { ProductLoadMoreV2 } from "./_components/product-load-more-v2";
 import { ProductViewSwitcher } from "./_components/product-view-switcher";
 
