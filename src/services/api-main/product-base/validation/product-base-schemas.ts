@@ -34,6 +34,23 @@ export const ProductFindByIdSchema = z.object({
   pe_product_id: z.number().int().positive(),
 });
 
+export const ProductPremiumSchema = z.object({
+  ...baseContextSchema,
+  pe_search: z.string().max(300).optional(),
+  pe_taxonomy_id: z.number().int().optional(),
+  pe_type_id: z.number().int().optional(),
+  pe_brand_id: z.number().int().optional(),
+  pe_stock_flag: z.number().int().optional(),
+  pe_flag_service: z.number().int().min(0).max(1).optional(),
+  pe_flag_promotions: z.number().int().min(0).max(1).optional(),
+  pe_flag_highlight: z.number().int().min(0).max(1).optional(),
+  pe_flag_launch: z.number().int().min(0).max(1).optional(),
+  pe_records_quantity: z.number().int().positive().optional(),
+  pe_page_id: z.number().int().optional(),
+  pe_column_id: z.number().int().optional(),
+  pe_order_id: z.number().int().min(1).max(2).optional(),
+});
+
 export const ProductCreateSchema = z.object({
   ...baseContextSchema,
   pe_product_name: z.string().max(300).min(1),
@@ -61,4 +78,5 @@ export const ProductCreateSchema = z.object({
 export type ProductFindAllInput = z.infer<typeof ProductFindAllSchema>;
 export type ProductSearchAllInput = z.infer<typeof ProductSearchAllSchema>;
 export type ProductFindByIdInput = z.infer<typeof ProductFindByIdSchema>;
+export type ProductPremiumInput = z.infer<typeof ProductPremiumSchema>;
 export type ProductCreateInput = z.infer<typeof ProductCreateSchema>;

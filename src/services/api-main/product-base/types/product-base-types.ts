@@ -239,6 +239,26 @@ export interface ProductCreateResponse extends ProductBaseResponse {
   data: StoredProcedureResponse[];
 }
 
+export interface ProductPremiumRequest extends ProductBaseRequest {
+  pe_search?: string;
+  pe_taxonomy_id?: number;
+  pe_type_id?: number;
+  pe_brand_id?: number;
+  pe_stock_flag?: number;
+  pe_flag_service?: number;
+  pe_flag_promotions?: number;
+  pe_flag_highlight?: number;
+  pe_flag_launch?: number;
+  pe_records_quantity?: number;
+  pe_page_id?: number;
+  pe_column_id?: number;
+  pe_order_id?: number;
+}
+
+export interface ProductPremiumResponse extends ProductBaseResponse {
+  data: Record<string, ProductListItem[]>;
+}
+
 export class ProductBaseError extends Error {
   constructor(
     message: string,
