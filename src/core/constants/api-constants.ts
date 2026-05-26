@@ -74,6 +74,7 @@ export const PRODUCT_BASE_ENDPOINTS = {
   FIND_BY_ID: "/product-base/v3/product-find-id",
   SEARCH_ALL: "/product-base/v3/product-search-all",
   CREATE: "/product-base/v3/product-create",
+  PRODUCT_PREMIUM: "/product-base/v1/product-premium",
 } as const;
 
 // Endpoints de Taxonomy Base (V3) - CRUD completo
@@ -314,6 +315,13 @@ export const ORDER_SALES_ENDPOINTS = {
   FIND_ORDER_ID: "/order-sales/v2/order-find-order-id",
   FIND_DASHBOARD_ID: "/order-sales/v2/order-find-dashboard-id",
   FIND_EQUIPMENT_ID: "/order-sales/v2/order-find-equipment-id",
+} as const;
+
+// Endpoints de Order B2B
+export const ORDER_B2B_ENDPOINTS = {
+  FIND_BUDGET_CUSTOMER_ID: "/order-b2b/v2/order-find-budget-customer-id",
+  FIND_DASHBOARD_CUSTOMER_ID: "/order-b2b/v2/order-find-dashboard-customer-id",
+  FIND_ITEM_QT: "/order-b2b/v2/order-item-find-qt",
 } as const;
 
 // Endpoints de Order Update

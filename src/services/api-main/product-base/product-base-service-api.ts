@@ -21,6 +21,8 @@ import type {
   ProductFindByIdRequest,
   ProductFindByIdResponse,
   ProductListItem,
+  ProductPremiumRequest,
+  ProductPremiumResponse,
   ProductSearchAllRequest,
   ProductSearchAllResponse,
   ProductSearchItem,
@@ -34,6 +36,7 @@ import {
   ProductCreateSchema,
   ProductFindAllSchema,
   ProductFindByIdSchema,
+  ProductPremiumSchema,
   ProductSearchAllSchema,
 } from "./validation/product-base-schemas";
 
@@ -145,6 +148,43 @@ export class ProductBaseServiceApi extends BaseApiService {
     }
   }
 
+  async findPremiumProducts(
+    params: Partial<ProductPremiumRequest> = {},
+  ): Promise<ProductPremiumResponse> {
+    try {
+      const validatedParams = ProductPremiumSchema.partial().parse(params);
+      const requestBody = this.buildBasePayload({
+        pe_user_id: validatedParams.pe_user_id,
+        pe_user_name: validatedParams.pe_user_name,
+        pe_user_role: validatedParams.pe_user_role,
+        pe_person_id: validatedParams.pe_person_id,
+        pe_search: validatedParams.pe_search,
+        pe_taxonomy_id: validatedParams.pe_taxonomy_id,
+        pe_Type_id: validatedParams.pe_type_id,
+        pe_brand_id: validatedParams.pe_brand_id,
+        pe_stock_flag: validatedParams.pe_stock_flag,
+        pe_flag_Service: validatedParams.pe_flag_service,
+        pe_flag_Promotions: validatedParams.pe_flag_promotions,
+        pe_flag_Highlight: validatedParams.pe_flag_highlight,
+        pe_flag_Launch: validatedParams.pe_flag_launch,
+        pe_records_quantity: validatedParams.pe_records_quantity ?? 100,
+        pe_pageId: validatedParams.pe_page_id,
+        pe_columnId: validatedParams.pe_column_id,
+        pe_orderId: validatedParams.pe_order_id,
+      });
+
+      const response = await this.post<ProductPremiumResponse>(
+        PRODUCT_BASE_ENDPOINTS.PRODUCT_PREMIUM,
+        requestBody,
+      );
+
+      return this.normalizeEmptyPremiumResponse(response);
+    } catch (error) {
+      logger.error("Erro ao buscar produtos premium", error);
+      throw error;
+    }
+  }
+
   async createProduct(
     params: ProductCreateRequest,
   ): Promise<ProductCreateResponse> {
@@ -214,6 +254,25 @@ export class ProductBaseServiceApi extends BaseApiService {
     return response;
   }
 
+  private normalizeEmptyPremiumResponse(
+    response: ProductPremiumResponse,
+  ): ProductPremiumResponse {
+    if (
+      response.statusCode === API_STATUS_CODES.NOT_FOUND ||
+      response.statusCode === API_STATUS_CODES.EMPTY_RESULT
+    ) {
+      return {
+        ...response,
+        statusCode: API_STATUS_CODES.SUCCESS,
+        quantity: 0,
+        data: {
+          "Product find Premium V1": [],
+        },
+      };
+    }
+    return response;
+  }
+
   extractProducts(response: ProductFindAllResponse): ProductListItem[] {
     return response.data?.["Product find All"] ?? [];
   }
@@ -222,6 +281,10 @@ export class ProductBaseServiceApi extends BaseApiService {
     response: ProductSearchAllResponse,
   ): ProductSearchItem[] {
     return response.data?.["Product find All"] ?? [];
+  }
+
+  extractPremiumProducts(response: ProductPremiumResponse): ProductListItem[] {
+    return response.data?.["Product find Premium V1"] ?? [];
   }
 
   extractProductById(response: ProductFindByIdResponse): ProductDetail | null {
@@ -270,6 +333,14 @@ export class ProductBaseServiceApi extends BaseApiService {
       response.data != null &&
       Array.isArray(response.data["Product find Id"]) &&
       (response.data["Product find Id"] as ProductDetail[]).length > 0
+    );
+  }
+
+  isValidPremiumProductList(response: ProductPremiumResponse): boolean {
+    return (
+      isApiSuccess(response.statusCode) &&
+      response.data != null &&
+      Array.isArray(response.data["Product find Premium V1"])
     );
   }
 }

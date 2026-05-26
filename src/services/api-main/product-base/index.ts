@@ -14,6 +14,8 @@ export type {
   ProductFindByIdRequest,
   ProductFindByIdResponse,
   ProductListItem,
+  ProductPremiumRequest,
+  ProductPremiumResponse,
   ProductSearchAllRequest,
   ProductSearchAllResponse,
   ProductSearchItem,
