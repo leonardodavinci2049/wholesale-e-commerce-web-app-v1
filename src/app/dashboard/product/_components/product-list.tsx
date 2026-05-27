@@ -32,8 +32,13 @@ export function ProductList({ products, orderId }: ProductListProps) {
 
   return (
     <ul className="flex flex-col gap-2 sm:gap-3">
-      {sorted.map((product) => (
-        <ProductListItem key={product.id} product={product} orderId={orderId} />
+      {sorted.map((product, index) => (
+        <ProductListItem
+          key={product.id}
+          product={product}
+          orderId={orderId}
+          imageLoading={index === 0 ? "eager" : "lazy"}
+        />
       ))}
     </ul>
   );

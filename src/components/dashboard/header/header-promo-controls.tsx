@@ -7,12 +7,12 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const BUDGET_ROUTE = "/dashboard/order/budget";
-const STORAGE_KEY = "budget:product-view-mode";
-const SEARCH_PANEL_CONTAINER_ID = "budget-search-panel-container";
+const PROMO_ROUTE = "/dashboard/product/products-on-sale";
+const STORAGE_KEY = "promo:product-view-mode";
+const SEARCH_PANEL_CONTAINER_ID = "promo-search-panel-container";
 type ViewMode = "grid" | "list";
 
-export function HeaderBudgetControls() {
+export function HeaderPromoControls() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,7 +28,6 @@ export function HeaderBudgetControls() {
     setPortalTarget(document.getElementById(SEARCH_PANEL_CONTAINER_ID));
   }, []);
 
-  // Hydrate mode from localStorage
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -36,12 +35,11 @@ export function HeaderBudgetControls() {
         setMode(stored);
       }
     } catch {
-      // ignore storage access errors (private mode, etc.)
+      // ignore
     }
     setHydrated(true);
   }, []);
 
-  // Listen to external view mode changes
   useEffect(() => {
     const handleModeChange = (e: Event) => {
       const customEvent = e as CustomEvent<ViewMode>;
@@ -49,13 +47,12 @@ export function HeaderBudgetControls() {
         setMode(customEvent.detail);
       }
     };
-    window.addEventListener("budget-view-mode-change", handleModeChange);
+    window.addEventListener("promo-view-mode-change", handleModeChange);
     return () => {
-      window.removeEventListener("budget-view-mode-change", handleModeChange);
+      window.removeEventListener("promo-view-mode-change", handleModeChange);
     };
   }, []);
 
-  // Function to toggle mode
   const toggleMode = () => {
     const newMode = mode === "grid" ? "list" : "grid";
     setMode(newMode);
@@ -64,9 +61,8 @@ export function HeaderBudgetControls() {
     } catch {
       // ignore
     }
-    // Dispatch event to sync other switcher components
     window.dispatchEvent(
-      new CustomEvent("budget-view-mode-change", { detail: newMode }),
+      new CustomEvent("promo-view-mode-change", { detail: newMode }),
     );
   };
 
@@ -96,7 +92,7 @@ export function HeaderBudgetControls() {
       debounceRef.current = setTimeout(() => {
         const params = buildSearchParams(value);
         startTransition(() => {
-          router.push(`${BUDGET_ROUTE}?${params.toString()}`, {
+          router.push(`${PROMO_ROUTE}?${params.toString()}`, {
             scroll: false,
           });
         });
@@ -105,7 +101,6 @@ export function HeaderBudgetControls() {
     [buildSearchParams, router],
   );
 
-  // Close search on escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -116,14 +111,12 @@ export function HeaderBudgetControls() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Check if we are on the budget route
-  if (pathname !== BUDGET_ROUTE) {
+  if (pathname !== PROMO_ROUTE) {
     return null;
   }
 
   return (
     <div className="flex items-center gap-1 sm:hidden">
-      {/* Search Button */}
       <Button
         variant="ghost"
         size="icon"
@@ -138,7 +131,6 @@ export function HeaderBudgetControls() {
         )}
       </Button>
 
-      {/* View Switcher Button */}
       {hydrated ? (
         <Button
           variant="ghost"
@@ -161,7 +153,6 @@ export function HeaderBudgetControls() {
         <div className="h-9 w-9" />
       )}
 
-      {/* Search Panel via portal */}
       {isSearchOpen &&
         portalTarget &&
         createPortal(
@@ -169,12 +160,12 @@ export function HeaderBudgetControls() {
             <div className="relative mx-auto max-w-350">
               <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
               <Input
-                id="header-product-search-v2"
-                placeholder="Digite o modelo para consultar rápido"
+                id="header-promo-product-search"
+                placeholder="Buscar produto em promoção..."
                 key={currentSearchValue}
                 defaultValue={currentSearchValue}
                 onChange={(e) => handleSearch(e.target.value)}
-                aria-label="Buscar produto"
+                aria-label="Buscar produto em promoção"
                 className={isPending ? "pl-10 opacity-60 pr-10" : "pl-10 pr-10"}
                 autoFocus
               />
@@ -183,7 +174,7 @@ export function HeaderBudgetControls() {
                   type="button"
                   onClick={() => {
                     const input = document.getElementById(
-                      "header-product-search-v2",
+                      "header-promo-product-search",
                     ) as HTMLInputElement;
                     if (input) {
                       input.value = "";

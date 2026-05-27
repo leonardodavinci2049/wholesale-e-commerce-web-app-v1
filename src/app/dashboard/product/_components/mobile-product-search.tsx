@@ -42,7 +42,7 @@ export function MobileProductSearch({
 
   return (
     <div className="relative">
-      <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
       <Input
         placeholder="Buscar produto em promoção..."
         key={defaultValue}
