@@ -4,13 +4,13 @@ import { getAuthContext } from "@/server/auth-context";
 import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
 import { getPremiumProducts } from "@/services/api-main/product-base/product-base-cached-service";
 
-import { CartSummaryPanel } from "./_components/cart-summary-panel";
-import { MobileProductSearch } from "./_components/mobile-product-search";
-import { ProductGrid } from "./_components/product-grid";
-import { ProductList } from "./_components/product-list";
-import { ProductLoadMore } from "./_components/product-load-more";
-import { ProductViewSwitcher } from "./_components/product-view-switcher";
-import { SaleMobileBottomBar } from "./_components/sale-mobile-bottom-bar";
+import { CartSummaryPanel } from "../_components/cart-summary-panel";
+import { MobileProductSearch } from "../_components/mobile-product-search";
+import { ProductGrid } from "../_components/product-grid";
+import { ProductList } from "../_components/product-list";
+import { ProductLoadMore } from "../_components/product-load-more";
+import { ProductViewSwitcher } from "../_components/product-view-switcher";
+import { SaleMobileBottomBar } from "../_components/sale-mobile-bottom-bar";
 
 const logger = createLogger("products-on-sale-page");
 
