@@ -82,24 +82,24 @@ const data = {
       title: "Catálogo de Produtos",
       url: "#",
       icon: PackageSearch,
-      items: [
+      items: [ 
         {
-          title: "Tabela de Produtos",
-          url: "/dashboard/product/products-tabela",
-        },
-        {
-          title: "Produtos em Promoção",
+          title: "Em Promoção",
           url: "/dashboard/product/products-on-sale",
         },
         {
-          title: "Produtos Lançamentos",
+          title: "Lançamentos",
           url: "/dashboard/product/products-new-releases",
         },
 
         {
-          title: "Produtos Mais Vendidos",
+          title: "Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
         },
+        {
+          title: "Tabela",
+          url: "/dashboard/product/products-tabela",
+        },       
       ],
     },
 
