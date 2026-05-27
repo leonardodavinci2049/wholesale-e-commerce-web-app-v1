@@ -32,7 +32,7 @@ const DEFAULT_AVATAR = "/images/user/default-user-image.jpeg";
 
 function resolveAvatar(avatar: string): string {
   try {
-    if (!avatar || !avatar.trim()) return DEFAULT_AVATAR;
+    if (!avatar?.trim()) return DEFAULT_AVATAR;
     new URL(avatar);
     return avatar;
   } catch {
