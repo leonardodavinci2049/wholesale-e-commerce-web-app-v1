@@ -11,9 +11,14 @@ import { ProductAddButton } from "./product-add-button";
 interface ProductListItemProps {
   product: UIProduct;
   orderId?: number;
+  imageLoading?: "eager" | "lazy";
 }
 
-export function ProductListItem({ product, orderId }: ProductListItemProps) {
+export function ProductListItem({
+  product,
+  orderId,
+  imageLoading = "lazy",
+}: ProductListItemProps) {
   const validImage =
     product.imagePath &&
     (product.imagePath.startsWith("/") || product.imagePath.startsWith("http"))
@@ -38,6 +43,7 @@ export function ProductListItem({ product, orderId }: ProductListItemProps) {
                 src={validImage}
                 alt={product.name}
                 fill
+                loading={imageLoading}
                 sizes="(max-width: 640px) 3.5rem, 4rem"
                 className="object-contain p-1.5"
               />

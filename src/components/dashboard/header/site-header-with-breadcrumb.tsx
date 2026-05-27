@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { HeaderBudgetControls } from "./header-budget-controls";
+import { HeaderPromoControls } from "./header-promo-controls";
 
 const HEADER_LOGO_SRC = "/images/logo/logo-sidebar.png";
 
@@ -81,6 +82,10 @@ export function SiteHeaderWithBreadcrumb({
         <div className="relative z-10 ml-auto flex items-center gap-2">
           <Suspense>
             <HeaderBudgetControls />
+          </Suspense>
+
+          <Suspense>
+            <HeaderPromoControls />
           </Suspense>
 
           <Suspense

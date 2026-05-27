@@ -72,7 +72,7 @@ export function ProductSearchBar({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="flex flex-1 gap-2">
         <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
           <Input
             id="product-search-v2"
             placeholder="Digite o modelo para consultar rápido"
