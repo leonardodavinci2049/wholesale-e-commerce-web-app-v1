@@ -313,7 +313,7 @@ export function transformReportListEntity(
   entity: OrderReportListEntity,
 ): UIOrderReportListItem {
   return {
-    orderId: entity.ID_TBL_PEDIDO ?? entity.ID_PEDIDO ?? 0,
+    orderId: entity.ID_PEDIDO ?? entity.ID_PEDIDO ?? 0,
     saleDate: entity.DATA_VENDA,
     customerId: entity.ID_CLIENTE,
     customerName: entity.CLIENTE_NOME,
