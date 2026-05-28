@@ -9,7 +9,7 @@ import {
   getOrderStatisticsCustomer,
   type UIOrderStatisticsCustomer,
 } from "@/services/api-main/order-b2b";
-import { formatCurrency } from "@/utils/common-utils";
+import { formatCurrency, parseMonetaryValue } from "@/utils/common-utils";
 
 export async function SectionCards() {
   const { session, apiContext } = await getAuthContext();
@@ -33,7 +33,7 @@ export async function SectionCards() {
   const totalOrders = stats?.totalOrders ?? 0;
   const averageTicket = formatCurrency(Number(stats?.averageTicket ?? 0));
   const totalItems = stats?.totalItems ?? "0";
-  const totalValue = formatCurrency(Number(stats?.totalValue ?? 0));
+  const totalValue = formatCurrency(parseMonetaryValue(stats?.totalValue));
 
   const cards = [
     {

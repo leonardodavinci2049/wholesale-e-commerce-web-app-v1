@@ -196,7 +196,7 @@ export interface OrderStatisticsCustomerEntity {
   QT_PEDIDOS: number;
   QT_ITENS: string;
   TICKET_MEDIO: string;
-  TOTAL_GERAL: string;
+  TOTAL_GERAL_PEDIDO: string;
 }
 
 // === Response Interfaces ===
