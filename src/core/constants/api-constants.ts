@@ -322,6 +322,8 @@ export const ORDER_B2B_ENDPOINTS = {
   FIND_BUDGET_CUSTOMER_ID: "/order-b2b/v2/order-find-budget-customer-id",
   FIND_DASHBOARD_CUSTOMER_ID: "/order-b2b/v2/order-find-dashboard-customer-id",
   FIND_ITEM_QT: "/order-b2b/v2/order-item-find-qt",
+  FIND_LATEST: "/order-b2b/v2/order-find-latest",
+  STATISTICS_CUSTOMER: "/order-b2b/v2/order-statistics-customer",
 } as const;
 
 // Endpoints de Order Update

@@ -14,14 +14,20 @@ import type {
   OrderFindBudgetCustomerIdResponse,
   OrderFindDashboardCustomerIdRequest,
   OrderFindDashboardCustomerIdResponse,
+  OrderFindLatestRequest,
+  OrderFindLatestResponse,
   OrderItemFindQtRequest,
   OrderItemFindQtResponse,
+  OrderStatisticsCustomerRequest,
+  OrderStatisticsCustomerResponse,
 } from "./types/order-b2b-types";
 import { OrderB2bError, OrderB2bNotFoundError } from "./types/order-b2b-types";
 import {
   OrderFindBudgetCustomerIdSchema,
   OrderFindDashboardCustomerIdSchema,
+  OrderFindLatestSchema,
   OrderItemFindQtSchema,
+  OrderStatisticsCustomerSchema,
 } from "./validation/order-b2b-schemas";
 
 const logger = createLogger("OrderB2bServiceApi");
@@ -199,6 +205,93 @@ export class OrderB2bServiceApi extends BaseApiService {
 
   extractItemQt(response: OrderItemFindQtResponse): number {
     return response.data?.["Qt Items"]?.[0]?.QT_ITEMS ?? 0;
+  }
+
+  // === Find Latest ===
+
+  async findLatest(
+    params: OrderFindLatestRequest,
+  ): Promise<OrderFindLatestResponse> {
+    try {
+      const validatedParams = OrderFindLatestSchema.parse(params);
+      const requestBody = this.buildBasePayload({
+        pe_user_id: validatedParams.pe_user_id,
+        pe_user_name: validatedParams.pe_user_name,
+        pe_user_role: validatedParams.pe_user_role,
+        pe_person_id: validatedParams.pe_person_id,
+        pe_customer_id: validatedParams.pe_customer_id,
+      });
+
+      const response = await this.post<OrderFindLatestResponse>(
+        ORDER_B2B_ENDPOINTS.FIND_LATEST,
+        requestBody,
+      );
+
+      if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
+        throw new OrderB2bNotFoundError(validatedParams);
+      }
+
+      if (isApiError(response.statusCode)) {
+        throw new OrderB2bError(
+          response.message || "Erro ao buscar últimos pedidos",
+          "ORDER_B2B_FIND_LATEST_ERROR",
+          response.statusCode,
+        );
+      }
+
+      return response;
+    } catch (error) {
+      logger.error("Erro ao buscar últimos pedidos", error);
+      throw error;
+    }
+  }
+
+  extractFindLatest(response: OrderFindLatestResponse) {
+    return response.data?.["Orders Find Latest"] ?? [];
+  }
+
+  // === Statistics Customer ===
+
+  async statisticsCustomer(
+    params: OrderStatisticsCustomerRequest,
+  ): Promise<OrderStatisticsCustomerResponse> {
+    try {
+      const validatedParams = OrderStatisticsCustomerSchema.parse(params);
+      const requestBody = this.buildBasePayload({
+        pe_user_id: validatedParams.pe_user_id,
+        pe_user_name: validatedParams.pe_user_name,
+        pe_user_role: validatedParams.pe_user_role,
+        pe_person_id: validatedParams.pe_person_id,
+        pe_customer_id: validatedParams.pe_customer_id,
+      });
+
+      const response = await this.post<OrderStatisticsCustomerResponse>(
+        ORDER_B2B_ENDPOINTS.STATISTICS_CUSTOMER,
+        requestBody,
+      );
+
+      if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
+        throw new OrderB2bNotFoundError(validatedParams);
+      }
+
+      if (isApiError(response.statusCode)) {
+        throw new OrderB2bError(
+          response.message ||
+            "Erro ao buscar estatísticas de pedidos do cliente",
+          "ORDER_B2B_STATISTICS_CUSTOMER_ERROR",
+          response.statusCode,
+        );
+      }
+
+      return response;
+    } catch (error) {
+      logger.error("Erro ao buscar estatísticas de pedidos do cliente", error);
+      throw error;
+    }
+  }
+
+  extractStatisticsCustomer(response: OrderStatisticsCustomerResponse) {
+    return response.data?.["Orders Statistics Customer"]?.[0] ?? null;
   }
 }
 

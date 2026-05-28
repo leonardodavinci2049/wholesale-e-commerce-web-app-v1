@@ -8,14 +8,18 @@ import { orderB2bServiceApi } from "./order-b2b-service-api";
 import {
   transformCustomerEntity,
   transformDetailsEntity,
+  transformFindLatestEntity,
   transformItemEntity,
   transformSellerEntity,
+  transformStatisticsCustomerEntity,
   transformSummaryEntity,
   type UIOrderB2bCustomer,
   type UIOrderB2bDetails,
   type UIOrderB2bItem,
   type UIOrderB2bSeller,
   type UIOrderB2bSummary,
+  type UIOrderFindLatest,
+  type UIOrderStatisticsCustomer,
 } from "./transformers/transformers";
 
 const logger = createLogger("order-b2b-cached-service");
@@ -149,6 +153,66 @@ export async function getOrderItemQt(
   } catch (error) {
     logger.error(
       `Erro ao buscar quantidade de itens para customer ID ${customerId}:`,
+      error,
+    );
+    throw error;
+  }
+}
+
+// === Find Latest ===
+
+export async function getOrderFindLatest(
+  customerId: number,
+  params: BaseParams = {},
+): Promise<UIOrderFindLatest[]> {
+  "use cache";
+  cacheLife("seconds");
+  cacheTag(CACHE_TAGS.orderB2bDetail(String(customerId)), CACHE_TAGS.orderB2b);
+
+  try {
+    const response = await orderB2bServiceApi.findLatest({
+      pe_customer_id: customerId,
+      pe_user_id: params.pe_user_id,
+      pe_user_name: params.pe_user_name,
+      pe_user_role: params.pe_user_role,
+      pe_person_id: params.pe_person_id,
+    });
+
+    const entities = orderB2bServiceApi.extractFindLatest(response);
+    return entities.map(transformFindLatestEntity);
+  } catch (error) {
+    logger.error(
+      `Erro ao buscar últimos pedidos para customer ID ${customerId}:`,
+      error,
+    );
+    throw error;
+  }
+}
+
+// === Statistics Customer ===
+
+export async function getOrderStatisticsCustomer(
+  customerId: number,
+  params: BaseParams = {},
+): Promise<UIOrderStatisticsCustomer | null> {
+  "use cache";
+  cacheLife("seconds");
+  cacheTag(CACHE_TAGS.orderB2bDetail(String(customerId)), CACHE_TAGS.orderB2b);
+
+  try {
+    const response = await orderB2bServiceApi.statisticsCustomer({
+      pe_customer_id: customerId,
+      pe_user_id: params.pe_user_id,
+      pe_user_name: params.pe_user_name,
+      pe_user_role: params.pe_user_role,
+      pe_person_id: params.pe_person_id,
+    });
+
+    const entity = orderB2bServiceApi.extractStatisticsCustomer(response);
+    return entity ? transformStatisticsCustomerEntity(entity) : null;
+  } catch (error) {
+    logger.error(
+      `Erro ao buscar estatísticas de pedidos para customer ID ${customerId}:`,
       error,
     );
     throw error;
