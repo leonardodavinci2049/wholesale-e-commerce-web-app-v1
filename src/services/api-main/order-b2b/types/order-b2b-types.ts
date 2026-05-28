@@ -36,6 +36,14 @@ export interface OrderItemFindQtRequest extends OrderB2bBaseRequest {
   pe_customer_id: number;
 }
 
+export interface OrderFindLatestRequest extends OrderB2bBaseRequest {
+  pe_customer_id: number;
+}
+
+export interface OrderStatisticsCustomerRequest extends OrderB2bBaseRequest {
+  pe_customer_id: number;
+}
+
 // === Entity Interfaces - Budget / Dashboard ===
 
 export interface OrderB2bSummaryEntity {
@@ -161,6 +169,36 @@ export interface OrderItemQtEntity {
   QT_ITEMS: number;
 }
 
+// === Entity - Order Find Latest ===
+
+export interface OrderFindLatestEntity {
+  DATA_PEDIDO: string;
+  ID_CLIENTE: number;
+  CLIENTE: string;
+  ID_TBL_PEDIDO: number;
+  ID_STATUS_PEDIDO: number;
+  ID_STATUS_FINANCEIRO: number;
+  ID_STATUS_ENTREGA: number;
+  STATUS_PEDIDO: string;
+  STATUS_FINANCEIRO: string;
+  STATUS_ENTREGA: string;
+  QT_ITENS: number;
+  VL_FRETE: string;
+  VL_DESCONTO: string;
+  VL_TOTAL: string;
+}
+
+// === Entity - Order Statistics Customer ===
+
+export interface OrderStatisticsCustomerEntity {
+  ID_CLIENTE: number;
+  CLIENTE: string;
+  QT_PEDIDOS: number;
+  QT_ITENS: string;
+  TICKET_MEDIO: string;
+  TOTAL_GERAL: string;
+}
+
 // === Response Interfaces ===
 
 export interface OrderFindBudgetCustomerIdResponse
@@ -191,6 +229,20 @@ export interface OrderItemFindQtResponse extends OrderB2bBaseResponse {
   recordId: number;
   data: {
     "Qt Items": OrderItemQtEntity[];
+  };
+}
+
+export interface OrderFindLatestResponse extends OrderB2bBaseResponse {
+  recordId: number;
+  data: {
+    "Orders Find Latest": OrderFindLatestEntity[];
+  };
+}
+
+export interface OrderStatisticsCustomerResponse extends OrderB2bBaseResponse {
+  recordId: number;
+  data: {
+    "Orders Statistics Customer": OrderStatisticsCustomerEntity[];
   };
 }
 

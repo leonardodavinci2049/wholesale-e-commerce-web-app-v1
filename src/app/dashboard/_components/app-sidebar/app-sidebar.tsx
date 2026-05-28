@@ -82,7 +82,7 @@ const data = {
       title: "Catálogo de Produtos",
       url: "#",
       icon: PackageSearch,
-      items: [ 
+      items: [
         {
           title: "Em Promoção",
           url: "/dashboard/product/products-on-sale",
@@ -99,7 +99,7 @@ const data = {
         {
           title: "Tabela",
           url: "/dashboard/product/products-tabela",
-        },       
+        },
       ],
     },
 

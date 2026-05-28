@@ -23,6 +23,16 @@ export const OrderItemFindQtSchema = z.object({
   pe_customer_id: z.number().int(),
 });
 
+export const OrderFindLatestSchema = z.object({
+  ...baseContextSchema,
+  pe_customer_id: z.number().int(),
+});
+
+export const OrderStatisticsCustomerSchema = z.object({
+  ...baseContextSchema,
+  pe_customer_id: z.number().int(),
+});
+
 export type OrderFindBudgetCustomerIdInput = z.infer<
   typeof OrderFindBudgetCustomerIdSchema
 >;
@@ -30,3 +40,7 @@ export type OrderFindDashboardCustomerIdInput = z.infer<
   typeof OrderFindDashboardCustomerIdSchema
 >;
 export type OrderItemFindQtInput = z.infer<typeof OrderItemFindQtSchema>;
+export type OrderFindLatestInput = z.infer<typeof OrderFindLatestSchema>;
+export type OrderStatisticsCustomerInput = z.infer<
+  typeof OrderStatisticsCustomerSchema
+>;

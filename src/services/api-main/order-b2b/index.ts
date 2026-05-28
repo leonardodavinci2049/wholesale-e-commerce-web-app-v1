@@ -1,7 +1,9 @@
 export {
   getBudgetByCustomerId,
   getDashboardByCustomerId,
+  getOrderFindLatest,
   getOrderItemQt,
+  getOrderStatisticsCustomer,
   type UIBudgetOrderDetail,
   type UIDashboardOrderDetail,
 } from "./order-b2b-cached-service";
@@ -13,14 +15,18 @@ export {
 export {
   transformCustomerEntity,
   transformDetailsEntity,
+  transformFindLatestEntity,
   transformItemEntity,
   transformSellerEntity,
+  transformStatisticsCustomerEntity,
   transformSummaryEntity,
   type UIOrderB2bCustomer,
   type UIOrderB2bDetails,
   type UIOrderB2bItem,
   type UIOrderB2bSeller,
   type UIOrderB2bSummary,
+  type UIOrderFindLatest,
+  type UIOrderStatisticsCustomer,
 } from "./transformers/transformers";
 export type {
   OrderB2bCustomerEntity,
@@ -34,7 +40,13 @@ export type {
   OrderFindBudgetCustomerIdResponse,
   OrderFindDashboardCustomerIdRequest,
   OrderFindDashboardCustomerIdResponse,
+  OrderFindLatestEntity,
+  OrderFindLatestRequest,
+  OrderFindLatestResponse,
   OrderItemFindQtRequest,
   OrderItemFindQtResponse,
   OrderItemQtEntity,
+  OrderStatisticsCustomerEntity,
+  OrderStatisticsCustomerRequest,
+  OrderStatisticsCustomerResponse,
 } from "./types/order-b2b-types";

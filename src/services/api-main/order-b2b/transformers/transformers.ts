@@ -4,6 +4,8 @@ import type {
   OrderB2bItemEntity,
   OrderB2bSellerEntity,
   OrderB2bSummaryEntity,
+  OrderFindLatestEntity,
+  OrderStatisticsCustomerEntity,
 } from "../types/order-b2b-types";
 
 // === UI Interfaces ===
@@ -261,5 +263,69 @@ export function transformSellerEntity(
     sellerPhone: entity.TELEFONE_VENDEDOR,
     sellerWhatsapp: entity.WHATSAPP_VENDEDOR,
     sellerEmail: entity.EMAIL_VENDEDOR,
+  };
+}
+
+// === UI Interfaces - Order Find Latest ===
+
+export interface UIOrderFindLatest {
+  orderDate: string;
+  customerId: number;
+  customerName: string;
+  orderId: number;
+  orderStatusId: number;
+  financialStatusId: number;
+  deliveryStatusId: number;
+  orderStatus: string;
+  financialStatus: string;
+  deliveryStatus: string;
+  itemCount: number;
+  freightValue: string;
+  discountValue: string;
+  totalValue: string;
+}
+
+export function transformFindLatestEntity(
+  entity: OrderFindLatestEntity,
+): UIOrderFindLatest {
+  return {
+    orderDate: entity.DATA_PEDIDO,
+    customerId: entity.ID_CLIENTE,
+    customerName: entity.CLIENTE,
+    orderId: entity.ID_TBL_PEDIDO,
+    orderStatusId: entity.ID_STATUS_PEDIDO,
+    financialStatusId: entity.ID_STATUS_FINANCEIRO,
+    deliveryStatusId: entity.ID_STATUS_ENTREGA,
+    orderStatus: entity.STATUS_PEDIDO,
+    financialStatus: entity.STATUS_FINANCEIRO,
+    deliveryStatus: entity.STATUS_ENTREGA,
+    itemCount: entity.QT_ITENS,
+    freightValue: entity.VL_FRETE,
+    discountValue: entity.VL_DESCONTO,
+    totalValue: entity.VL_TOTAL,
+  };
+}
+
+// === UI Interfaces - Order Statistics Customer ===
+
+export interface UIOrderStatisticsCustomer {
+  customerId: number;
+  customerName: string;
+  totalOrders: number;
+  totalItems: string;
+  averageTicket: string;
+  totalValue: string;
+}
+
+export function transformStatisticsCustomerEntity(
+  entity: OrderStatisticsCustomerEntity,
+): UIOrderStatisticsCustomer {
+  return {
+    customerId: entity.ID_CLIENTE,
+    customerName: entity.CLIENTE,
+    totalOrders: entity.QT_PEDIDOS,
+    totalItems: entity.QT_ITENS,
+    averageTicket: entity.TICKET_MEDIO,
+    totalValue: entity.TOTAL_GERAL,
   };
 }
