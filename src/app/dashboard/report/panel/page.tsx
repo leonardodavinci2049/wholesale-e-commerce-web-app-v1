@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { SiteHeaderWithBreadcrumb } from "@/app/dashboard/_components/header/site-header-with-breadcrumb";
-import { ChartAreaInteractive } from "./_components/chart-area-interactive";
-import { DataTable } from "./_components/data-table";
+import { ReportPanelContent } from "./_components/report-panel-content";
 import { SectionCards } from "./_components/section-cards";
 
 const Page = () => {
@@ -20,13 +19,8 @@ const Page = () => {
             <Suspense>
               <SectionCards />
             </Suspense>
-            <div className="px-4 lg:px-6">
-              <Suspense>
-                <ChartAreaInteractive />
-              </Suspense>
-            </div>
             <Suspense>
-              <DataTable />
+              <ReportPanelContent />
             </Suspense>
           </div>
         </div>

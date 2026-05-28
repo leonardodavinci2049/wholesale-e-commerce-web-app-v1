@@ -7,11 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getAuthContext } from "@/server/auth-context";
-import {
-  getOrderFindLatest,
-  type UIOrderFindLatest,
-} from "@/services/api-main/order-b2b";
+import type { UIOrderFindLatest } from "@/services/api-main/order-b2b";
 import { formatCurrency } from "@/utils/common-utils";
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
@@ -28,25 +24,11 @@ function formatDate(dateString: string): string {
   }
 }
 
-export async function DataTable() {
-  const { session, apiContext } = await getAuthContext();
-  const customerId = session.user.personId ?? 0;
+type DataTableProps = {
+  orders: UIOrderFindLatest[];
+};
 
-  let orders: UIOrderFindLatest[];
-  try {
-    orders = await getOrderFindLatest(customerId, { ...apiContext });
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Erro ao buscar pedidos recentes.";
-    return (
-      <div className="overflow-hidden rounded-lg border">
-        <p className="p-4 text-sm text-destructive">{message}</p>
-      </div>
-    );
-  }
-
+export function DataTable({ orders }: DataTableProps) {
   return (
     <div className="overflow-hidden rounded-lg border">
       <div className="overflow-x-auto">

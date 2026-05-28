@@ -326,6 +326,6 @@ export function transformStatisticsCustomerEntity(
     totalOrders: entity.QT_PEDIDOS,
     totalItems: entity.QT_ITENS,
     averageTicket: entity.TICKET_MEDIO,
-    totalValue: entity.TOTAL_GERAL,
+    totalValue: entity.TOTAL_GERAL_PEDIDO,
   };
 }
