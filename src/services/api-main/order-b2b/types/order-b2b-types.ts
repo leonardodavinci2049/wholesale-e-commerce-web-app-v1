@@ -175,7 +175,7 @@ export interface OrderFindLatestEntity {
   DATA_PEDIDO: string;
   ID_CLIENTE: number;
   CLIENTE: string;
-  ID_TBL_PEDIDO: number;
+  ID_PEDIDO: number;
   ID_STATUS_PEDIDO: number;
   ID_STATUS_FINANCEIRO: number;
   ID_STATUS_ENTREGA: number;

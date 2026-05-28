@@ -74,7 +74,6 @@ export interface OrderCustomerAllEntity {
 /** Entidade para latest-all / sale-all / seller-all (com comissão) */
 export interface OrderReportListEntity {
   DATA_VENDA: string | null;
-  ID_TBL_PEDIDO?: number;
   ID_PEDIDO?: number;
   ID_CLIENTE: number;
   CLIENTE_NOME: string;

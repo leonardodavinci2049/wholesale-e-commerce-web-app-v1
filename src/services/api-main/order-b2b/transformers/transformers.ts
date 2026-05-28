@@ -292,7 +292,7 @@ export function transformFindLatestEntity(
     orderDate: entity.DATA_PEDIDO,
     customerId: entity.ID_CLIENTE,
     customerName: entity.CLIENTE,
-    orderId: entity.ID_TBL_PEDIDO,
+    orderId: entity.ID_PEDIDO,
     orderStatusId: entity.ID_STATUS_PEDIDO,
     financialStatusId: entity.ID_STATUS_FINANCEIRO,
     deliveryStatusId: entity.ID_STATUS_ENTREGA,
