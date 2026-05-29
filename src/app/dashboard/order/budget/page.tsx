@@ -80,22 +80,22 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
 
   const orderCartPromise = getOrderCart(orderId ?? 0, dashboardParams).catch(
     (error) => {
-      logger.error("Erro ao carregar carrinho do pedido (v2):", error);
+      logger.error("Erro ao carregar carrinho do pedido:", error);
       return undefined;
     },
   );
 
   const [products, brands, categories, orderCart] = await Promise.all([
     productsPromise.catch((error) => {
-      logger.error("Erro ao carregar produtos (v2):", error);
+      logger.error("Erro ao carregar produtos:", error);
       return [];
     }),
     brandsPromise.catch((error) => {
-      logger.error("Erro ao carregar marcas (v2):", error);
+      logger.error("Erro ao carregar marcas:", error);
       return [];
     }),
     categoriesPromise.catch((error) => {
-      logger.error("Erro ao carregar categorias (v2):", error);
+      logger.error("Erro ao carregar categorias:", error);
       return [];
     }),
     orderCartPromise,
@@ -113,7 +113,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
         breadcrumbItems={[
           { label: "Dashboard", href: "/dashboard" },
           { label: "Vendas", href: "#" },
-          { label: "Novo Orçamento (v2)", isActive: true },
+          { label: "Novo Orçamento", isActive: true },
         ]}
       />
 
