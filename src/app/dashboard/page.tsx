@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/card";
 
 import { getAuthContext } from "@/server/auth-context";
+import { DashboardMobileBottomBar } from "./_components/dashboard-mobile-bottom-bar";
 import { SiteHeaderWithBreadcrumb } from "./_components/header/site-header-with-breadcrumb";
 
 const modules = [
@@ -203,17 +204,13 @@ export default async function DashboardPage() {
                       Bem-vindo ao <strong>WINERP B2B</strong>.
                     </p>
                   </div>
-
                 </div>
               </div>
-
             </div>
           </CardContent>
         </Card>
 
-
-        <section className="grid grid-cols-1 gap-4 pb-4 xl:grid-cols-[1.1fr_0.9fr]">
-
+        <section className="grid grid-cols-1 gap-4 pb-20 xl:grid-cols-[1.1fr_0.9fr] xl:pb-4">
           <Card className="border-border/60 bg-card/70 animate-in fade-in slide-in-from-bottom-5 duration-700">
             <CardHeader className="space-y-1 pb-3">
               <CardTitle className="flex items-center gap-2 text-xl tracking-tight">
@@ -259,6 +256,8 @@ export default async function DashboardPage() {
           </Card>
         </section>
       </main>
+
+      <DashboardMobileBottomBar />
     </div>
   );
 }
