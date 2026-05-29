@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 
 export const metadata: Metadata = {
@@ -33,7 +34,10 @@ interface ProductsOnSalePageProps {
 export default async function ProductsOnSalePage({
   searchParams,
 }: ProductsOnSalePageProps) {
-  const { apiContext } = await getAuthContext();
+  const { session, apiContext } = await getAuthContext();
+
+  const customerId = session.user.personId ?? 0;
+  const typeBusiness = serverEnvs.TYPE_BUSINESS;
 
   const params = await searchParams;
   const search = params.search?.trim() ?? "";
@@ -64,6 +68,8 @@ export default async function ProductsOnSalePage({
 
   const orderCartPromise = getOrderCart(orderId ?? 0, {
     ...apiContext,
+    customerId,
+    typeBusiness,
   }).catch((error) => {
     logger.error("Erro ao carregar carrinho:", error);
     return undefined;
