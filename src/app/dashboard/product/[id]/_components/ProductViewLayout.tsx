@@ -6,7 +6,6 @@ import { ProductViewCategories } from "./ProductViewCategories";
 import { ProductViewGallery } from "./ProductViewGallery";
 import { ProductViewHeader } from "./ProductViewHeader";
 import { ProductViewPricing } from "./ProductViewPricing";
-import { ProductViewStock } from "./ProductViewStock";
 import { ProductViewTabs } from "./ProductViewTabs";
 
 interface ProductViewLayoutProps {
@@ -32,7 +31,7 @@ export function ProductViewLayout({
         </div>
         <div className="flex flex-col gap-6">
           <ProductViewPricing product={product} />
-          <ProductViewStock product={product} />
+
           <ProductViewCategories categories={relatedCategories} />
         </div>
       </div>

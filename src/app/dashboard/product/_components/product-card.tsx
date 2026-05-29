@@ -80,7 +80,7 @@ export function ProductCard({
             </span>
           ) : null}
           {product.ref && (
-            <span className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">
+            <span className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
               REF {product.ref}
             </span>
           )}
@@ -89,7 +89,7 @@ export function ProductCard({
         <div className="mt-1">
           <p
             className={cn(
-              "text-sm font-bold",
+              "text-sm font-medium",
               inStock
                 ? "text-foreground"
                 : "text-muted-foreground line-through",
