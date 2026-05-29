@@ -70,7 +70,7 @@ export function ProductListItem({
 
         <p
           className={cn(
-            "line-clamp-2 text-[13px] font-semibold leading-snug transition-colors group-hover:text-foreground",
+            "line-clamp-2 text-[16px] font-semibold dark:font-medium leading-snug transition-colors group-hover:text-foreground",
             !inStock && "text-muted-foreground",
           )}
         >
@@ -84,12 +84,12 @@ export function ProductListItem({
             </span>
           )}
           {product.ref && (
-            <span className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">
+            <span className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
               REF {product.ref}
             </span>
           )}
           {product.sku ? (
-            <span className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground">
+            <span className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
               SKU {product.sku}
             </span>
           ) : null}
@@ -99,7 +99,7 @@ export function ProductListItem({
           <div>
             <p
               className={cn(
-                "text-[15px] font-bold tabular-nums tracking-tight sm:text-base",
+                "text-[15px] font-semibold dark:font-medium tabular-nums tracking-tight sm:text-base",
                 inStock
                   ? "text-zinc-900 dark:text-zinc-100"
                   : "text-muted-foreground line-through",

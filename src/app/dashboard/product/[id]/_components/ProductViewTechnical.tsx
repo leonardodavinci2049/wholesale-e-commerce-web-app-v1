@@ -1,4 +1,4 @@
-import { Clock, Globe, Hash, Settings } from "lucide-react";
+import { Clock, Globe, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { UIProductPdv } from "@/services/api-main/product-pdv/transformers/transformers";
 
@@ -71,48 +71,11 @@ export function ProductViewTechnical({ product }: ProductViewTechnicalProps) {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-md flex items-center gap-2">
-            <Globe className="w-4 h-4" /> SEO & Metadados
+            <Globe className="w-4 h-4" /> Diversos
           </CardTitle>
         </CardHeader>
         <CardContent>
           <dl className="space-y-4 text-sm mt-2">
-            <div className="pt-2">
-              <dt className="text-muted-foreground flex items-center gap-2">
-                <Hash className="w-3 h-3" /> Slug da URL:
-              </dt>
-              <dd className="font-mono text-xs p-2 bg-slate-100 dark:bg-slate-800 rounded mt-1 break-all border">
-                {product.slug || (
-                  <span className="text-muted-foreground font-sans italic">
-                    Não informado
-                  </span>
-                )}
-              </dd>
-            </div>
-            <div className="pt-2">
-              <dt className="text-muted-foreground mb-1">
-                Meta Title ({product.metaTitle?.length || 0} chars):
-              </dt>
-              <dd className="font-medium">
-                {product.metaTitle || (
-                  <span className="text-muted-foreground italic">
-                    Padrão da loja
-                  </span>
-                )}
-              </dd>
-            </div>
-            <div className="border-t pt-2 mt-2">
-              <dt className="text-muted-foreground mb-1">
-                Meta Description ({product.metaDescription?.length || 0} chars):
-              </dt>
-              <dd className="font-medium text-xs leading-relaxed">
-                {product.metaDescription || (
-                  <span className="text-muted-foreground italic">
-                    Padrão da loja
-                  </span>
-                )}
-              </dd>
-            </div>
-
             <div className="grid grid-cols-2 gap-4 border-t pt-4 mt-2">
               <div>
                 <dt className="text-muted-foreground flex items-center gap-1 text-xs">

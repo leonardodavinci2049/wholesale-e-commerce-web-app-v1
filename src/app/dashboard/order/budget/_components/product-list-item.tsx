@@ -30,9 +30,9 @@ export function ProductListItem({
   const isLaunch = product.launch;
 
   return (
-    <li className="group flex items-start gap-3 border border-border/60 rounded-xl bg-card p-3 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-zinc-200/20 dark:hover:shadow-none hover:border-zinc-300 dark:border-zinc-800/80 dark:bg-zinc-900/80 dark:hover:bg-zinc-900/40 dark:hover:border-zinc-700 sm:gap-4">
+    <li className="group flex items-start gap-3 border border-border/60 rounded-lg bg-card p-3 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-zinc-200/20 dark:hover:shadow-none hover:border-zinc-300 dark:border-zinc-800/80 dark:bg-zinc-900/80 dark:hover:bg-zinc-900/40 dark:hover:border-zinc-700 sm:gap-4">
       <div className="shrink-0 pt-0.5">
-        <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-zinc-200/50 bg-zinc-50 dark:bg-zinc-900 sm:h-16 sm:w-16 dark:border-zinc-800/50">
+        <div className="relative h-14 w-14 overflow-hidden rounded-lg border border-zinc-200/50 bg-zinc-50 dark:bg-zinc-900 sm:h-16 sm:w-16 dark:border-zinc-800/50">
           <div
             className={cn(
               "relative flex h-full w-full items-center justify-center transition-transform duration-300 group-hover:scale-105",
@@ -76,7 +76,7 @@ export function ProductListItem({
 
         <p
           className={cn(
-            "line-clamp-2 text-[14px] font-semibold leading-snug text-zinc-800 dark:text-zinc-150 transition-colors group-hover:text-foreground",
+            "line-clamp-2 text-[16px] font-semibold dark:font-medium leading-snug text-zinc-800 dark:text-white transition-colors group-hover:text-foreground",
             !inStock && "text-muted-foreground",
           )}
         >
@@ -106,7 +106,7 @@ export function ProductListItem({
         <div className="flex items-center justify-between gap-x-2 mt-2 w-full">
           <p
             className={cn(
-              "text-[15px] font-bold tabular-nums tracking-tight text-left sm:text-base",
+              "text-[15px] font-semibold dark:font-medium tabular-nums tracking-tight text-left sm:text-base",
               inStock
                 ? "text-zinc-900 dark:text-zinc-100"
                 : "text-muted-foreground line-through",

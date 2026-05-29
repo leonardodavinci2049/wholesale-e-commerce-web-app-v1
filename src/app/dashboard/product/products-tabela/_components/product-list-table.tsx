@@ -101,7 +101,7 @@ export function ProductListTable({ products }: ProductListTableProps) {
                         )}
                       </div>
 
-                      <p className="text-[13px] font-semibold leading-4.5 text-foreground wrap-break-word">
+                      <p className="text-[14px] font-semibold leading-4.5 text-foreground wrap-break-word">
                         {product.name}
                       </p>
                     </div>
@@ -156,7 +156,7 @@ export function ProductListTable({ products }: ProductListTableProps) {
               <TableHead className="w-20">ID</TableHead>
               <TableHead>Produto</TableHead>
               <TableHead className="w-62.5 max-w-62.5">Categorias</TableHead>
-              <TableHead className="w-24">Estoque</TableHead>
+
               <TableHead className="w-24">Atacado</TableHead>
               <TableHead className="w-24 text-right">Ações</TableHead>
             </TableRow>
@@ -174,7 +174,7 @@ export function ProductListTable({ products }: ProductListTableProps) {
                 </TableCell>
                 <TableCell className="align-top whitespace-normal">
                   <div className="space-y-0.5">
-                    <p className="font-medium leading-5 text-foreground whitespace-normal wrap-break-word">
+                    <p className="text-[16px] font-semibold leading-5 text-foreground whitespace-normal wrap-break-word">
                       {product.name}
                     </p>
                     {(product.ref || product.brand || product.type) && (
@@ -198,25 +198,7 @@ export function ProductListTable({ products }: ProductListTableProps) {
                     {getCategoryNames(product.categories)}
                   </p>
                 </TableCell>
-                <TableCell>
-                  <span
-                    className={cn(
-                      "text-sm font-medium",
-                      product.storeStock === 0
-                        ? "text-destructive"
-                        : product.storeStock < 10
-                          ? "text-amber-600 dark:text-amber-400"
-                          : "text-foreground",
-                    )}
-                  >
-                    {product.storeStock}
-                  </span>
-                  {product.storeStock === 0 && (
-                    <Badge variant="destructive" className="ml-2 text-xs">
-                      Ruptura
-                    </Badge>
-                  )}
-                </TableCell>
+
                 <TableCell>
                   <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                     {formatPrice(product.wholesalePrice)}

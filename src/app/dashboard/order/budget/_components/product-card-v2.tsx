@@ -30,7 +30,7 @@ export function ProductCardV2({
   const isLaunch = product.launch;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-xl border border-border/60 bg-card text-card-foreground shadow-xs transition-all hover:shadow-sm dark:bg-zinc-900/80">
+    <div className="group flex flex-col overflow-hidden rounded-lg border border-border/60 bg-card text-card-foreground shadow-xs transition-all hover:shadow-sm dark:bg-zinc-900/80">
       <div className="relative aspect-square w-full bg-white p-2 dark:bg-zinc-100">
         {product.brand && (
           <span className="absolute left-2 top-2 z-10 rounded-md bg-zinc-200/90 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-zinc-700">
