@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { createLogger } from "@/core/logger";
+
+export const metadata: Metadata = {
+  title: "Produtos em Promoção",
+};
+
 import { getAuthContext } from "@/server/auth-context";
 import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
 import { getPremiumProducts } from "@/services/api-main/product-base/product-base-cached-service";
@@ -90,6 +96,16 @@ export default async function ProductsOnSalePage({
       <div id="promo-search-panel-container" className="sm:hidden" />
 
       <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
+        <div className="mx-auto w-full max-w-350 flex flex-col gap-1 mb-2">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-foreground">
+            Produtos em Promoção
+          </h1>
+          <p className="text-muted-foreground text-sm md:text-base">
+            Confira as melhores ofertas e descontos especiais preparados para
+            você.
+          </p>
+        </div>
+
         <div className="mx-auto grid w-full max-w-350 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
           <div className="flex min-w-0 flex-col gap-4">
             <ProductViewSwitcher
