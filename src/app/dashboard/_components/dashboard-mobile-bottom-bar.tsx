@@ -5,19 +5,18 @@ import {
   ClipboardList,
   Home,
   LayoutGrid,
+  MessageCircle,
   Search,
-  Settings,
-  Store,
   Target,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
-
 import {
   MobileBottomBar,
+  MobileBottomBarExternalLink,
   MobileBottomBarLink,
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
+import { publicEnvs } from "@/core/config/envs.client";
 
 import { DashboardSearchContent } from "./dashboard-search-content";
 
@@ -31,11 +30,11 @@ interface MoreItem {
 
 const moreItems: MoreItem[] = [
   {
-    label: "Clientes",
-    href: "/dashboard/customer/customer-list",
-    icon: Users,
-    color: "text-indigo-500",
-    bgColor: "bg-indigo-500/10",
+    label: "Relatórios",
+    href: "/dashboard/report/panel",
+    icon: BarChart3,
+    color: "text-purple-500",
+    bgColor: "bg-purple-500/10",
   },
   {
     label: "CRM",
@@ -44,13 +43,7 @@ const moreItems: MoreItem[] = [
     color: "text-rose-500",
     bgColor: "bg-rose-500/10",
   },
-  {
-    label: "Relatórios",
-    href: "/dashboard/report/panel",
-    icon: BarChart3,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-  },
+
   {
     label: "Agenda",
     href: "/dashboard/agenda/agenda-panel",
@@ -58,16 +51,21 @@ const moreItems: MoreItem[] = [
     color: "text-sky-500",
     bgColor: "bg-sky-500/10",
   },
-  {
-    label: "Configurações",
-    href: "/dashboard/settings",
-    icon: Settings,
-    color: "text-slate-500",
-    bgColor: "bg-slate-500/10",
-  },
 ];
 
+const WHATSAPP_MESSAGE = "Olá, gostaria de tirar algumas dúvidas";
+
+function buildWhatsappUrl(phone: string, message: string): string {
+  const digits = phone.replace(/\D/g, "");
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}
+
 export function DashboardMobileBottomBar() {
+  const whatsappUrl = buildWhatsappUrl(
+    publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
+    WHATSAPP_MESSAGE,
+  );
+
   return (
     <MobileBottomBar aria-label="Menu de navegação principal">
       <MobileBottomBarLink
@@ -78,9 +76,9 @@ export function DashboardMobileBottomBar() {
       />
 
       <MobileBottomBarLink
-        href="/dashboard/sales-dashboard"
-        icon={<Store className="h-5 w-5" />}
-        label="Vendas"
+        href="/dashboard/order/order-list"
+        icon={<ClipboardList className="h-5 w-5" />}
+        label="Pedidos"
       />
 
       <MobileBottomBarSheet
@@ -93,10 +91,10 @@ export function DashboardMobileBottomBar() {
         <DashboardSearchContent />
       </MobileBottomBarSheet>
 
-      <MobileBottomBarLink
-        href="/dashboard/order/order-list"
-        icon={<ClipboardList className="h-5 w-5" />}
-        label="Pedidos"
+      <MobileBottomBarExternalLink
+        href={whatsappUrl}
+        icon={<MessageCircle className="h-5 w-5" />}
+        label="WhatsApp"
       />
 
       <MobileBottomBarSheet

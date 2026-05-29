@@ -98,7 +98,7 @@ export function OrderTable({ orders }: OrderTableProps) {
             <article className="min-w-0 overflow-hidden rounded-xl border border-border/80 bg-neutral-50 p-3 shadow-sm transition-all hover:border-primary/30 hover:bg-neutral-100 hover:shadow-md dark:border-border/80 dark:bg-neutral-900/50 dark:hover:bg-neutral-900/80">
               {/* Row 1: ID + date */}
               <div className="flex min-w-0 items-center gap-1.5">
-                <span className="shrink-0 rounded-full border border-border/40 bg-background px-2 py-0.5 font-mono text-[10px] shadow-sm text-muted-foreground">
+                <span className="shrink-0 rounded-full border border-border/40 bg-background px-2 py-0.5 font-mono text-[14px] shadow-sm text-muted-foreground">
                   #{order.orderId}
                 </span>
                 <span className="text-[11px] text-muted-foreground">
