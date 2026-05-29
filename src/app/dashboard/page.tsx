@@ -6,127 +6,102 @@ import {
   CalendarDays,
   ClipboardList,
   LayoutGrid,
-  Mail,
   PackageSearch,
-  PhoneCall,
-  Settings,
   ShieldCheck,
-  Store,
-  Target,
+  ShoppingCart,
   TriangleAlert,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { publicEnvs } from "@/core/config/envs.client";
 import { getAuthContext } from "@/server/auth-context";
 import { DashboardMobileBottomBar } from "./_components/dashboard-mobile-bottom-bar";
 import { SiteHeaderWithBreadcrumb } from "./_components/header/site-header-with-breadcrumb";
 
 const modules = [
   {
-    title: "Painel de Compras",
-    description: "Inicie novas compras e acompanhe o fluxo de caixa.",
+    title: "Orçamentos e Pedidos",
+    description: "Gerencie pedidos, orçamentos e status de entrega.",
     href: "/dashboard/sales-dashboard",
-    icon: Store,
+    icon: BadgeCheck,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     borderColor: "group-hover:border-blue-500/50",
   },
   {
-    title: "Orçamentos e Pedidos",
-    description: "Gerencie pedidos, orçamentos e status de entrega.",
-    href: "/dashboard/order/order-list",
-    icon: ClipboardList,
+    title: "Meu Carrinho",
+    description: "Adicione novos produtos ao carrinho.",
+    href: "/dashboard/order/budget",
+    icon: ShoppingCart,
     color: "text-amber-500",
     bgColor: "bg-amber-500/10",
     borderColor: "group-hover:border-amber-500/50",
   },
   {
-    title: "Catálogo de Produtos",
-    description: "Consulte estoque, preços e portfólio de produtos.",
-    href: "/dashboard/product/catalog",
+    title: "Produtos em Destaque",
+    description: "Confira os produtos em destaque.",
+    href: "/dashboard/product/products-on-sale",
     icon: PackageSearch,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
     borderColor: "group-hover:border-emerald-500/50",
   },
   {
-    title: "Lista de Clientes",
-    description: "Acesse o cadastro e histórico completo de compras.",
-    href: "/dashboard/customer/customer-list",
-    icon: Users,
+    title: "Lançamentos",
+    description: "Confira os lançamentos.",
+    href: "/dashboard/product/products-new-releases",
+    icon: Bolt,
     color: "text-indigo-500",
     bgColor: "bg-indigo-500/10",
     borderColor: "group-hover:border-indigo-500/50",
   },
   {
-    title: "Painel de Relatórios",
-    description: "Visualize métricas, resultados, metas e comissões.",
-    href: "/dashboard/report/panel",
+    title: "Os mais Vendidos",
+    description: "Confira os mais vendidos.",
+    href: "/dashboard/product/products-best-selling",
     icon: BarChart3,
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
     borderColor: "group-hover:border-purple-500/50",
   },
   {
-    title: "CRM",
-    description: "Gestão de relacionamento e pipeline de vendas.",
-    href: "/dashboard/crm/crm-panel",
-    icon: Target,
+    title: "MInhas Compras",
+    description: "Confira suas compras.",
+    href: "/dashboard/order/order-list",
+    icon: ClipboardList,
     color: "text-rose-500",
     bgColor: "bg-rose-500/10",
     borderColor: "group-hover:border-rose-500/50",
+  },
+  {
+    title: "Relatórios",
+    description: "Acesse os relatórios.",
+    href: "/dashboard/report/panel",
+    icon: BarChart3,
+    color: "text-sky-500",
+    bgColor: "bg-sky-500/10",
+    borderColor: "group-hover:border-sky-500/50",
+  },
+  {
+    title: "Meu Cadastro",
+    description: "Confira seus dados cadastrais.",
+    href: "/dashboard/profile",
+    icon: ShieldCheck,
+    color: "text-sky-500",
+    bgColor: "bg-sky-500/10",
+    borderColor: "group-hover:border-sky-500/50",
   },
   {
     title: "Agenda",
     description: "Organize seus compromissos, visitas e retornos.",
     href: "/dashboard/agenda/agenda-panel",
     icon: CalendarDays,
-    color: "text-sky-500",
-    bgColor: "bg-sky-500/10",
-    borderColor: "group-hover:border-sky-500/50",
-  },
-  {
-    title: "Configurações",
-    description: "Ajuste preferências e configurações da sua conta.",
-    href: "/dashboard/settings",
-    icon: Settings,
     color: "text-slate-500",
     bgColor: "bg-slate-500/10",
     borderColor: "group-hover:border-slate-500/50",
-  },
-];
-
-const quickInfoItems = [
-  {
-    title: "Acesse o Painel de Vendas para acompanhar indicadores do dia.",
-    icon: Bolt,
-    color: "text-amber-500",
-  },
-  {
-    title: "Seus dados permanecem protegidos com autenticação e sessão ativa.",
-    icon: ShieldCheck,
-    color: "text-emerald-500",
-  },
-  {
-    title: "Relatórios e metas ficam centralizados para consulta rápida.",
-    icon: BarChart3,
-    color: "text-sky-500",
-  },
-  {
-    title: "Clientes e agenda ajudam a priorizar contatos e retornos.",
-    icon: PhoneCall,
-    color: "text-teal-500",
   },
 ];
 
@@ -143,22 +118,12 @@ function getInitials(name?: string | null) {
   return initials || "US";
 }
 
-function formatRole(role?: string | null) {
-  if (!role) return "Usuário";
-
-  return role
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/^./, (char) => char.toUpperCase());
-}
-
 export default async function DashboardPage() {
   const { session, authWarning } = await getAuthContext();
 
   const { user } = session;
   const firstName = user?.name?.split(" ")[0] || "Vendedor";
   const userInitials = getInitials(user?.name);
-  const userRole = formatRole(user?.role);
-
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_28%),radial-gradient(circle_at_top_right,rgba(148,163,184,0.1),transparent_20%)]" />
@@ -168,7 +133,7 @@ export default async function DashboardPage() {
         breadcrumbItems={[{ label: "Início", isActive: true }]}
       />
 
-      <main className="mx-auto flex w-full max-w-350 flex-1 flex-col gap-6 p-4 md:p-6 lg:p-8">
+      <main className="mx-auto flex w-full max-w-350 flex-1 flex-col gap-3 p-3 md:p-4 lg:p-5">
         {authWarning ? (
           <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-950 dark:text-amber-100">
             <TriangleAlert className="text-amber-600 dark:text-amber-300" />
@@ -180,12 +145,12 @@ export default async function DashboardPage() {
         ) : null}
 
         <Card className="overflow-hidden border-border/60 bg-linear-to-br from-card via-card to-muted/30 shadow-sm animate-in fade-in slide-in-from-bottom-3 duration-500">
-          <CardContent className="relative px-6 py-4 sm:px-8 sm:py-4">
+          <CardContent className="relative px-4 py-2 sm:px-6 sm:py-3">
             <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_65%)] lg:block" />
 
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-4 sm:gap-5">
-                <Avatar className="size-16 border border-border/60 shadow-sm sm:size-20">
+            <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <Avatar className="size-12 border border-border/60 shadow-sm sm:size-14">
                   <AvatarImage
                     src={user.image ?? ""}
                     alt={user.name ?? firstName}
@@ -195,13 +160,14 @@ export default async function DashboardPage() {
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="space-y-1">
                     <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                       Olá, {firstName}!
                     </h1>
                     <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-                      Bem-vindo ao <strong>WINERP B2B</strong>.
+                      Bem-vindo à{" "}
+                      <strong>{publicEnvs.NEXT_PUBLIC_COMPANY_NAME}</strong>.
                     </p>
                   </div>
                 </div>
@@ -210,10 +176,10 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <section className="grid grid-cols-1 gap-4 pb-20 xl:grid-cols-[1.1fr_0.9fr] xl:pb-4">
+        <section className="grid grid-cols-1 gap-4 pb-4 xl:grid-cols-[1.1fr_0.9fr]">
           <Card className="border-border/60 bg-card/70 animate-in fade-in slide-in-from-bottom-5 duration-700">
-            <CardHeader className="space-y-1 pb-3">
-              <CardTitle className="flex items-center gap-2 text-xl tracking-tight">
+            <CardHeader className="space-y-0.5 px-4 py-2">
+              <CardTitle className="flex items-center gap-2 text-base tracking-tight">
                 <LayoutGrid className="size-5 text-foreground/80" />
                 Acesso rápido
               </CardTitle>
