@@ -179,11 +179,11 @@ export default async function DashboardPage() {
         ) : null}
 
         <Card className="overflow-hidden border-border/60 bg-linear-to-br from-card via-card to-muted/30 shadow-sm animate-in fade-in slide-in-from-bottom-3 duration-500">
-          <CardContent className="relative px-6 py-6 sm:px-8 sm:py-7">
+          <CardContent className="relative px-6 py-4 sm:px-8 sm:py-4">
             <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_65%)] lg:block" />
 
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-start gap-4 sm:gap-5">
+              <div className="flex items-center gap-4 sm:gap-5">
                 <Avatar className="size-16 border border-border/60 shadow-sm sm:size-20">
                   <AvatarImage
                     src={user.image ?? ""}
@@ -200,141 +200,19 @@ export default async function DashboardPage() {
                       Olá, {firstName}!
                     </h1>
                     <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-                      Bem-vindo ao painel principal. Acesse os módulos mais
-                      importantes, acompanhe informações rápidas e entre direto
-                      nos fluxos do dia.
+                      Bem-vindo ao <strong>WINERP B2B</strong>.
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="gap-1.5 rounded-full px-3 py-1">
-                      <BadgeCheck className="size-3.5" />
-                      {userRole}
-                    </Badge>
-
-                    {user.email ? (
-                      <Badge
-                        variant="outline"
-                        className="gap-1.5 rounded-full border-border/60 px-3 py-1 text-muted-foreground"
-                      >
-                        <Mail className="size-3.5" />
-                        {user.email}
-                      </Badge>
-                    ) : null}
-                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-3 rounded-3xl border border-border/60 bg-background/70 p-4 shadow-sm backdrop-blur sm:min-w-56 lg:justify-center">
-                <div className="space-y-1 lg:hidden">
-                  <p className="text-sm font-medium text-foreground">
-                    {modules.length} módulos disponíveis
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    atalhos e áreas principais do sistema
-                  </p>
-                </div>
-
-                <div className="hidden lg:block lg:space-y-3">
-                  <div className="mx-auto flex size-18 items-center justify-center rounded-2xl bg-muted text-foreground shadow-inner">
-                    <LayoutGrid className="size-8 stroke-[1.75]" />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground">
-                      {modules.length} módulos disponíveis
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      painel inicial de navegação
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex size-14 items-center justify-center rounded-2xl bg-muted text-foreground shadow-inner lg:hidden">
-                  <LayoutGrid className="size-6 stroke-[1.75]" />
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
 
-        <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-              Módulos principais
-            </h2>
-            <p className="text-sm text-muted-foreground sm:text-base">
-              Escolha um dos acessos abaixo para continuar o trabalho.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {modules.map((mod) => (
-              <Link
-                key={mod.title}
-                href={mod.href}
-                prefetch={false}
-                className="group block h-full rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <Card
-                  className={`relative flex h-full flex-col overflow-hidden border-border/60 bg-card/70 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5 ${mod.borderColor}`}
-                >
-                  <CardHeader className="items-center pb-2">
-                    <div className="flex items-center justify-center">
-                      <div
-                        className={`rounded-2xl p-3.5 shadow-inner ${mod.bgColor} ${mod.color}`}
-                      >
-                        <mod.icon className="h-6 w-6 stroke-[1.75] md:h-7 md:w-7" />
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex grow flex-col justify-end space-y-2 pt-2">
-                    <CardTitle className="text-lg font-semibold tracking-tight text-foreground/90 md:text-[1.15rem]">
-                      {mod.title}
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2 text-sm leading-relaxed font-medium text-muted-foreground opacity-85">
-                      {mod.description}
-                    </CardDescription>
-
-                    <div className="pt-3">
-                      <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground/80 transition-transform duration-300 group-hover:translate-x-1">
-                        Abrir módulo
-                        <ArrowRight className="size-4" />
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </section>
 
         <section className="grid grid-cols-1 gap-4 pb-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <Card className="border-border/60 bg-card/70 animate-in fade-in slide-in-from-bottom-5 duration-700">
-            <CardHeader className="space-y-1 pb-3">
-              <CardTitle className="flex items-center gap-2 text-xl tracking-tight">
-                <Bolt className="size-5 text-amber-500" />
-                Informações rápidas
-              </CardTitle>
-              <CardDescription>
-                Resumo objetivo para facilitar sua navegação inicial.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {quickInfoItems.map((item) => (
-                <div
-                  key={item.title}
-                  className="flex items-start gap-3 rounded-2xl border border-transparent px-1 py-1"
-                >
-                  <div className={`mt-0.5 ${item.color}`}>
-                    <item.icon className="size-4.5" />
-                  </div>
-                  <p className="text-sm leading-6 text-muted-foreground sm:text-[0.95rem]">
-                    {item.title}
-                  </p>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
 
           <Card className="border-border/60 bg-card/70 animate-in fade-in slide-in-from-bottom-5 duration-700">
             <CardHeader className="space-y-1 pb-3">
@@ -342,9 +220,6 @@ export default async function DashboardPage() {
                 <LayoutGrid className="size-5 text-foreground/80" />
                 Acesso rápido
               </CardTitle>
-              <CardDescription>
-                Os mesmos módulos principais organizados como lista de atalho.
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-1">
               {modules.map((mod, index) => (
