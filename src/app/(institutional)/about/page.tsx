@@ -91,9 +91,8 @@ export default async function AboutPage() {
                     &ldquo;Qual a melhor forma de negociar produtos de
                     tecnologia para oferecer os melhores preços?&rdquo;
                   </strong>
-                  A busca por essa resposta foi o que motivou o empresário{" "}
-                  <strong>Wellington de Freitas</strong> a criar{" "}
-                  {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                  A busca por essa resposta foi o que motivou o empresário a
+                  criar {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
                   em <strong>1994</strong>.
                 </p>
                 <p className="text-muted-foreground mb-4 leading-relaxed">
