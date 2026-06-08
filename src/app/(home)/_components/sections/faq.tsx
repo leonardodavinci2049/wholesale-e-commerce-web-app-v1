@@ -7,7 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { FAQItem } from "@/types/home-type";
 
-const FAQ_DATA: FAQItem[] = [
+export const RESELLER_FAQ_DATA: FAQItem[] = [
   {
     question: "Como faço para me cadastrar como revendedor?",
     answer:
@@ -43,12 +43,12 @@ const FAQ_DATA: FAQItem[] = [
 export function FAQSection() {
   return (
     <section className="py-16 sm:py-20">
-      <div className="container px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-start">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-start gap-8 sm:gap-12 lg:grid-cols-2">
           {/* Left Side - Content */}
           <div className="order-2 lg:order-1">
-            <Badge className="mb-3 sm:mb-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs sm:text-sm">
-              ATACADO E VAREJO
+            <Badge className="mb-3 border border-primary/20 bg-primary/10 text-xs text-primary sm:mb-4 sm:text-sm">
+              REVENDA ATACADISTA
             </Badge>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
               Há mais de 25 anos Fornecendo Produtos de Qualidade para
@@ -56,8 +56,8 @@ export function FAQSection() {
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground">
               Distribuição de Eletrônicos, Informática e Perfumes Importados,
-              Preços para Atacado e Varejo, Suporte Especializado e Condições
-              Exclusivas para Revendedores e Consumidores.
+              preços para atacado e varejo, suporte especializado e condições
+              exclusivas para revenda.
             </p>
           </div>
 
@@ -68,7 +68,7 @@ export function FAQSection() {
               collapsible
               className="space-y-3 sm:space-y-4"
             >
-              {FAQ_DATA.map((item, index) => (
+              {RESELLER_FAQ_DATA.map((item, index) => (
                 <AccordionItem
                   key={item.question}
                   value={`item-${index + 1}`}
