@@ -19,7 +19,7 @@ export function MainHeader() {
           >
             <div className="relative w-40 h-8 sm:w-48 sm:h-10 lg:w-56 lg:h-12">
               <Image
-                src="/images/logo/logo-horizontal-header1.png"
+                src="/images/logo/logo-horizontal-header.png"
                 alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                 fill
                 sizes="(min-width: 1024px) 224px, (min-width: 640px) 192px, 160px"

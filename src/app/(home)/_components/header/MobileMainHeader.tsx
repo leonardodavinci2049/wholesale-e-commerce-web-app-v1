@@ -21,7 +21,7 @@ export async function MobileMainHeader() {
             >
               <div className="relative w-48 h-10 xs:w-56 xs:h-12">
                 <Image
-                  src="/images/logo/logo-header-mobile1.png"
+                  src="/images/logo/logo-header-mobile.png"
                   alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                   fill
                   sizes="224px"

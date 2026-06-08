@@ -46,7 +46,7 @@ function getGeoFromMapsUrl() {
   };
 }
 
-export const COMPANY_LOGO_URL = `${publicEnvs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`;
+export const COMPANY_LOGO_URL = `${publicEnvs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header.png`;
 
 export const DEFAULT_OG_IMAGE_URL = `${publicEnvs.NEXT_PUBLIC_BASE_URL_APP}/opengraph-image`;
 
