@@ -1,5 +1,5 @@
 import { Globe, Shield, Zap } from "lucide-react";
-import { publicEnvs }  from "@/core/config/envs.client";
+import { publicEnvs } from "@/core/config/envs.client";
 
 const FEATURES_DATA = [
   {

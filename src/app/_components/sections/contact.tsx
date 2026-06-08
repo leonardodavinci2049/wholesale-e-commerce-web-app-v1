@@ -2,7 +2,6 @@ import { MapPin, MessageSquare, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { publicEnvs } from "@/core/config";
 
-
 const getContactData = () =>
   [
     {

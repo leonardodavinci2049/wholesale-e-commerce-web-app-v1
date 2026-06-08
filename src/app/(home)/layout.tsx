@@ -3,8 +3,8 @@ import { Suspense } from "react";
 
 import { fetchCategoriesAction } from "@/app/actions/product";
 import { publicEnvs } from "@/core/config/envs.client";
-import FooterHome from "../(home)/_components/_components/";
 import { MobileBottomMenu } from "../_components/footer/MobileBottomMenu";
+import FooterHome from "../(home)/_components/_components/";
 import { MainHeader } from "../(home)/_components/header/MainHeader";
 import { MobileMainHeader } from "../(home)/_components/header/MobileMainHeader";
 import { NavigationMenu } from "../(home)/_components/navegation/NavigationMenu";
