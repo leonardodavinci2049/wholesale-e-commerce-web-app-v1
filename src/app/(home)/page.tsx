@@ -5,7 +5,7 @@ import { BenefitsSection } from "./_components/sections/benefits";
 import { ContactSection } from "./_components/sections/contact";
 import { CTASection } from "./_components/sections/cta";
 import { FAQSection, RESELLER_FAQ_DATA } from "./_components/sections/faq";
-import { HeroSlider } from "./_components/sections/hero-slider";
+import HeroSliderV2 from "./_components/sections/hero-slider-v2";
 import { LocationSection } from "./_components/sections/location";
 import { ProductsSection } from "./_components/sections/products";
 import { StatsSection } from "./_components/sections/stats";
@@ -30,7 +30,7 @@ const ResellerPage = () => {
       <h1 className="sr-only">
         {publicEnvs.NEXT_PUBLIC_COMPANY_NAME} revenda atacadista e varejo
       </h1>
-      <HeroSlider />
+      <HeroSliderV2 />
       <StatsSection />
       <ProductsSection />
       <WhyChooseUsSection />
