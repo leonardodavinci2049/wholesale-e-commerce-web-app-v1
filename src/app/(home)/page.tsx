@@ -12,18 +12,13 @@ import { StatsSection } from "./_components/sections/stats";
 import { WhyChooseUsSection } from "./_components/sections/why-choose-us";
 
 export const metadata = createPageMetadata({
-  title: "Revenda atacadista em Ribeirao Preto | Mundial Megastore",
-  description:
-    "Cadastre sua empresa para comprar no atacado com a Mundial Megastore. Revenda eletronicos, informatica e perfumes importados com suporte comercial e loja fisica em Ribeirao Preto.",
-  path: "/reseller",
-  keywords: [
-    "revenda atacadista ribeirao preto",
-    "distribuidor de eletronicos",
-    "atacado de perfumes importados",
-  ],
+  title: publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE,
+  description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+  path: "/",
+  keywords: [publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS],
 });
 
-const ResellerPage = () => {
+const HomePage = () => {
   return (
     <main className="bg-background">
       <FAQPageJsonLd questions={RESELLER_FAQ_DATA} />
@@ -43,4 +38,4 @@ const ResellerPage = () => {
   );
 };
 
-export default ResellerPage;
+export default HomePage;

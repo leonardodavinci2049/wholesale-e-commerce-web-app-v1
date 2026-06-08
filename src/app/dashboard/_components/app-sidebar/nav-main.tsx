@@ -20,6 +20,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { publicEnvs } from "@/core/config";
 
 export function NavMain({
   items,
@@ -40,7 +41,9 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>WINERP B2B - Sistema de Compras</SidebarGroupLabel>
+      <SidebarGroupLabel>
+        {publicEnvs.NEXT_PUBLIC_APP_NAME} - Sistema de Compras
+      </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const hasItems = item.items && item.items.length > 0;

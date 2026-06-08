@@ -34,7 +34,7 @@ export function LocationSection() {
           <div className="order-2 lg:order-1">
             <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3717.889900010886!2d-47.82531012429679!3d-21.27618998043697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b9b8d3f8e8e8e9%3A0x86ec04742ff10b99!2sMundial!5e0!3m2!1spt-BR!2sbr"
+                src={publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL}
                 width="100%"
                 height="300"
                 style={{ border: 0 }}

@@ -9,16 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(publicEnvs.NEXT_PUBLIC_APP_URL),
   title: `${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
   description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
-  keywords: [
-    "informática",
-    "eletrônicos",
-    "perfumes importados",
-    "notebooks",
-    "computadores",
-    "periféricos",
-    "hardware",
-    "software",
-  ],
+  keywords: [publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS],
   alternates: {
     canonical: "/",
   },
@@ -31,7 +22,7 @@ export const metadata: Metadata = {
     description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
     images: [
       {
-        url: "/images/logo/logo-horizontal-header1.png",
+        url: "/images/logo/logo-horizontal-header.png",
         width: 1200,
         height: 630,
         alt: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
@@ -42,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
     description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
-    images: ["/images/logo/logo-horizontal-header1.png"],
+    images: ["/images/logo/logo-horizontal-header.png"],
   },
 };
 export default function RootLayout({

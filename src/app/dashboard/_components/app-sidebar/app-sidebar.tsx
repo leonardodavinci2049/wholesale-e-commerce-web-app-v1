@@ -23,6 +23,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { publicEnvs } from "@/core/config";
 import { useSession } from "@/lib/auth/auth-client";
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
@@ -33,17 +34,17 @@ import { SidebarLogo } from "./sidebar-logo";
 const data = {
   teams: [
     {
-      name: "WinERP",
+      name: publicEnvs.NEXT_PUBLIC_APP_NAME,
       logo: GalleryVerticalEnd,
       plan: "Distribuidora",
     },
     {
-      name: "Mundial Megastore",
+      name: "Empresa Filial 01",
       logo: AudioWaveform,
       plan: "Enterprise",
     },
     {
-      name: "Atacadão Eletrônico",
+      name: "Empresa Filial 02",
       logo: Command,
       plan: "Revenda",
     },

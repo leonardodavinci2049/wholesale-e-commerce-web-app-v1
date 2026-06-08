@@ -91,9 +91,9 @@ export default async function AboutPage() {
                     &ldquo;Qual a melhor forma de negociar produtos de
                     tecnologia para oferecer os melhores preços?&rdquo;
                   </strong>
-                  A busca por essa resposta foi o que motivou o empresário{" "}
-                  <strong>Wellington de Freitas</strong> a criar a Mundial
-                  Distribuidora em <strong>1994</strong>.
+                  A busca por essa resposta foi o que motivou o empresário a
+                  criar {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                  em <strong>1994</strong>.
                 </p>
                 <p className="text-muted-foreground mb-4 leading-relaxed">
                   Vendo uma oportunidade significativa na emergente indústria de
@@ -399,7 +399,8 @@ export default async function AboutPage() {
                 Nosso Compromisso
               </h2>
               <p className="text-muted-foreground mx-auto mb-8 max-w-4xl text-lg leading-relaxed">
-                Antes mesmo do primeiro cliente, a Mundial já tinha como meta
+                Antes mesmo do primeiro cliente, a{" "}
+                {publicEnvs.NEXT_PUBLIC_COMPANY_NAME} já tinha como meta
                 oferecer o melhor serviço e construir relacionamentos de longo
                 prazo. Essa estratégia provou ser muito bem-sucedida e continua
                 sendo um componente chave em nossa missão.
