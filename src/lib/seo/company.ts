@@ -20,11 +20,14 @@ function splitOpeningHours(
 }
 
 function getRegionFromLocation() {
-  return publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION.match(REGION_PATTERN)?.[1];
+  return publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION.match(
+    REGION_PATTERN,
+  )?.[1];
 }
 
 function getPostalCodeFromAddress() {
-  const match = publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS.match(POSTAL_CODE_PATTERN);
+  const match =
+    publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS.match(POSTAL_CODE_PATTERN);
 
   return match?.[0]?.replace(/(\d{5})(\d{3})/, "$1-$2");
 }

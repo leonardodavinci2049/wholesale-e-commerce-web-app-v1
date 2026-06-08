@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { fetchCategoriesAction } from "@/app/actions/product";
 import { publicEnvs } from "@/core/config/envs.client";
 import FooterHome from "./_components/footer/FooterHome";
-import { MobileBottomMenu } from "./_components/footer/MobileBottomMenu";
 import { MainHeader } from "./_components/header/MainHeader";
 import { MobileMainHeader } from "./_components/header/MobileMainHeader";
 
@@ -17,8 +15,6 @@ export default async function CompanyLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <MobileMainHeader />

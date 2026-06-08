@@ -15,7 +15,10 @@ export function createPageMetadata({
   path,
   keywords = [],
 }: PageMetadataOptions): Metadata {
-  const absoluteUrl = new URL(path, publicEnvs.NEXT_PUBLIC_BASE_URL_APP).toString();
+  const absoluteUrl = new URL(
+    path,
+    publicEnvs.NEXT_PUBLIC_BASE_URL_APP,
+  ).toString();
 
   return {
     title,
