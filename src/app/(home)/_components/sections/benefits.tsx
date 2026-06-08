@@ -22,7 +22,7 @@ const BENEFITS_DATA = [
 export function BenefitsSection() {
   return (
     <section className="py-16 sm:py-20">
-      <div className="container px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div className="order-2 lg:order-1">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">

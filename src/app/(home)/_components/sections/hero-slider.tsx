@@ -98,7 +98,7 @@ export function HeroSlider() {
                   // Content Slide - Mobile First
                   <div className="relative h-full">
                     <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20" />
-                    <div className="relative container flex h-full items-center justify-center px-4 sm:px-6 lg:px-8">
+                    <div className="container relative mx-auto flex h-full w-full max-w-7xl items-center justify-center px-4 sm:px-6 lg:px-8">
                       <div className="mx-auto w-full max-w-4xl text-center">
                         <Badge className="mb-3 bg-green-100 text-xs text-green-800 sm:mb-4 sm:text-sm dark:bg-green-900 dark:text-green-200">
                           {slide.badge}
@@ -145,7 +145,7 @@ export function HeroSlider() {
                     >
                       <div className="absolute inset-0 bg-black/40" />
                     </div>
-                    <div className="relative container flex h-full items-center justify-center px-4 sm:px-6 lg:px-8">
+                    <div className="container relative mx-auto flex h-full w-full max-w-7xl items-center justify-center px-4 sm:px-6 lg:px-8">
                       <div className="mx-auto w-full max-w-2xl text-center text-white">
                         <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl lg:text-5xl">
                           {slide.title}
