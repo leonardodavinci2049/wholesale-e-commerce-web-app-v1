@@ -5,7 +5,6 @@ import {
   Home as HomeIcon,
   Menu as MenuIcon,
   MessageCircle,
-  ShoppingCart,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -19,7 +18,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { publicEnvs } from "@/core/config/envs.client";
-import { useCart } from "@/hooks/useCart";
+
 import type { UICategory } from "@/lib/transformers";
 
 interface MobileBottomMenuProps {
@@ -27,7 +26,6 @@ interface MobileBottomMenuProps {
 }
 
 export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
-  const { uniqueItems, openCart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleWhatsAppClick = () => {
@@ -116,24 +114,6 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
             <MessageCircle className="h-5 w-5" />
           </div>
           <span>Fale Conosco</span>
-        </button>
-
-        {/* Carrinho */}
-        <button
-          type="button"
-          onClick={openCart}
-          className="relative flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] leading-tight"
-          aria-label="Abrir carrinho de compras"
-        >
-          <div className="relative flex items-center justify-center">
-            <ShoppingCart className="h-5 w-5" />
-            {uniqueItems > 0 && (
-              <span className="absolute -right-2 -top-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
-                {uniqueItems > 99 ? "99+" : uniqueItems}
-              </span>
-            )}
-          </div>
-          <span>Carrinho</span>
         </button>
       </div>
     </nav>

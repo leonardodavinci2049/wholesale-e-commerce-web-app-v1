@@ -1,6 +1,6 @@
 import "server-only";
 
-import { envs } from "@/core/config";
+import { serverEnvs } from "@/core/config/envs.server";
 import {
   API_STATUS_CODES,
   isApiError,
@@ -74,18 +74,15 @@ function extractSearchFeedback(
 }
 
 export class ProductWebServiceApi extends BaseApiService {
-  private static buildBasePayload(
+  private buildBasePayload(
     additionalData: Record<string, unknown> = {},
   ): Record<string, unknown> {
     return {
-      pe_app_id: envs.APP_ID,
-      pe_system_client_id: envs.SYSTEM_CLIENT_ID,
-      pe_store_id: envs.STORE_ID,
-      pe_organization_id: envs.ORGANIZATION_ID,
-      pe_member_id: envs.MEMBER_ID,
-      pe_user_id: envs.USER_ID,
-      pe_person_id: envs.PERSON_ID,
+      pe_app_id: serverEnvs.APP_ID,
+      pe_store_id: serverEnvs.STORE_ID,
       ...additionalData,
+      pe_system_client_id: serverEnvs.SYSTEM_CLIENT_ID,
+      pe_organization_id: serverEnvs.ORGANIZATION_ID,
     };
   }
 
@@ -95,7 +92,7 @@ export class ProductWebServiceApi extends BaseApiService {
   ): Promise<ProductWebFindByIdResponse> {
     try {
       const payloadInput = {
-        pe_type_business: params.pe_type_business ?? envs.TYPE_BUSINESS,
+        pe_type_business: params.pe_type_business,
         pe_id_produto: params.pe_id_produto,
         pe_slug_produto: params.pe_slug_produto,
       };
@@ -103,7 +100,7 @@ export class ProductWebServiceApi extends BaseApiService {
       const validatedParams = ProductWebFindByIdSchema.parse(payloadInput);
 
       const instance = new ProductWebServiceApi();
-      const requestBody = ProductWebServiceApi.buildBasePayload({
+      const requestBody = instance.buildBasePayload({
         ...validatedParams,
       });
 
@@ -146,15 +143,9 @@ export class ProductWebServiceApi extends BaseApiService {
     try {
       const validatedParams = ProductWebServiceApi.validateSearchParams(params);
 
-      const requestBody =
-        ProductWebServiceApi.buildSearchPayload(validatedParams);
-
-      // logger.debug("Payload de busca de produtos", {
-      //   payload: requestBody,
-      //   timestamp: new Date().toISOString(),
-      // });
-
       const instance = new ProductWebServiceApi();
+      const requestBody = instance.buildSearchPayload(validatedParams);
+
       const response = await instance.post<ProductWebFindResponse>(
         PRODUCT_WEB_ENDPOINTS.FIND,
         requestBody,
@@ -174,15 +165,9 @@ export class ProductWebServiceApi extends BaseApiService {
       const validatedParams =
         ProductWebServiceApi.validateSectionsParams(params);
 
-      const requestBody =
-        ProductWebServiceApi.buildSectionsPayload(validatedParams);
-
-      /*       logger.debug("Payload de busca de seções de produtos", {
-        payload: requestBody,
-        timestamp: new Date().toISOString(),
-      }); */
-
       const instance = new ProductWebServiceApi();
+      const requestBody = instance.buildSectionsPayload(validatedParams);
+
       const response = await instance.post<ProductWebSectionsResponse>(
         PRODUCT_WEB_ENDPOINTS.SECTIONS,
         requestBody,
@@ -209,10 +194,10 @@ export class ProductWebServiceApi extends BaseApiService {
     }
   }
 
-  private static buildSearchPayload(
+  private buildSearchPayload(
     params: Partial<ProductWebFindRequest>,
   ): Record<string, unknown> {
-    return ProductWebServiceApi.buildBasePayload({
+    return this.buildBasePayload({
       pe_id_taxonomy: params.pe_id_taxonomy ?? 0,
       pe_slug_taxonomy: params.pe_slug_taxonomy ?? "",
       pe_id_produto: params.pe_id_produto ?? 0,
@@ -240,10 +225,10 @@ export class ProductWebServiceApi extends BaseApiService {
     }
   }
 
-  private static buildSectionsPayload(
+  private buildSectionsPayload(
     params: Partial<ProductWebSectionsRequest>,
   ): Record<string, unknown> {
-    return ProductWebServiceApi.buildBasePayload({
+    return this.buildBasePayload({
       pe_id_taxonomy: params.pe_id_taxonomy ?? 0,
       pe_id_marca: params.pe_id_marca ?? 0,
       pe_id_tipo: params.pe_id_tipo ?? 0,
