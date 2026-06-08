@@ -83,7 +83,7 @@ export default function FooterHome() {
               <Link href="/" className="flex items-center">
                 <Image
                   src="/images/logo/logo-horizontal-footer1.png"
-                  alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
+                  alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS}`}
                   width={140}
                   height={44}
                   className="h-10 w-auto brightness-0 invert filter transition-opacity hover:opacity-80"

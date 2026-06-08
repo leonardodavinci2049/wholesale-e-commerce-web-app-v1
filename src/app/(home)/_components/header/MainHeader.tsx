@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { publicEnvs } from "@/core/config";
 import { OperationButtons } from "./OperationButtons";
 
 /**
@@ -15,12 +16,12 @@ export function MainHeader() {
           <Link
             href="/"
             className="inline-flex items-center"
-            aria-label="Mundial Megastore - Página inicial"
+            aria-label={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - Página inicial`}
           >
             <div className="relative w-40 h-8 sm:w-48 sm:h-10 lg:w-56 lg:h-12">
               <Image
-                src="/images/logo/logo-horizontal-header1.png"
-                alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
+                src="/images/logo/logo-horizontal-header.png"
+                alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - Informática, Eletrônicos e Perfumes Importados`}
                 fill
                 sizes="(min-width: 1024px) 224px, (min-width: 640px) 192px, 160px"
                 className="object-contain"

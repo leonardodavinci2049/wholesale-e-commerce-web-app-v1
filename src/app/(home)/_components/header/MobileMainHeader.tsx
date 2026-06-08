@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import ModeToggle from "@/components/theme/mode-toggle";
+import { publicEnvs } from "@/core/config";
 
 export async function MobileMainHeader() {
   return (
@@ -17,12 +18,12 @@ export async function MobileMainHeader() {
             <Link
               href="/"
               className="inline-flex items-center"
-              aria-label="Mundial Megastore - Página inicial"
+              aria-label={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - Página inicial`}
             >
               <div className="relative w-48 h-10 xs:w-56 xs:h-12">
                 <Image
-                  src="/images/logo/logo-header-mobile1.png"
-                  alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
+                  src="/images/logo/logo-header-mobile.png"
+                  alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS}`}
                   fill
                   sizes="224px"
                   className="object-contain drop-shadow-sm"
