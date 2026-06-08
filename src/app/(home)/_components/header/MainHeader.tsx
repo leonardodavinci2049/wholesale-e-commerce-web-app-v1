@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { OperationButtons } from "./OperationButtons";
 
 /**
  * Server Component - renders static header structure
@@ -27,6 +28,12 @@ export function MainHeader() {
               />
             </div>
           </Link>
+        </div>
+
+        {/* OperationButtons - Client Island */}
+
+        <div className="hidden md:flex">
+          <OperationButtons />
         </div>
       </div>
     </header>

@@ -36,7 +36,7 @@ const SLIDES_DATA: SlideData[] = [
   },
 ] as const;
 
-export function HeroSlider() {
+export function HeroSliderV1() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
