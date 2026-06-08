@@ -9,16 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(publicEnvs.NEXT_PUBLIC_APP_URL),
   title: `${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
   description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
-  keywords: [
-    "informática",
-    "eletrônicos",
-    "perfumes importados",
-    "notebooks",
-    "computadores",
-    "periféricos",
-    "hardware",
-    "software",
-  ],
+  keywords: [publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS],
   alternates: {
     canonical: "/",
   },
