@@ -54,4 +54,5 @@ ecosystem.config.js
 AGENTS.md
 public/upload
 public/images
+public/slides
 /src/app/globals.css

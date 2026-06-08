@@ -33,7 +33,7 @@ const PRODUCTS_DATA = [
 export function ProductsSection() {
   return (
     <section id="produtos" className="py-16 sm:py-20">
-      <div className="container px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center sm:mb-16">
           <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl lg:text-4xl">
             Nossas Categorias de Produtos

@@ -28,7 +28,7 @@ const FEATURES_DATA = [
 export function WhyChooseUsSection() {
   return (
     <section className="py-16 sm:py-20 bg-muted/50">
-      <div className="container px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
             Por que escolher a {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}?
