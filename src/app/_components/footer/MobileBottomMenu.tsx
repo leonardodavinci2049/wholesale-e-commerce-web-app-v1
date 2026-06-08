@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { envs } from "@/core/config/envs";
+import { publicEnvs } from "@/core/config/envs.client";
 import { useCart } from "@/hooks/useCart";
 import type { UICategory } from "@/lib/transformers";
 
@@ -34,7 +34,10 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
     const message =
       "Olá! Estou no APP do Mundial Megastore. Gostaria de mais informações.";
     // Remove caracteres especiais do número de WhatsApp: (XX) XXXXX XXXX -> XXXXXXXXXX
-    const whatsappNumber = envs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(/\D/g, "");
+    const whatsappNumber = publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(
+      /\D/g,
+      "",
+    );
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       message,
     )}`;

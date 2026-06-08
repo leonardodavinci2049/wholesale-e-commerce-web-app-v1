@@ -198,10 +198,10 @@ export default function FooterHome() {
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
                 <div className="text-sm">
                   <p className="text-gray-400">
-                    {envs.NEXT_PUBLIC_COMPANY_ADDRESS}
+                    {publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS}
                   </p>
                   <p className="text-gray-400">
-                    {envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}
+                    {publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}
                   </p>
                 </div>
               </div>
@@ -209,20 +209,20 @@ export default function FooterHome() {
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
-                  href={`tel:${process.env.NEXT_PUBLIC_COMPANY_PHONE}`}
+                  href={`tel:${publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}`}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
                 >
-                  {process.env.NEXT_PUBLIC_COMPANY_PHONE}
+                  {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
                 </a>
               </div>
 
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
-                  href={`mailto:${process.env.NEXT_PUBLIC_COMPANY_EMAIL}`}
+                  href={`mailto:${publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}`}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
                 >
-                  {process.env.NEXT_PUBLIC_COMPANY_EMAIL}
+                  {publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}
                 </a>
               </div>
 
@@ -230,10 +230,10 @@ export default function FooterHome() {
                 <Clock className="h-5 w-5 shrink-0 text-blue-400" />
                 <div className="text-sm">
                   <p className="text-gray-400">
-                    Seg - Sex: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                    Seg - Sex: {publicEnvs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
                   </p>
                   <p className="text-gray-400">
-                    Sáb: {envs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY}
+                    Sáb: {publicEnvs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY}
                   </p>
                 </div>
               </div>
@@ -321,9 +321,9 @@ export default function FooterHome() {
         <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0">
             <p className="text-sm text-gray-400">
-              &copy; {currentYear} {process.env.NEXT_PUBLIC_COMPANY_NAME}. Todos
-              os direitos reservados - CNPJ: {envs.NEXT_PUBLIC_COMPANY_CNPJ} -
-              Build: 27042018
+              &copy; {currentYear} {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Todos
+              os direitos reservados - CNPJ:{" "}
+              {publicEnvs.NEXT_PUBLIC_COMPANY_CNPJ} - Build: 27042018
             </p>
             <div className="flex space-x-6 text-sm">
               <Link
