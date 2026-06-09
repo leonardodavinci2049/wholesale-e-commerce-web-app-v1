@@ -3,7 +3,6 @@
 import { Eye } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import type { UIProductPdv } from "@/services/api-main/product-pdv/transformers/transformers";
 import { ProductDetailDialog } from "./product-detail-dialog";
 
@@ -76,31 +74,6 @@ export function ProductListTable({ products }: ProductListTableProps) {
                 <div className="min-w-0 flex-1">
                   <div className="flex min-w-0 items-start gap-1">
                     <div className="min-w-0 flex-1 space-y-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-[10px] text-muted-foreground">
-                          #{product.id}
-                        </span>
-                        {product.storeStock === 0 ? (
-                          <Badge
-                            variant="destructive"
-                            className="h-5 rounded-md px-1.5 text-[10px]"
-                          >
-                            Ruptura
-                          </Badge>
-                        ) : (
-                          <span
-                            className={cn(
-                              "shrink-0 text-[10px] font-medium",
-                              product.storeStock < 10
-                                ? "text-amber-600 dark:text-amber-400"
-                                : "text-emerald-600 dark:text-emerald-400",
-                            )}
-                          >
-                            Estoque: {product.storeStock}
-                          </span>
-                        )}
-                      </div>
-
                       <p className="text-[14px] font-semibold leading-4.5 text-foreground wrap-break-word">
                         {product.name}
                       </p>
@@ -120,6 +93,9 @@ export function ProductListTable({ products }: ProductListTableProps) {
                   </div>
 
                   <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] leading-4 text-muted-foreground">
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      #{product.id}
+                    </span>
                     {product.ref && <span>Ref: {product.ref}</span>}
                     {product.brand && <span>{product.brand}</span>}
                     {product.type && <span>{product.type}</span>}
