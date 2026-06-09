@@ -1,31 +1,36 @@
-import { Headphones, Laptop, Smartphone } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { BatteryCharging, MonitorSmartphone, Smartphone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { publicEnvs } from "@/core/config";
+
+const PRODUCT_ICONS = {
+  BatteryCharging,
+  MonitorSmartphone,
+  Smartphone,
+} as const;
 
 const PRODUCTS_DATA = [
   {
-    icon: Laptop,
-    link: "/category/linha-celular",
-    title: "Informática",
-    description:
-      "Notebooks, desktops, periféricos e acessórios das melhores marcas",
+    id: "cat-1",
+    icon: PRODUCT_ICONS[publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_ICON1],
+    link: "/category/cat-1",
+    title: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_TITLE1,
+    description: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_DESCRIPTION1,
     color: "blue",
   },
   {
-    icon: Smartphone,
-
-    link: "category/informatica-eletronico",
-    title: "Eletrônicos",
-    description: "Smartphones, tablets, smartwatches e gadgets tecnológicos",
+    id: "cat-2",
+    icon: PRODUCT_ICONS[publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_ICON2],
+    link: "/category/cat-2",
+    title: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_TITLE2,
+    description: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_DESCRIPTION2,
     color: "green",
   },
   {
-    icon: Headphones,
-    link: "/category/perfumaria-e-beleza",
-    title: "Perfumes",
-    description:
-      "Perfumes importados originais das melhores marcas internacionais",
+    id: "cat-3",
+    icon: PRODUCT_ICONS[publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_ICON3],
+    link: "/category/cat-3",
+    title: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_TITLE3,
+    description: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_DESCRIPTION3,
     color: "purple",
   },
 ] as const;
@@ -48,10 +53,10 @@ export function ProductsSection() {
             const Icon = product.icon;
             return (
               <Card
-                key={product.title}
+                key={product.id}
                 className="group transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
-                <CardContent className="p-6 text-center sm:p-8">
+                <CardContent className="p-4 text-center sm:p-8">
                   <div
                     className={`inline-flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16 bg-${product.color}-100 dark:bg-${product.color}-900/20 mb-4 transition-transform group-hover:scale-110 sm:mb-6`}
                   >
@@ -65,14 +70,6 @@ export function ProductsSection() {
                   <p className="text-muted-foreground mb-4 text-sm sm:mb-6 sm:text-base">
                     {product.description}
                   </p>
-                  <Link href={product.link} className="w-full">
-                    <Button
-                      variant="outline"
-                      className="w-full bg-transparent cursor-pointer"
-                    >
-                      Ver Produtos
-                    </Button>
-                  </Link>
                 </CardContent>
               </Card>
             );
