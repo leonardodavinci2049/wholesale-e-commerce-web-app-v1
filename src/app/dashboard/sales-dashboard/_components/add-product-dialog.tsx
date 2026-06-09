@@ -242,13 +242,6 @@ function ProductSearchItem({
             {formatCurrency(price)}
           </span>
 
-          <Badge
-            variant="outline"
-            className="rounded-full px-2 py-0 text-[10px]"
-          >
-            Estoque: {product.storeStock}
-          </Badge>
-
           {product.promotion && (
             <Badge className="rounded-full bg-accent px-2 py-0 text-[10px] text-accent-foreground hover:bg-accent">
               Oferta
