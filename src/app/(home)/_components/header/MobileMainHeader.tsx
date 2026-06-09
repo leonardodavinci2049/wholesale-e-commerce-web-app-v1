@@ -1,3 +1,4 @@
+import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -33,8 +34,16 @@ export async function MobileMainHeader() {
               </div>
             </Link>
 
-            {/* Toggle de tema e pesquisa - direita */}
+            {/* Toggle de tema e Área do Cliente - direita */}
             <div className="absolute right-0 flex items-center gap-1">
+              <Link
+                href="/dashboard"
+                aria-label="Acessar Área do Cliente"
+                className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors"
+              >
+                <CircleUserRound className="h-5 w-5" />
+                <span className="hidden xs:inline">Área do Cliente</span>
+              </Link>
               <ModeToggle />
             </div>
           </div>
