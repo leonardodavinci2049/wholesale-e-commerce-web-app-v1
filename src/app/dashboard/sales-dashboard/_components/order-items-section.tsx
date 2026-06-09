@@ -132,6 +132,8 @@ export function OrderItemsSection({
                   {isEditable ? (
                     <QuantityControls
                       movementId={item.movementId}
+                      orderId={orderId}
+                      productName={item.product}
                       quantity={item.quantity}
                       storeStock={item.storeStock}
                       disabled={!isEditable}

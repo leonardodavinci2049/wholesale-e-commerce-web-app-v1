@@ -82,7 +82,7 @@ export default function FooterHome() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
                 <Image
-                  src="/images/logo/logo-horizontal-footer1.png"
+                  src="/images/logo/logo-horizontal-footer.png"
                   alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS}`}
                   width={140}
                   height={44}
