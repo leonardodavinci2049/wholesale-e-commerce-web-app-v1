@@ -27,7 +27,7 @@ export async function MobileMainHeader() {
                   alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS}`}
                   fill
                   sizes="224px"
-                  className="object-contain drop-shadow-sm"
+                  className="scale-[1.25] object-contain drop-shadow-sm"
                   priority
                   quality={100}
                 />
