@@ -1,6 +1,7 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,8 @@ import { updateQuantityAction } from "../actions/update-quantity-action";
 
 interface QuantityControlsProps {
   movementId: number;
+  orderId: number;
+  productName: string;
   quantity: number;
   storeStock: number;
   disabled: boolean;
@@ -15,31 +18,44 @@ interface QuantityControlsProps {
 
 export function QuantityControls({
   movementId,
+  orderId,
+  productName,
   quantity,
   storeStock,
   disabled,
 }: QuantityControlsProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const isDecrementDisabled = disabled || isPending || quantity <= 1;
-  const isIncrementDisabled = disabled || isPending;
+  const isIncrementDisabled = disabled || isPending || quantity >= storeStock;
 
-  function handleDecrement() {
+  function handleQuantityChange(nextQuantity: number) {
     startTransition(async () => {
-      await updateQuantityAction(movementId, quantity - 1);
+      const result = await updateQuantityAction(
+        movementId,
+        orderId,
+        nextQuantity,
+      );
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      router.refresh();
     });
   }
 
   function handleIncrement() {
     if (quantity >= storeStock) {
       toast.warning("Estoque insuficiente", {
-        description: `Quantidade máxima disponível: ${storeStock} unidades`,
+        description: `${productName} possui no máximo ${storeStock} unidade(s) disponíveis.`,
       });
       return;
     }
-    startTransition(async () => {
-      await updateQuantityAction(movementId, quantity + 1);
-    });
+
+    handleQuantityChange(quantity + 1);
   }
 
   return (
@@ -49,7 +65,8 @@ export function QuantityControls({
         size="icon-xs"
         className="rounded-full hover:bg-background"
         disabled={isDecrementDisabled}
-        onClick={handleDecrement}
+        onClick={() => handleQuantityChange(quantity - 1)}
+        aria-label={`Diminuir quantidade de ${productName}`}
       >
         <Minus className="h-3.5 w-3.5" strokeWidth={2.5} />
       </Button>
@@ -64,6 +81,7 @@ export function QuantityControls({
         className="rounded-full hover:bg-background"
         disabled={isIncrementDisabled}
         onClick={handleIncrement}
+        aria-label={`Aumentar quantidade de ${productName}`}
       >
         <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
       </Button>
