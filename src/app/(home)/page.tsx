@@ -1,6 +1,7 @@
 import { FAQPageJsonLd } from "@/components/seo";
 import { publicEnvs } from "@/core/config/envs.client";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { HomeMobileBottomBar } from "./_components/home-mobile-bottom-bar";
 import { BenefitsSection } from "./_components/sections/benefits";
 import { ContactSection } from "./_components/sections/contact";
 import { CTASection } from "./_components/sections/cta";
@@ -20,7 +21,7 @@ export const metadata = createPageMetadata({
 
 const HomePage = () => {
   return (
-    <main className="bg-background">
+    <main className="bg-background pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-0">
       <FAQPageJsonLd questions={RESELLER_FAQ_DATA} />
       <h1 className="sr-only">
         {publicEnvs.NEXT_PUBLIC_COMPANY_NAME} revenda atacadista e varejo
@@ -34,6 +35,7 @@ const HomePage = () => {
       <LocationSection />
       <CTASection />
       <ContactSection />
+      <HomeMobileBottomBar />
     </main>
   );
 };

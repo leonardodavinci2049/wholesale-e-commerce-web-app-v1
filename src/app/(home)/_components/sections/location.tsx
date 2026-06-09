@@ -16,7 +16,7 @@ const CONTACT_INFO = {
 
 export function LocationSection() {
   return (
-    <section className="bg-muted/50 py-16 sm:py-20">
+    <section id="localizacao" className="bg-muted/50 py-16 sm:py-20">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center sm:mb-12">
           <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl lg:text-4xl">
@@ -34,7 +34,7 @@ export function LocationSection() {
           <div className="order-2 lg:order-1">
             <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800">
               <iframe
-                src={publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL}
+                src={publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_EMBED}
                 width="100%"
                 height="300"
                 style={{ border: 0 }}
@@ -109,19 +109,29 @@ export function LocationSection() {
 
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <Button
+                asChild
                 size="lg"
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center whitespace-nowrap cursor-pointer"
               >
-                <MapPin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                Abrir no Google Maps
+                <a
+                  href={publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_SHORT}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  Abrir no Google Maps
+                </a>
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="outline"
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center bg-transparent whitespace-nowrap cursor-pointer"
               >
-                <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5 " />
-                Ligar Agora
+                <a href={`tel:${CONTACT_INFO.phone.replace(/\D/g, "")}`}>
+                  <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  Ligar Agora
+                </a>
               </Button>
             </div>
 
@@ -142,11 +152,18 @@ export function LocationSection() {
                       produtos e condições especiais para revendedores.
                     </p>
                     <Button
+                      asChild
                       size="sm"
                       variant="outline"
                       className="bg-transparent text-xs sm:text-sm"
                     >
-                      Agendar Visita
+                      <a
+                        href={`https://api.whatsapp.com/send/?phone=${publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}&text=${encodeURIComponent("Olá, gostaria de falar sobre revenda de produtos")}&type=phone_number&app_absent=0`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Agendar Visita
+                      </a>
                     </Button>
                   </div>
                 </div>

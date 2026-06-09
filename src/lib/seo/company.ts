@@ -33,7 +33,8 @@ function getPostalCodeFromAddress() {
 }
 
 function getGeoFromMapsUrl() {
-  const match = publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL.match(GEO_PATTERN);
+  const match =
+    publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_EMBED.match(GEO_PATTERN);
 
   if (!match) {
     return undefined;
@@ -146,7 +147,7 @@ export function getLocalBusinessSchema() {
     taxID: publicEnvs.NEXT_PUBLIC_COMPANY_CNPJ,
     address: COMPANY_POSTAL_ADDRESS,
     geo: getCompanyGeo(),
-    hasMap: publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL,
+    hasMap: publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_EMBED,
     sameAs: COMPANY_SAME_AS,
     parentOrganization: {
       "@id": SCHEMA_IDS.organization,
