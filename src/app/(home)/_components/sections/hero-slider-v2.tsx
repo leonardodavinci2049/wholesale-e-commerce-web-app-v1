@@ -70,7 +70,7 @@ export default function HeroSliderV2() {
   if (!isClient) {
     return (
       <section className="relative w-full bg-muted">
-        <div className="h-[300px] md:h-[400px] lg:h-[500px] w-full" />
+        <div className="aspect-square w-full md:aspect-[1920/500]" />
       </section>
     );
   }
@@ -78,7 +78,7 @@ export default function HeroSliderV2() {
   return (
     <section className="relative w-full overflow-hidden bg-background">
       {/* Slides Container */}
-      <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px]">
+      <div className="relative aspect-square w-full md:aspect-[1920/500]">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -93,7 +93,7 @@ export default function HeroSliderV2() {
                   src={slide.imageMobile}
                   alt={slide.alt}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   priority={index === 0}
                   sizes="(max-width: 767px) 100vw, 0px"
                 />
@@ -105,7 +105,7 @@ export default function HeroSliderV2() {
                   src={slide.imageDesktop}
                   alt={slide.alt}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   priority={index === 0}
                   sizes="(min-width: 768px) 100vw, 0px"
                 />
@@ -119,7 +119,7 @@ export default function HeroSliderV2() {
       <button
         type="button"
         onClick={prevSlide}
-        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm text-foreground p-2 md:p-3 rounded-full hover:bg-card transition-all z-20 shadow-lg"
+        className="absolute top-1/2 left-3 z-20 -translate-y-1/2 rounded-full bg-card/80 p-2 text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-card md:left-6 md:p-3"
         aria-label="Slide anterior"
       >
         <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
@@ -127,7 +127,7 @@ export default function HeroSliderV2() {
       <button
         type="button"
         onClick={nextSlide}
-        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm text-foreground p-2 md:p-3 rounded-full hover:bg-card transition-all z-20 shadow-lg"
+        className="absolute top-1/2 right-3 z-20 -translate-y-1/2 rounded-full bg-card/80 p-2 text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-card md:right-6 md:p-3"
         aria-label="Próximo slide"
       >
         <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
