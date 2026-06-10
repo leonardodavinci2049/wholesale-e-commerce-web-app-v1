@@ -52,8 +52,7 @@ AGENTS.md
 /upload
 /docs
 /data
-
-
+src/core/config-tenant
 public/upload
 public/images
 public/slides
