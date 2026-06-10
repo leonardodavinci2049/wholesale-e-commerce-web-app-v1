@@ -1,4 +1,5 @@
 import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
 
 /**
@@ -10,9 +11,9 @@ export function WebSiteJsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": SCHEMA_IDS.website,
-    name: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
+    name: companyInfo.name,
     url: publicEnvs.NEXT_PUBLIC_BASE_URL_APP,
-    description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+    description: companyInfo.meta.description,
     publisher: {
       "@id": SCHEMA_IDS.organization,
     },

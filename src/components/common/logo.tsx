@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
@@ -22,7 +23,7 @@ export default function Logo({
       >
         <Image
           src="/images/logo/logo-header.png"
-          alt={`${process.env.NEXT_PUBLIC_COMPANY_NAME || "Logo"} Logo`}
+          alt={`${companyInfo.name || "Logo"} Logo`}
           fill
           loading="eager"
           sizes="72px"
@@ -41,7 +42,7 @@ export default function Logo({
     >
       <Image
         src="/images/logo/logo-header.png"
-        alt={`${process.env.NEXT_PUBLIC_COMPANY_NAME || "Logo"} Logo`}
+        alt={`${companyInfo.name || "Logo"} Logo`}
         width={200}
         height={64}
         loading="eager"

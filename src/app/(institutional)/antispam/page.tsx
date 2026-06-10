@@ -15,12 +15,12 @@ import {
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
-  title: `Política Anti-Spam - ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Política Anti-Spam da ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Conheça nosso compromisso contra práticas abusivas de e-mail e como garantimos comunicações éticas e responsáveis.`,
+  title: `Política Anti-Spam - ${companyInfo.name}`,
+  description: `Política Anti-Spam da ${companyInfo.name}. Conheça nosso compromisso contra práticas abusivas de e-mail e como garantimos comunicações éticas e responsáveis.`,
 };
 
 export default async function AntispamPage() {
@@ -28,8 +28,8 @@ export default async function AntispamPage() {
     getCurrentDatePtBr(),
     getCurrentYear(),
   ]);
-  const companyName = publicEnvs.NEXT_PUBLIC_COMPANY_NAME;
-  const companyEmail = publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL;
+  const companyName = companyInfo.name;
+  const companyEmail = companyInfo.email;
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
@@ -428,12 +428,10 @@ export default async function AntispamPage() {
                     <strong>E-mail:</strong> {companyEmail}
                   </p>
                   <p>
-                    <strong>Telefone:</strong>{" "}
-                    {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
+                    <strong>Telefone:</strong> {companyInfo.phone}
                   </p>
                   <p>
-                    <strong>WhatsApp:</strong>{" "}
-                    {publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}
+                    <strong>WhatsApp:</strong> {companyInfo.whatsapp}
                   </p>
                   <p>
                     <strong>Formulário:</strong> Canal &ldquo;Fale
@@ -577,12 +575,10 @@ export default async function AntispamPage() {
                       </a>
                     </p>
                     <p>
-                      <strong>Telefone:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
+                      <strong>Telefone:</strong> {companyInfo.phone}
                     </p>
                     <p>
-                      <strong>WhatsApp:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}
+                      <strong>WhatsApp:</strong> {companyInfo.whatsapp}
                     </p>
                     <p>
                       <strong>Formulário:</strong> Canal &ldquo;Fale

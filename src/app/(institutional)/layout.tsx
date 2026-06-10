@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
-import { publicEnvs } from "@/core/config/envs.client";
 import FooterHome from "../(home)/_components/footer/FooterHome";
 import { MainHeader } from "../(home)/_components/header/MainHeader";
 import { MobileMainHeader } from "../(home)/_components/header/MobileMainHeader";
 
 export const metadata: Metadata = {
-  title: `Empresa - ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
+  title: `Empresa - ${companyInfo.name}`,
 };
 
 export default async function CompanyLayout({

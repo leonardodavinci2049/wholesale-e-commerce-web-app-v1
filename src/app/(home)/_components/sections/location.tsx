@@ -1,12 +1,12 @@
 import { Clock, MapPin, Phone, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 const CONTACT_INFO = {
   address: "Av. Caramuru, 1008 - Jardim Sumaré\nRibeirão Preto - SP, 14025-080",
-  phone: publicEnvs.NEXT_PUBLIC_COMPANY_PHONE,
-  email: publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL,
+  phone: companyInfo.phone,
+  email: companyInfo.email,
   hours: {
     weekdays: "Segunda a Sexta: 8h às 18h",
     saturday: "Sábado: 8h às 12h",
@@ -34,7 +34,7 @@ export function LocationSection() {
           <div className="order-2 lg:order-1">
             <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800">
               <iframe
-                src={publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_EMBED}
+                src={companyInfo.links.mapsEmbedUrl}
                 width="100%"
                 height="300"
                 style={{ border: 0 }}
@@ -42,7 +42,7 @@ export function LocationSection() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="h-[300px] w-full sm:h-[350px] lg:h-[400px]"
-                title={`Localização da ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`}
+                title={`Localização da ${companyInfo.name}`}
               />
             </div>
           </div>
@@ -51,7 +51,7 @@ export function LocationSection() {
           <div className="order-1 space-y-6 sm:space-y-8 lg:order-2">
             <div>
               <h3 className="mb-4 text-xl font-bold sm:mb-6 sm:text-2xl">
-                {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                {companyInfo.name}
               </h3>
 
               <div className="space-y-4 sm:space-y-6">
@@ -114,7 +114,7 @@ export function LocationSection() {
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center whitespace-nowrap cursor-pointer"
               >
                 <a
-                  href={publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_SHORT}
+                  href={companyInfo.links.mapsShortUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -158,7 +158,7 @@ export function LocationSection() {
                       className="bg-transparent text-xs sm:text-sm"
                     >
                       <a
-                        href={`https://api.whatsapp.com/send/?phone=${publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}&text=${encodeURIComponent("Olá, gostaria de falar sobre revenda de produtos")}&type=phone_number&app_absent=0`}
+                        href={`https://api.whatsapp.com/send/?phone=${companyInfo.whatsapp}&text=${encodeURIComponent("Olá, gostaria de falar sobre revenda de produtos")}&type=phone_number&app_absent=0`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

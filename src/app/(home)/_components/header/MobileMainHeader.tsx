@@ -2,9 +2,8 @@ import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-
 import ModeToggle from "@/components/theme/mode-toggle";
-import { publicEnvs } from "@/core/config";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 export async function MobileMainHeader() {
   return (
@@ -19,12 +18,12 @@ export async function MobileMainHeader() {
             <Link
               href="/"
               className="inline-flex items-center"
-              aria-label={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - Página inicial`}
+              aria-label={`${companyInfo.name} - Página inicial`}
             >
               <div className="relative w-48 h-10 xs:w-56 xs:h-12">
                 <Image
                   src="/images/logo/logo-header-mobile.png"
-                  alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS}`}
+                  alt={`${companyInfo.name} - ${companyInfo.meta.keywords}`}
                   fill
                   sizes="224px"
                   className="scale-[1.25] object-contain drop-shadow-sm"

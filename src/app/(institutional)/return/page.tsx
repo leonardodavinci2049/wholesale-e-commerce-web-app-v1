@@ -18,12 +18,12 @@ import {
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
-  title: `Política de Entrega, Troca e Devolução - ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Política completa de entrega, troca e devolução de produtos da ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Conheça prazos, condições e procedimentos para vendas no atacado e varejo B2B/B2C.`,
+  title: `Política de Entrega, Troca e Devolução - ${companyInfo.name}`,
+  description: `Política completa de entrega, troca e devolução de produtos da ${companyInfo.name}. Conheça prazos, condições e procedimentos para vendas no atacado e varejo B2B/B2C.`,
 };
 
 export default async function ReturnPage() {
@@ -31,9 +31,9 @@ export default async function ReturnPage() {
     getCurrentDatePtBr(),
     getCurrentYear(),
   ]);
-  const companyName = publicEnvs.NEXT_PUBLIC_COMPANY_NAME;
-  const companyEmail = publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL;
-  const companyPhone = publicEnvs.NEXT_PUBLIC_COMPANY_PHONE;
+  const companyName = companyInfo.name;
+  const companyEmail = companyInfo.email;
+  const companyPhone = companyInfo.phone;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
@@ -617,8 +617,7 @@ export default async function ReturnPage() {
                       <strong>Fixo:</strong> {companyPhone}
                     </p>
                     <p>
-                      <strong>WhatsApp:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}
+                      <strong>WhatsApp:</strong> {companyInfo.whatsapp}
                     </p>
                   </div>
                 </div>

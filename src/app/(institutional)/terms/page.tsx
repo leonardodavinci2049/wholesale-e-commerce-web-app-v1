@@ -2,12 +2,12 @@ import { AlertCircle, Building2, FileText, Scale, Shield } from "lucide-react";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
-  title: `Termos e Condições - ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Termos de uso e condições para vendas no atacado e varejo B2B/B2C da ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Conheça as regras e políticas que regem nossa plataforma de e-commerce atacadista e varejista.`,
+  title: `Termos e Condições - ${companyInfo.name}`,
+  description: `Termos de uso e condições para vendas no atacado e varejo B2B/B2C da ${companyInfo.name}. Conheça as regras e políticas que regem nossa plataforma de e-commerce atacadista e varejista.`,
 };
 
 export default async function TermsPage() {
@@ -161,8 +161,8 @@ export default async function TermsPage() {
             <CardContent className="prose prose-slate max-w-none">
               <p className="text-muted-foreground leading-relaxed">
                 Os TERMOS DE USO são estabelecidos entre a{" "}
-                <strong>{publicEnvs.NEXT_PUBLIC_COMPANY_NAME}</strong> e você, o
-                USUÁRIO. Reservamo-nos o direito de, a nosso critério, alterar,
+                <strong>{companyInfo.name}</strong> e você, o USUÁRIO.
+                Reservamo-nos o direito de, a nosso critério, alterar,
                 modificar, atualizar, adicionar ou remover seções destes TERMOS
                 DE USO a qualquer momento, sem notificação prévia.
               </p>
@@ -380,7 +380,7 @@ export default async function TermsPage() {
             <CardContent className="prose prose-slate max-w-none">
               <p className="text-muted-foreground leading-relaxed">
                 Todos os materiais contidos neste website constituem propriedade
-                da {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                da {companyInfo.name}
                 ou dos fabricantes referidos através de suas marcas e produtos.
               </p>
               <p className="text-muted-foreground leading-relaxed">
@@ -439,20 +439,16 @@ export default async function TermsPage() {
                   <h4 className="mb-3 font-semibold">Dados da Empresa</h4>
                   <div className="space-y-2 text-sm">
                     <p>
-                      <strong>Razão Social:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                      <strong>Razão Social:</strong> {companyInfo.name}
                     </p>
                     <p>
-                      <strong>Telefone:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
+                      <strong>Telefone:</strong> {companyInfo.phone}
                     </p>
                     <p>
-                      <strong>WhatsApp:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}
+                      <strong>WhatsApp:</strong> {companyInfo.whatsapp}
                     </p>
                     <p>
-                      <strong>E-mail:</strong>{" "}
-                      {publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}
+                      <strong>E-mail:</strong> {companyInfo.email}
                     </p>
                   </div>
                 </div>
@@ -475,8 +471,7 @@ export default async function TermsPage() {
               <div className="text-center">
                 <p className="text-muted-foreground mb-2 text-sm">
                   <strong>
-                    Copyright © 2011-{currentYear} |{" "}
-                    {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                    Copyright © 2011-{currentYear} | {companyInfo.name}
                   </strong>
                 </p>
                 <p className="text-muted-foreground text-xs">

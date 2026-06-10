@@ -6,14 +6,13 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import type { ReactNode } from "react";
-
 import {
   MobileBottomBar,
   MobileBottomBarExternalLink,
   MobileBottomBarLink,
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
@@ -46,10 +45,7 @@ export function BudgetMobileBottomBar({
   categories,
   selectedTaxonomyId,
 }: BudgetMobileBottomBarProps) {
-  const whatsappUrl = buildWhatsappUrl(
-    publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
-    WHATSAPP_MESSAGE,
-  );
+  const whatsappUrl = buildWhatsappUrl(companyInfo.whatsapp, WHATSAPP_MESSAGE);
 
   return (
     <MobileBottomBar aria-label="Menu de navegação do orçamento">

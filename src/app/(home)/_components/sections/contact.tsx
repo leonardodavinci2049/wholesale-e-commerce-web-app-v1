@@ -1,26 +1,25 @@
 import { MapPin, MessageSquare, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 const getContactData = () =>
   [
     {
       icon: Phone,
       title: "Televendas",
-      info: publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(/^55/, "").replace(
-        /(\d{2})(\d{5})(\d{4})/,
-        "($1) $2-$3",
-      ),
+      info: companyInfo.whatsapp
+        .replace(/^55/, "")
+        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       color: "green",
     },
     {
       icon: MessageSquare,
       title: "WhatsApp",
-      info: publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(
+      info: companyInfo.whatsapp.replace(
         /(\d{2})(\d{2})(\d{5})(\d{4})/,
         "$1 $2 $3-$4",
       ),
-      href: `https://wa.me/${publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}`,
+      href: `https://wa.me/${companyInfo.whatsapp}`,
       color: "green",
     },
     {

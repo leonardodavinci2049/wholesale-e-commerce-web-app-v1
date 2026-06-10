@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";
@@ -7,9 +8,9 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   metadataBase: new URL(publicEnvs.NEXT_PUBLIC_APP_URL),
-  title: `${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
-  description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
-  keywords: [publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS],
+  title: `${companyInfo.meta.titleMain} | ${companyInfo.meta.titleCaption}`,
+  description: companyInfo.meta.description,
+  keywords: [companyInfo.meta.keywords],
   alternates: {
     canonical: "/",
   },
@@ -17,22 +18,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: publicEnvs.NEXT_PUBLIC_APP_URL,
-    siteName: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
-    title: `${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
-    description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+    siteName: companyInfo.name,
+    title: `${companyInfo.meta.titleMain} | ${companyInfo.meta.titleCaption}`,
+    description: companyInfo.meta.description,
     images: [
       {
         url: "/images/logo/logo-horizontal-header.png",
         width: 1200,
         height: 630,
-        alt: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
+        alt: companyInfo.name,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${publicEnvs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
-    description: publicEnvs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+    title: `${companyInfo.meta.titleMain} | ${companyInfo.meta.titleCaption}`,
+    description: companyInfo.meta.description,
     images: ["/images/logo/logo-horizontal-header.png"],
   },
 };

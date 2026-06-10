@@ -1,11 +1,11 @@
 import { ContactSection } from "@/app/(home)/_components/sections/contact";
 import { LocationSection } from "@/app/(home)/_components/sections/location";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
-  title: `Contato e loja fisica- ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Fale com a ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} pelo WhatsApp, telefone ou visite nossa loja fisica em ${publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION} para comprar ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS} `,
+  title: `Contato e loja fisica- ${companyInfo.name}`,
+  description: `Fale com a ${companyInfo.name} pelo WhatsApp, telefone ou visite nossa loja fisica em ${companyInfo.addressLocation} para comprar ${companyInfo.meta.keywords} `,
   path: "/contact",
   keywords: ["contato", "loja fisica"],
 });

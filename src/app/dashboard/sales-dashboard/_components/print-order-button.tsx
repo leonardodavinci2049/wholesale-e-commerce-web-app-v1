@@ -2,7 +2,6 @@
 
 import { Printer } from "lucide-react";
 import { useCallback, useState } from "react";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import type {
   UIOrderCustomer,
   UIOrderDashboardDetails,
@@ -230,7 +229,7 @@ export function PrintOrderButton({
   customer,
 }: PrintOrderButtonProps) {
   const [open, setOpen] = useState(false);
-  const companyName = publicEnvs.NEXT_PUBLIC_COMPANY_NAME ?? "";
+  const companyName = companyInfo.name ?? "";
 
   const handlePrint = useCallback(() => {
     const logoSrc = `${window.location.origin}${LOGO_PATH}`;
