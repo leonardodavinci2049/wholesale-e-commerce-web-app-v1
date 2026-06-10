@@ -1,6 +1,6 @@
 import { publicEnvs } from "@/core/config/envs.client";
-import { companyInfo } from "@/core/config-tenant/info-company";
-import { PAYMENT_ACCEPTED_SCHEMA } from "@/core/config-tenant/payment-methods";
+import { companyInfo } from "@/data/info-company";
+import { PAYMENT_ACCEPTED_SCHEMA } from "@/data/payment-methods";
 import { SCHEMA_IDS } from "./json-ld";
 
 const HOURS_SEPARATOR = /\s*-\s*/;

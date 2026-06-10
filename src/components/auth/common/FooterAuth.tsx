@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 export default function CompanyFooter() {
   const [year, setYear] = useState("");

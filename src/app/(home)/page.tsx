@@ -1,5 +1,5 @@
 import { FAQPageJsonLd } from "@/components/seo";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { HomeMobileBottomBar } from "./_components/home-mobile-bottom-bar";
 import { BenefitsSection } from "./_components/sections/benefits";

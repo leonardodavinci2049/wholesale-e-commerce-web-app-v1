@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 import FooterHome from "./_components/footer/FooterHome";
 import { MainHeader } from "./_components/header/MainHeader";

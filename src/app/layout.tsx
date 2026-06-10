@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";

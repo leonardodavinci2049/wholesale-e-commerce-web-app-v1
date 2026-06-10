@@ -17,7 +17,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

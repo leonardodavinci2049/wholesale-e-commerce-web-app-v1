@@ -17,8 +17,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { companyInfo } from "@/core/config-tenant/info-company";
-import { PAYMENT_METHOD_NAMES_BY_ID } from "@/core/config-tenant/payment-methods";
+import { companyInfo } from "@/data/info-company";
+import { PAYMENT_METHOD_NAMES_BY_ID } from "@/data/payment-methods";
 import { useUserData } from "@/hooks/use-user-data";
 import type {
   UIOrderCustomer,

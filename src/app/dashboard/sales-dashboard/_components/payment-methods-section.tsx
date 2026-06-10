@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { SALES_DASHBOARD_PAYMENT_METHODS } from "@/core/config-tenant/payment-methods";
+import { SALES_DASHBOARD_PAYMENT_METHODS } from "@/data/payment-methods";
 import { PaymentButtonSection } from "./payment-button-section";
 
 export function PaymentMethodsSection() {

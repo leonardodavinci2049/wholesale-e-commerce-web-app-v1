@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { getCurrentYear } from "@/lib/current-time";
 
 export default async function CompanyFooter() {

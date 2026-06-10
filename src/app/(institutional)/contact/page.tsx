@@ -1,6 +1,6 @@
 import { ContactSection } from "@/app/(home)/_components/sections/contact";
 import { LocationSection } from "@/app/(home)/_components/sections/location";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({

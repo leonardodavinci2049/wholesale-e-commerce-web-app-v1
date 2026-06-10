@@ -1,5 +1,5 @@
 import { publicEnvs } from "@/core/config/envs.client";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
 
 /**

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { OperationButtons } from "./OperationButtons";
 
 /**

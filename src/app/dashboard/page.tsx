@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 import { getAuthContext } from "@/server/auth-context";
 import { DashboardMobileBottomBar } from "./_components/dashboard-mobile-bottom-bar";

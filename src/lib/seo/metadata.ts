@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { publicEnvs } from "@/core/config/envs.client";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { DEFAULT_OG_IMAGE_URL } from "./company";
 
 interface PageMetadataOptions {
