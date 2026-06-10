@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { publicEnvs } from "@/core/config";
+import { PAYMENT_METHOD_NAMES_BY_ID } from "@/core/config-tenant/payment-methods";
 import { useUserData } from "@/hooks/use-user-data";
 import type {
   UIOrderCustomer,
@@ -93,19 +94,9 @@ function translateStatus(status: string | undefined): string {
   return map[status.toUpperCase()] ?? status.toLowerCase();
 }
 
-const PAYMENT_METHOD_NAMES: Record<number, string> = {
-  1: "Dinheiro",
-  2: "PIX",
-  3: "Cartão Débito",
-  4: "Cartão Crédito",
-  5: "Depósito",
-  7: "Boleto",
-  8: "Cheque",
-};
-
 function getPaymentMethodName(id: number | undefined): string {
   if (!id) return "";
-  return PAYMENT_METHOD_NAMES[id] ?? "";
+  return PAYMENT_METHOD_NAMES_BY_ID[id] ?? "";
 }
 
 function buildWhatsAppMessage(params: {

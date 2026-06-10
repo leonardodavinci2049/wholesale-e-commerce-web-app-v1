@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  Banknote,
-  CreditCard,
-  Landmark,
-  type LucideIcon,
-  QrCode,
-} from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -15,62 +8,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SALES_DASHBOARD_PAYMENT_METHODS } from "@/core/config-tenant/payment-methods";
 import { PaymentButtonSection } from "./payment-button-section";
-
-interface PaymentMethod {
-  id: string;
-  icon: string;
-  label: string;
-  color: string;
-  recommended?: boolean;
-  Icon: LucideIcon;
-}
-
-const paymentMethods: PaymentMethod[] = [
-  {
-    id: "cash",
-    icon: "banknote",
-    label: "Dinheiro",
-    color: "text-primary",
-    Icon: Banknote,
-  },
-  {
-    id: "pix",
-    icon: "qr-code",
-    label: "Pix",
-    color: "text-primary",
-    recommended: true,
-    Icon: QrCode,
-  },
-  {
-    id: "credit",
-    icon: "credit-card",
-    label: "Cartao de Credito",
-    color: "text-primary",
-    Icon: CreditCard,
-  },
-  {
-    id: "debit",
-    icon: "credit-card",
-    label: "Cartao de Debito",
-    color: "text-primary",
-    Icon: CreditCard,
-  },
-  {
-    id: "boleto",
-    icon: "landmark",
-    label: "Boleto",
-    color: "text-primary",
-    Icon: Landmark,
-  },
-];
 
 export function PaymentMethodsSection() {
   const [selectedMethod, setSelectedMethod] = useState("pix");
 
   const currentMethod =
-    paymentMethods.find((method) => method.id === selectedMethod) ??
-    paymentMethods[0];
+    SALES_DASHBOARD_PAYMENT_METHODS.find(
+      (method) => method.id === selectedMethod,
+    ) ?? SALES_DASHBOARD_PAYMENT_METHODS[0];
 
   const CurrentIcon = currentMethod.Icon;
 
@@ -92,7 +39,7 @@ export function PaymentMethodsSection() {
         </AccordionTrigger>
         <AccordionContent className="pb-0 pt-3">
           <div className="grid grid-cols-2 gap-2">
-            {paymentMethods.map((method) => (
+            {SALES_DASHBOARD_PAYMENT_METHODS.map((method) => (
               <PaymentButtonSection
                 key={method.id}
                 icon={method.icon}

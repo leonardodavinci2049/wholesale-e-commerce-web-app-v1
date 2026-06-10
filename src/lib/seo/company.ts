@@ -1,4 +1,5 @@
 import { publicEnvs } from "@/core/config/envs.client";
+import { PAYMENT_ACCEPTED_SCHEMA } from "@/core/config-tenant/payment-methods";
 import { SCHEMA_IDS } from "./json-ld";
 
 const HOURS_SEPARATOR = /\s*-\s*/;
@@ -155,6 +156,6 @@ export function getLocalBusinessSchema() {
     openingHoursSpecification: COMPANY_OPENING_HOURS,
     priceRange: "$$",
     currenciesAccepted: "BRL",
-    paymentAccepted: "Pix, Cartao de Credito, Dinheiro",
+    paymentAccepted: PAYMENT_ACCEPTED_SCHEMA,
   };
 }

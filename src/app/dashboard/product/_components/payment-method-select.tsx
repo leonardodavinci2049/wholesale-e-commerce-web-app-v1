@@ -1,28 +1,12 @@
 "use client";
 
-import {
-  Banknote,
-  Building2,
-  Check,
-  CreditCard,
-  FileText,
-  Loader2,
-  QrCode,
-} from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { PAYMENT_METHODS } from "@/core/config-tenant/payment-methods";
 import { cn } from "@/lib/utils";
 
 import { updatePaymentAction } from "../actions/update-payment-action";
-
-const PAYMENT_METHODS = [
-  { id: "1", label: "Dinheiro", icon: Banknote },
-  { id: "2", label: "PIX", icon: QrCode },
-  { id: "3", label: "Cartão Débito", icon: CreditCard },
-  { id: "4", label: "Cartão Crédito", icon: CreditCard },
-  { id: "5", label: "Depósito", icon: Building2 },
-  { id: "7", label: "Boleto", icon: FileText },
-];
 
 interface PaymentMethodSelectProps {
   orderId: number;
