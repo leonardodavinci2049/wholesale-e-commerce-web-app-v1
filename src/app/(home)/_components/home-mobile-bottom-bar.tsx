@@ -4,7 +4,7 @@ import {
   MobileBottomBarExternalLink,
   MobileBottomBarLink,
 } from "@/components/common/mobile-bottom-bar";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 const WHATSAPP_MESSAGE = "Olá, gostaria de falar sobre revenda de produtos";
 

@@ -6,7 +6,7 @@ import {
   MobileBottomBarLink,
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 interface SaleMobileBottomBarProps {
   cartItemCount: number;

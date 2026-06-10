@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 export default function CompanyLogo() {
   return (

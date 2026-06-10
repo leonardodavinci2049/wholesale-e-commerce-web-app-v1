@@ -1,6 +1,6 @@
 import { MapPin, MessageSquare, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 const getContactData = () =>
   [

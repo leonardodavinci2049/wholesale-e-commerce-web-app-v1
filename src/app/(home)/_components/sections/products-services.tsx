@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { homeSectionConfig } from "@/core/config-tenant/Info-home-section";
+import { homeSectionConfig } from "@/data/Info-home-section";
 
 export function ProductsServicesSection() {
   return (

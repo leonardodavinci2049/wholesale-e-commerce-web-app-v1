@@ -1,5 +1,5 @@
 import { Globe, Shield, Zap } from "lucide-react";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 
 const FEATURES_DATA = [
   {

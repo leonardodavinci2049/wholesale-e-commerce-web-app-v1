@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { companyInfo } from "@/core/config-tenant/info-company";
+import { companyInfo } from "@/data/info-company";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {

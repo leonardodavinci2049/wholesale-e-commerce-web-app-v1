@@ -3,7 +3,7 @@
 import { Check, Loader2 } from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { PAYMENT_METHODS } from "@/core/config-tenant/payment-methods";
+import { PAYMENT_METHODS } from "@/data/payment-methods";
 import { cn } from "@/lib/utils";
 
 import { updatePaymentAction } from "../actions/update-payment-action";
