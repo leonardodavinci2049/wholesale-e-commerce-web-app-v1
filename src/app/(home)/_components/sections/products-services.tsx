@@ -1,39 +1,5 @@
-import { BatteryCharging, MonitorSmartphone, Smartphone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config";
-
-const PRODUCT_ICONS = {
-  BatteryCharging,
-  MonitorSmartphone,
-  Smartphone,
-} as const;
-
-const PRODUCTS_DATA = [
-  {
-    id: "cat-1",
-    icon: PRODUCT_ICONS[publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_ICON1],
-    link: "/category/cat-1",
-    title: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_TITLE1,
-    description: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_DESCRIPTION1,
-    color: "blue",
-  },
-  {
-    id: "cat-2",
-    icon: PRODUCT_ICONS[publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_ICON2],
-    link: "/category/cat-2",
-    title: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_TITLE2,
-    description: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_DESCRIPTION2,
-    color: "green",
-  },
-  {
-    id: "cat-3",
-    icon: PRODUCT_ICONS[publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_ICON3],
-    link: "/category/cat-3",
-    title: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_TITLE3,
-    description: publicEnvs.NEXT_PUBLIC_HOME_CATEGORY_DESCRIPTION3,
-    color: "purple",
-  },
-] as const;
+import { homeSectionConfig } from "@/core/config-tenant/Info-home-section";
 
 export function ProductsServicesSection() {
   return (
@@ -49,7 +15,7 @@ export function ProductsServicesSection() {
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
-          {PRODUCTS_DATA.map((product) => {
+          {homeSectionConfig.categories.map((product) => {
             const Icon = product.icon;
             return (
               <Card
