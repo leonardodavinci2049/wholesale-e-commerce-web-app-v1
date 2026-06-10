@@ -15,8 +15,8 @@ import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
-import { publicEnvs } from "@/core/config/envs.client";
 import { getAuthContext } from "@/server/auth-context";
 import { DashboardMobileBottomBar } from "./_components/dashboard-mobile-bottom-bar";
 import { SiteHeaderWithBreadcrumb } from "./_components/header/site-header-with-breadcrumb";
@@ -166,8 +166,7 @@ export default async function DashboardPage() {
                       Olá, {firstName}!
                     </h1>
                     <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-                      Bem-vindo à{" "}
-                      <strong>{publicEnvs.NEXT_PUBLIC_COMPANY_NAME}</strong>.
+                      Bem-vindo à <strong>{companyInfo.name}</strong>.
                     </p>
                   </div>
                 </div>

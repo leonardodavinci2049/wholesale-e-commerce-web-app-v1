@@ -1,4 +1,5 @@
 import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { PAYMENT_ACCEPTED_SCHEMA } from "@/core/config-tenant/payment-methods";
 import { SCHEMA_IDS } from "./json-ld";
 
@@ -21,21 +22,17 @@ function splitOpeningHours(
 }
 
 function getRegionFromLocation() {
-  return publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION.match(
-    REGION_PATTERN,
-  )?.[1];
+  return companyInfo.addressLocation.match(REGION_PATTERN)?.[1];
 }
 
 function getPostalCodeFromAddress() {
-  const match =
-    publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS.match(POSTAL_CODE_PATTERN);
+  const match = companyInfo.address.match(POSTAL_CODE_PATTERN);
 
   return match?.[0]?.replace(/(\d{5})(\d{3})/, "$1-$2");
 }
 
 function getGeoFromMapsUrl() {
-  const match =
-    publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_EMBED.match(GEO_PATTERN);
+  const match = companyInfo.links.mapsEmbedUrl.match(GEO_PATTERN);
 
   if (!match) {
     return undefined;
@@ -53,16 +50,16 @@ export const COMPANY_LOGO_URL = `${publicEnvs.NEXT_PUBLIC_BASE_URL_APP}/images/l
 export const DEFAULT_OG_IMAGE_URL = `${publicEnvs.NEXT_PUBLIC_BASE_URL_APP}/opengraph-image`;
 
 export const COMPANY_SAME_AS = [
-  publicEnvs.NEXT_PUBLIC_COMPANY_FACEBOOK_URL,
-  publicEnvs.NEXT_PUBLIC_COMPANY_INSTAGRAM_URL,
-  publicEnvs.NEXT_PUBLIC_COMPANY_LINKTREE_URL,
-  publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP_URL,
+  companyInfo.links.facebookUrl,
+  companyInfo.links.instagramUrl,
+  companyInfo.links.linktreeUrl,
+  companyInfo.links.whatsappUrl,
 ].filter(Boolean);
 
 export const COMPANY_POSTAL_ADDRESS = {
   "@type": "PostalAddress",
-  streetAddress: publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS,
-  addressLocality: publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION,
+  streetAddress: companyInfo.address,
+  addressLocality: companyInfo.addressLocation,
   addressRegion: getRegionFromLocation(),
   postalCode: getPostalCodeFromAddress(),
   addressCountry: "BR",
@@ -71,8 +68,8 @@ export const COMPANY_POSTAL_ADDRESS = {
 export const COMPANY_CONTACT_POINTS = [
   {
     "@type": "ContactPoint",
-    telephone: publicEnvs.NEXT_PUBLIC_COMPANY_PHONE,
-    email: publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL,
+    telephone: companyInfo.phone,
+    email: companyInfo.email,
     contactType: "sales",
     areaServed: "BR",
     availableLanguage: ["pt-BR", "Portuguese"],
@@ -80,11 +77,11 @@ export const COMPANY_CONTACT_POINTS = [
   },
   {
     "@type": "ContactPoint",
-    telephone: publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
+    telephone: companyInfo.whatsapp,
     contactType: "customer service",
     areaServed: "BR",
     availableLanguage: ["pt-BR", "Portuguese"],
-    url: publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP_URL,
+    url: companyInfo.links.whatsappUrl,
   },
 ];
 
@@ -92,20 +89,12 @@ export const COMPANY_OPENING_HOURS = [
   {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    ...splitOpeningHours(
-      publicEnvs.NEXT_PUBLIC_COMPANY_OPENING_HOURS,
-      "08:00",
-      "18:00",
-    ),
+    ...splitOpeningHours(companyInfo.openingHours, "08:00", "18:00"),
   },
   {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: "Saturday",
-    ...splitOpeningHours(
-      publicEnvs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY,
-      "08:00",
-      "12:00",
-    ),
+    ...splitOpeningHours(companyInfo.openingSaturday, "08:00", "12:00"),
   },
 ];
 
@@ -118,18 +107,18 @@ export function getOrganizationSchema() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": SCHEMA_IDS.organization,
-    name: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
+    name: companyInfo.name,
     url: publicEnvs.NEXT_PUBLIC_BASE_URL_APP,
     logo: COMPANY_LOGO_URL,
     image: COMPANY_LOGO_URL,
-    description: publicEnvs.NEXT_PUBLIC_COMPANY_ABOUT,
-    email: publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL,
-    telephone: publicEnvs.NEXT_PUBLIC_COMPANY_PHONE,
-    taxID: publicEnvs.NEXT_PUBLIC_COMPANY_CNPJ,
+    description: companyInfo.about,
+    email: companyInfo.email,
+    telephone: companyInfo.phone,
+    taxID: companyInfo.cnpj,
     sameAs: COMPANY_SAME_AS,
     contactPoint: COMPANY_CONTACT_POINTS,
     address: COMPANY_POSTAL_ADDRESS,
-    foundingDate: publicEnvs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION,
+    foundingDate: companyInfo.yearFoundation,
   };
 }
 
@@ -138,17 +127,17 @@ export function getLocalBusinessSchema() {
     "@context": "https://schema.org",
     "@type": "Store",
     "@id": SCHEMA_IDS.localBusiness,
-    name: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
+    name: companyInfo.name,
     url: publicEnvs.NEXT_PUBLIC_BASE_URL_APP,
     image: COMPANY_LOGO_URL,
     logo: COMPANY_LOGO_URL,
-    description: publicEnvs.NEXT_PUBLIC_COMPANY_ABOUT,
-    email: publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL,
-    telephone: publicEnvs.NEXT_PUBLIC_COMPANY_PHONE,
-    taxID: publicEnvs.NEXT_PUBLIC_COMPANY_CNPJ,
+    description: companyInfo.about,
+    email: companyInfo.email,
+    telephone: companyInfo.phone,
+    taxID: companyInfo.cnpj,
     address: COMPANY_POSTAL_ADDRESS,
     geo: getCompanyGeo(),
-    hasMap: publicEnvs.NEXT_PUBLIC_COMPANY_MAPS_URL_EMBED,
+    hasMap: companyInfo.links.mapsEmbedUrl,
     sameAs: COMPANY_SAME_AS,
     parentOrganization: {
       "@id": SCHEMA_IDS.organization,

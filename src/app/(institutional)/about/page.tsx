@@ -16,12 +16,12 @@ import {
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
-  title: `Quem Somos - ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Conheça a história da ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}, empresa atacadista e varejista B2B/B2C com mais de 30 anos de experiência no mercado. Excelência em atendimento e os melhores preços para sua empresa.`,
+  title: `Quem Somos - ${companyInfo.name}`,
+  description: `Conheça a história da ${companyInfo.name}, empresa atacadista e varejista B2B/B2C com mais de 30 anos de experiência no mercado. Excelência em atendimento e os melhores preços para sua empresa.`,
 };
 
 export default async function AboutPage() {
@@ -92,7 +92,7 @@ export default async function AboutPage() {
                     tecnologia para oferecer os melhores preços?&rdquo;
                   </strong>
                   A busca por essa resposta foi o que motivou o empresário a
-                  criar {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+                  criar {companyInfo.name}
                   em <strong>1994</strong>.
                 </p>
                 <p className="text-muted-foreground mb-4 leading-relaxed">
@@ -152,7 +152,7 @@ export default async function AboutPage() {
       <section className="mb-16">
         <h2 className="mb-12 flex items-center justify-center gap-3 text-center text-3xl font-bold">
           <Clock className="text-primary h-8 w-8" />
-          Linha do Tempo - {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
+          Linha do Tempo - {companyInfo.name}
         </h2>
 
         <div className="relative">
@@ -163,7 +163,7 @@ export default async function AboutPage() {
             {[
               {
                 year: "1994",
-                title: `Nasce a ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
+                title: `Nasce a ${companyInfo.name}`,
                 description:
                   "Início das atividades comercializando produtos de informática e eletrônicos, atuando no setor atacadista em Ribeirão Preto e região.",
                 icon: <Building2 className="h-6 w-6" />,
@@ -211,7 +211,7 @@ export default async function AboutPage() {
               },
               {
                 year: "2024",
-                title: `${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} B2B/B2C`,
+                title: `${companyInfo.name} B2B/B2C`,
                 description:
                   "Lançamento da plataforma especializada em vendas no atacado e varejo, atendendo tanto empresas quanto consumidores finais nos segmentos B2B e B2C.",
                 icon: <Star className="h-6 w-6" />,
@@ -399,11 +399,10 @@ export default async function AboutPage() {
                 Nosso Compromisso
               </h2>
               <p className="text-muted-foreground mx-auto mb-8 max-w-4xl text-lg leading-relaxed">
-                Antes mesmo do primeiro cliente, a{" "}
-                {publicEnvs.NEXT_PUBLIC_COMPANY_NAME} já tinha como meta
-                oferecer o melhor serviço e construir relacionamentos de longo
-                prazo. Essa estratégia provou ser muito bem-sucedida e continua
-                sendo um componente chave em nossa missão.
+                Antes mesmo do primeiro cliente, a {companyInfo.name} já tinha
+                como meta oferecer o melhor serviço e construir relacionamentos
+                de longo prazo. Essa estratégia provou ser muito bem-sucedida e
+                continua sendo um componente chave em nossa missão.
               </p>
 
               <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -451,7 +450,7 @@ export default async function AboutPage() {
               influenciando nossa forma de trabalhar, de nos relacionarmos e de
               gerirmos nossas vidas. Estar em sintonia com essa evolução e
               disponibilizar o melhor em produtos e serviços é o compromisso da{" "}
-              <strong>{publicEnvs.NEXT_PUBLIC_COMPANY_NAME}</strong>.
+              <strong>{companyInfo.name}</strong>.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Nos últimos anos, realizamos grandes investimentos em gestão de
@@ -477,21 +476,15 @@ export default async function AboutPage() {
             <div className="grid gap-6 text-center md:grid-cols-3">
               <div>
                 <h3 className="mb-2 font-semibold">Telefone</h3>
-                <p className="opacity-90">
-                  {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
-                </p>
+                <p className="opacity-90">{companyInfo.phone}</p>
               </div>
               <div>
                 <h3 className="mb-2 font-semibold">WhatsApp</h3>
-                <p className="opacity-90">
-                  {publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP}
-                </p>
+                <p className="opacity-90">{companyInfo.whatsapp}</p>
               </div>
               <div>
                 <h3 className="mb-2 font-semibold">E-mail</h3>
-                <p className="opacity-90">
-                  {publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}
-                </p>
+                <p className="opacity-90">{companyInfo.email}</p>
               </div>
             </div>
           </CardContent>

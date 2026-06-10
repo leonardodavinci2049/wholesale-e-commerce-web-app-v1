@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { DEFAULT_OG_IMAGE_URL } from "./company";
 
 interface PageMetadataOptions {
@@ -31,7 +32,7 @@ export function createPageMetadata({
       type: "website",
       locale: "pt_BR",
       url: absoluteUrl,
-      siteName: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
+      siteName: companyInfo.name,
       title,
       description,
       images: [
@@ -39,7 +40,7 @@ export function createPageMetadata({
           url: DEFAULT_OG_IMAGE_URL,
           width: 1200,
           height: 630,
-          alt: publicEnvs.NEXT_PUBLIC_COMPANY_NAME,
+          alt: companyInfo.name,
         },
       ],
     },

@@ -1,13 +1,12 @@
 import { Home, MessageCircle, Search, ShoppingCart } from "lucide-react";
 import type { ReactNode } from "react";
-
 import {
   MobileBottomBar,
   MobileBottomBarExternalLink,
   MobileBottomBarLink,
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 interface SaleMobileBottomBarProps {
   cartItemCount: number;
@@ -28,10 +27,7 @@ export function SaleMobileBottomBar({
   cartContent,
   searchContent,
 }: SaleMobileBottomBarProps) {
-  const whatsappUrl = buildWhatsappUrl(
-    publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
-    WHATSAPP_MESSAGE,
-  );
+  const whatsappUrl = buildWhatsappUrl(companyInfo.whatsapp, WHATSAPP_MESSAGE);
 
   return (
     <MobileBottomBar aria-label="Menu de navegação promoções">

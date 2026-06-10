@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { publicEnvs } from "@/core/config";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { PAYMENT_METHOD_NAMES_BY_ID } from "@/core/config-tenant/payment-methods";
 import { useUserData } from "@/hooks/use-user-data";
 import type {
@@ -170,7 +170,7 @@ export function SendWhatsAppButton({
   const [phoneInput, setPhoneInput] = useState("");
   const { user } = useUserData();
 
-  const companyName = publicEnvs.NEXT_PUBLIC_COMPANY_NAME ?? "";
+  const companyName = companyInfo.name ?? "";
   const sellerName = user?.name ?? "";
   const customerPhone = getCustomerPhone(customer);
 

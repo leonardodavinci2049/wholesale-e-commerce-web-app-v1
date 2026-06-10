@@ -16,7 +16,7 @@ import {
   MobileBottomBarLink,
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 import { DashboardSearchContent } from "./dashboard-search-content";
 
@@ -61,10 +61,7 @@ function buildWhatsappUrl(phone: string, message: string): string {
 }
 
 export function DashboardMobileBottomBar() {
-  const whatsappUrl = buildWhatsappUrl(
-    publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
-    WHATSAPP_MESSAGE,
-  );
+  const whatsappUrl = buildWhatsappUrl(companyInfo.whatsapp, WHATSAPP_MESSAGE);
 
   return (
     <MobileBottomBar aria-label="Menu de navegação principal">

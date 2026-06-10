@@ -1,5 +1,5 @@
 import { Globe, Shield, Zap } from "lucide-react";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 const FEATURES_DATA = [
   {
@@ -31,7 +31,7 @@ export function WhyChooseUsSection() {
       <div className="container mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
-            Por que escolher a {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}?
+            Por que escolher a {companyInfo.name}?
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4 sm:px-0">
             Oferecemos as melhores condições para o seu negócio prosperar

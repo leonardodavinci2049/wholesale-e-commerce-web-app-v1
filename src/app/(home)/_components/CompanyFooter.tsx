@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { getCurrentYear } from "@/lib/current-time";
 
 export default async function CompanyFooter() {
@@ -10,15 +10,9 @@ export default async function CompanyFooter() {
       <div className="container mx-auto max-w-7xl px-4">
         <div className="grid gap-6 sm:grid-cols-3">
           <div>
-            <h4 className="font-semibold">
-              {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}
-            </h4>
-            <p className="text-muted-foreground text-sm">
-              {publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}
-            </p>
-            <p className="text-muted-foreground text-sm">
-              {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
-            </p>
+            <h4 className="font-semibold">{companyInfo.name}</h4>
+            <p className="text-muted-foreground text-sm">{companyInfo.email}</p>
+            <p className="text-muted-foreground text-sm">{companyInfo.phone}</p>
           </div>
 
           <div>
@@ -49,8 +43,7 @@ export default async function CompanyFooter() {
 
       <div className="container mx-auto max-w-7xl px-4 mt-6">
         <div className="text-muted-foreground text-center text-sm">
-          © {currentYear} {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Todos os
-          direitos reservados.
+          © {currentYear} {companyInfo.name}. Todos os direitos reservados.
         </div>
       </div>
     </footer>

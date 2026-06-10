@@ -1,11 +1,10 @@
 import { Home, LogIn, MapPin, MessageCircle } from "lucide-react";
-
 import {
   MobileBottomBar,
   MobileBottomBarExternalLink,
   MobileBottomBarLink,
 } from "@/components/common/mobile-bottom-bar";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 const WHATSAPP_MESSAGE = "Olá, gostaria de falar sobre revenda de produtos";
 
@@ -14,10 +13,7 @@ function buildWhatsappUrl(phone: string, message: string): string {
 }
 
 export function HomeMobileBottomBar() {
-  const whatsappUrl = buildWhatsappUrl(
-    publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP,
-    WHATSAPP_MESSAGE,
-  );
+  const whatsappUrl = buildWhatsappUrl(companyInfo.whatsapp, WHATSAPP_MESSAGE);
 
   return (
     <MobileBottomBar

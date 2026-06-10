@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { publicEnvs } from "@/core/config";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { OperationButtons } from "./OperationButtons";
 
 /**
@@ -16,12 +16,12 @@ export function MainHeader() {
           <Link
             href="/"
             className="inline-flex items-center"
-            aria-label={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - Página inicial`}
+            aria-label={`${companyInfo.name} - Página inicial`}
           >
             <div className="relative h-8 w-40 sm:h-10 sm:w-48 lg:h-12 lg:w-56">
               <Image
                 src="/images/logo/logo-horizontal-header.png"
-                alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - Informática, Eletrônicos e Perfumes Importados`}
+                alt={`${companyInfo.name} - Informática, Eletrônicos e Perfumes Importados`}
                 fill
                 sizes="(min-width: 1024px) 224px, (min-width: 640px) 192px, 160px"
                 className="scale-[1.5] object-contain origin-left"

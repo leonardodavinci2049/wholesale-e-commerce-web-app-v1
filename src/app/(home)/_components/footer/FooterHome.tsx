@@ -17,7 +17,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -83,7 +83,7 @@ export default function FooterHome() {
               <Link href="/" className="flex items-center">
                 <Image
                   src="/images/logo/logo-horizontal-footer.png"
-                  alt={`${publicEnvs.NEXT_PUBLIC_COMPANY_NAME} - ${publicEnvs.NEXT_PUBLIC_COMPANY_META_KEYWORDS}`}
+                  alt={`${companyInfo.name} - ${companyInfo.meta.keywords}`}
                   width={140}
                   height={44}
                   className="h-10 w-auto brightness-0 invert filter transition-opacity hover:opacity-80"
@@ -91,13 +91,13 @@ export default function FooterHome() {
               </Link>
             </div>
             <p className="text-sm leading-relaxed text-gray-400">
-              {publicEnvs.NEXT_PUBLIC_COMPANY_ABOUT}
+              {companyInfo.about}
             </p>
 
             {/* Redes sociais */}
             <div className="flex space-x-4">
               <a
-                href={publicEnvs.NEXT_PUBLIC_COMPANY_FACEBOOK_URL}
+                href={companyInfo.links.facebookUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
@@ -106,7 +106,7 @@ export default function FooterHome() {
                 <FacebookIcon className="h-5 w-5" />
               </a>
               <a
-                href={publicEnvs.NEXT_PUBLIC_COMPANY_INSTAGRAM_URL}
+                href={companyInfo.links.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
@@ -115,7 +115,7 @@ export default function FooterHome() {
                 <InstagramIcon className="h-5 w-5" />
               </a>
               <a
-                href={publicEnvs.NEXT_PUBLIC_COMPANY_LINKTREE_URL}
+                href={companyInfo.links.linktreeUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
@@ -124,7 +124,7 @@ export default function FooterHome() {
                 <Globe className="h-5 w-5" />
               </a>
               <a
-                href={publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP_URL}
+                href={companyInfo.links.whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
@@ -197,32 +197,28 @@ export default function FooterHome() {
               <div className="flex items-start space-x-3">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
                 <div className="text-sm">
-                  <p className="text-gray-400">
-                    {publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS}
-                  </p>
-                  <p className="text-gray-400">
-                    {publicEnvs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}
-                  </p>
+                  <p className="text-gray-400">{companyInfo.address}</p>
+                  <p className="text-gray-400">{companyInfo.addressLocation}</p>
                 </div>
               </div>
 
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
-                  href={`tel:${publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}`}
+                  href={`tel:${companyInfo.phone}`}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
                 >
-                  {publicEnvs.NEXT_PUBLIC_COMPANY_PHONE}
+                  {companyInfo.phone}
                 </a>
               </div>
 
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
-                  href={`mailto:${publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}`}
+                  href={`mailto:${companyInfo.email}`}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
                 >
-                  {publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL}
+                  {companyInfo.email}
                 </a>
               </div>
 
@@ -230,10 +226,10 @@ export default function FooterHome() {
                 <Clock className="h-5 w-5 shrink-0 text-blue-400" />
                 <div className="text-sm">
                   <p className="text-gray-400">
-                    Seg - Sex: {publicEnvs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                    Seg - Sex: {companyInfo.openingHours}
                   </p>
                   <p className="text-gray-400">
-                    Sáb: {publicEnvs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY}
+                    Sáb: {companyInfo.openingSaturday}
                   </p>
                 </div>
               </div>
@@ -321,9 +317,8 @@ export default function FooterHome() {
         <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0">
             <p className="text-sm text-gray-400">
-              &copy; {currentYear} {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Todos
-              os direitos reservados - CNPJ:{" "}
-              {publicEnvs.NEXT_PUBLIC_COMPANY_CNPJ} - Build: 27042018
+              &copy; {currentYear} {companyInfo.name}. Todos os direitos
+              reservados - CNPJ: {companyInfo.cnpj} - Build: 27042018
             </p>
             <div className="flex space-x-6 text-sm">
               <Link

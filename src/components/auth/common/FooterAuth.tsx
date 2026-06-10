@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 export default function CompanyFooter() {
   const [year, setYear] = useState("");
@@ -17,8 +17,7 @@ export default function CompanyFooter() {
         <div className="mt-8pt-6">
           <div className="mx-auto max-w-5xl px-6 text-center">
             <p className="text-muted-foreground text-xs">
-              © {year} {publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Todos os direitos
-              reservados.
+              © {year} {companyInfo.name}. Todos os direitos reservados.
             </p>
           </div>
         </div>

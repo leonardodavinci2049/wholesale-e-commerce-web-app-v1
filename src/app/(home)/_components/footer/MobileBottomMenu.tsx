@@ -17,7 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 
 import type { UICategory } from "@/lib/transformers";
 
@@ -29,12 +29,9 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleWhatsAppClick = () => {
-    const message = `Olá! Estou no APP do ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Gostaria de mais informações.`;
+    const message = `Olá! Estou no APP do ${companyInfo.name}. Gostaria de mais informações.`;
 
-    const whatsappNumber = publicEnvs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(
-      /\D/g,
-      "",
-    );
+    const whatsappNumber = companyInfo.whatsapp.replace(/\D/g, "");
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       message,
     )}`;

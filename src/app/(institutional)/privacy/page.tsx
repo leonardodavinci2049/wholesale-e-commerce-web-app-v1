@@ -13,12 +13,12 @@ import {
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { publicEnvs } from "@/core/config/envs.client";
+import { companyInfo } from "@/core/config-tenant/info-company";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
-  title: `Política de Privacidade - ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Política de privacidade e proteção de dados da ${publicEnvs.NEXT_PUBLIC_COMPANY_NAME}. Saiba como coletamos, utilizamos e protegemos suas informações pessoais e empresariais.`,
+  title: `Política de Privacidade - ${companyInfo.name}`,
+  description: `Política de privacidade e proteção de dados da ${companyInfo.name}. Saiba como coletamos, utilizamos e protegemos suas informações pessoais e empresariais.`,
 };
 
 export default async function PrivacyPage() {
@@ -26,9 +26,9 @@ export default async function PrivacyPage() {
     getCurrentDatePtBr(),
     getCurrentYear(),
   ]);
-  const companyName = publicEnvs.NEXT_PUBLIC_COMPANY_NAME;
-  const companyEmail = publicEnvs.NEXT_PUBLIC_COMPANY_EMAIL;
-  const companyPhone = publicEnvs.NEXT_PUBLIC_COMPANY_PHONE;
+  const companyName = companyInfo.name;
+  const companyEmail = companyInfo.email;
+  const companyPhone = companyInfo.phone;
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
