@@ -9,6 +9,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { brandNames } from "@/data/brand-names";
 
 const slides = [
   {
@@ -40,6 +41,22 @@ const slides = [
     link: "#promocao-4",
   },
 ];
+
+const brandColors: Record<string, string> = {
+  IPHONE: "#1D1D1F",
+  MOTOROLA: "#5C92F2",
+  SAMSUNG: "#1428A0",
+  LG: "#A50034",
+  XIAOMI: "#FF6900",
+  REALME: "#FFC915",
+  ASUS: "#00539B",
+  POCO: "#FDD835",
+  "MI-NOTE": "#FF6900",
+  REDMI: "#FF6900",
+  NOKIA: "#124191",
+  OPPO: "#046A38",
+  IFINIT: "#00A651",
+};
 
 export default function HeroSliderV2() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -113,41 +130,69 @@ export default function HeroSliderV2() {
             </a>
           </div>
         ))}
+
+        {/* Navigation Arrows */}
+        <button
+          type="button"
+          onClick={prevSlide}
+          className="absolute top-1/2 left-3 z-20 -translate-y-1/2 rounded-full bg-card/80 p-2 text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-card md:left-6 md:p-3"
+          aria-label="Slide anterior"
+        >
+          <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
+        </button>
+        <button
+          type="button"
+          onClick={nextSlide}
+          className="absolute top-1/2 right-3 z-20 -translate-y-1/2 rounded-full bg-card/80 p-2 text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-card md:right-6 md:p-3"
+          aria-label="Próximo slide"
+        >
+          <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
+        </button>
+
+        {/* Dots Navigation */}
+        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 md:bottom-6">
+          {slides.map((slide, index) => (
+            <button
+              key={slide.id}
+              type="button"
+              onClick={() => goToSlide(index)}
+              className={`h-2 rounded-full transition-all md:h-3 ${
+                index === currentSlide
+                  ? "w-6 bg-primary md:w-8"
+                  : "w-2 bg-muted-foreground/50 hover:bg-muted-foreground/75 md:w-3"
+              }`}
+              aria-label={`Ir para slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        type="button"
-        onClick={prevSlide}
-        className="absolute top-1/2 left-3 z-20 -translate-y-1/2 rounded-full bg-card/80 p-2 text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-card md:left-6 md:p-3"
-        aria-label="Slide anterior"
-      >
-        <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
-      </button>
-      <button
-        type="button"
-        onClick={nextSlide}
-        className="absolute top-1/2 right-3 z-20 -translate-y-1/2 rounded-full bg-card/80 p-2 text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-card md:right-6 md:p-3"
-        aria-label="Próximo slide"
-      >
-        <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
-      </button>
-
-      {/* Dots Navigation */}
-      <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-        {slides.map((slide, index) => (
-          <button
-            key={slide.id}
-            type="button"
-            onClick={() => goToSlide(index)}
-            className={`h-2 md:h-3 rounded-full transition-all ${
-              index === currentSlide
-                ? "bg-primary w-6 md:w-8"
-                : "bg-muted-foreground/50 hover:bg-muted-foreground/75 w-2 md:w-3"
-            }`}
-            aria-label={`Ir para slide ${index + 1}`}
-          />
-        ))}
+      {/* Brand Marquee */}
+      <div className="border-t border-border bg-muted/50 py-6">
+        <p className="mb-4 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground/50">
+          Marcas que você encontra aqui
+        </p>
+        <div className="relative overflow-hidden">
+          <div className="absolute top-0 left-0 z-10 h-full w-16 bg-gradient-to-r from-muted/50 to-transparent md:w-24" />
+          <div className="absolute top-0 right-0 z-10 h-full w-16 bg-gradient-to-l from-muted/50 to-transparent md:w-24" />
+          <div className="flex animate-marquee">
+            {["set-a", "set-b", "set-c"].map((setId) =>
+              brandNames.map((brand) => (
+                <div
+                  key={`${brand}-${setId}`}
+                  className="mx-6 flex h-12 min-w-[110px] shrink-0 items-center justify-center md:mx-8 md:h-14 md:min-w-[130px]"
+                >
+                  <span
+                    className="text-lg font-bold md:text-xl"
+                    style={{ color: brandColors[brand] ?? "#64748B" }}
+                  >
+                    {brand}
+                  </span>
+                </div>
+              )),
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

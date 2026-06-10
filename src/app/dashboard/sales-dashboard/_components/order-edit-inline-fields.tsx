@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  Banknote,
-  Check,
-  FileText,
-  Loader2,
-  PencilLine,
-  Truck,
-  X,
-} from "lucide-react";
+import { Check, FileText, Loader2, PencilLine, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { UIOrderDashboardDetails } from "@/services/api-main/order-sales/transformers/transformers";
@@ -25,22 +15,6 @@ type EditableFieldKey = "ANOTACOES";
 
 type FormValues = Record<OrderFieldKey, string>;
 const EDITABLE_ORDER_STATUS_ID = 22;
-
-const PRICE_FIELDS = [
-  {
-    key: "VL_FRETE" as const,
-    icon: Truck,
-    label: "Valor do frete",
-    description: "Atualize inline o frete do pedido e salve sem sair da guia.",
-  },
-  {
-    key: "VL_DESCONTO" as const,
-    icon: Banknote,
-    label: "Valor do desconto",
-    description:
-      "Ajuste o desconto geral do pedido com persistência imediata por campo.",
-  },
-] as const;
 
 const ORDER_NOTES = {
   key: "ANOTACOES" as const,
@@ -228,47 +202,6 @@ export function OrderEditInlineFields({ details }: OrderEditInlineFieldsProps) {
           orcamento.
         </div>
       )}
-
-      <div className="rounded-3xl border border-border/70 bg-background/75 p-3 shadow-sm dark:bg-white/3 md:p-4">
-        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-          <PencilLine className="h-4 w-4" />
-          Frete e desconto
-        </div>
-
-        <div className="grid gap-2.5 sm:grid-cols-2">
-          {PRICE_FIELDS.map((field) => {
-            const Icon = field.icon;
-            const inputId = `order-inline-${field.key.toLowerCase()}`;
-
-            return (
-              <div
-                key={field.key}
-                className="rounded-2xl border border-border/70 bg-muted/30 p-3 dark:bg-white/2"
-              >
-                <Label
-                  htmlFor={inputId}
-                  className="flex items-center gap-2 text-sm font-semibold text-foreground"
-                >
-                  <Icon className="h-4 w-4 text-primary" />
-                  {field.label}
-                </Label>
-
-                <div className="mt-2 flex items-center gap-2">
-                  <Input
-                    id={inputId}
-                    type="text"
-                    inputMode="decimal"
-                    readOnly
-                    value={values[field.key]}
-                    placeholder="Sem valor informado"
-                    className="h-10 rounded-xl border-border/70 bg-background/80 text-sm shadow-none dark:bg-background/40"
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
       <div className="rounded-3xl border border-border/70 bg-background/75 p-3 shadow-sm dark:bg-white/3 md:p-4">
         <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
