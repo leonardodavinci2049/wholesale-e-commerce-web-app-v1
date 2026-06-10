@@ -8,7 +8,7 @@ import { CTASection } from "./_components/sections/cta";
 import { FAQSection, RESELLER_FAQ_DATA } from "./_components/sections/faq";
 import HeroSliderV2 from "./_components/sections/hero-slider-v2";
 import { LocationSection } from "./_components/sections/location";
-import { ProductsSection } from "./_components/sections/products";
+import { ProductsServicesSection } from "./_components/sections/products-services";
 import { StatsSection } from "./_components/sections/stats";
 import { WhyChooseUsSection } from "./_components/sections/why-choose-us";
 
@@ -28,7 +28,7 @@ const HomePage = () => {
       </h1>
       <HeroSliderV2 />
       <StatsSection />
-      <ProductsSection />
+      <ProductsServicesSection />
       <WhyChooseUsSection />
       <BenefitsSection />
       <FAQSection />
