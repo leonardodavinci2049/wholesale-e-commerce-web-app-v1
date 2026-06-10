@@ -47,13 +47,13 @@ ecosystem.config.js
 .agents/
 .vscode
 .agent/
-/datanase/schema.ts
+AGENTS.md
 /scripts
 /upload
 /docs
 /data
 
-AGENTS.md
+
 public/upload
 public/images
 public/slides
