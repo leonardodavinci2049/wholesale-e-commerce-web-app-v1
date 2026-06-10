@@ -35,7 +35,7 @@ const PRODUCTS_DATA = [
   },
 ] as const;
 
-export function ProductsSection() {
+export function ProductsServicesSection() {
   return (
     <section id="produtos" className="py-16 sm:py-20">
       <div className="container mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
