@@ -35,8 +35,8 @@ const slides = [
   },
   {
     id: 4,
-    imageMobile: "/slides/placeholder-mobile.svg",
-    imageDesktop: "/slides/placeholder.svg",
+    imageMobile: "/slides/slide4-mobile.webp",
+    imageDesktop: "/slides/slide4.webp",
     alt: "Slide 4 - Promoções",
     link: "#promocao-4",
   },
@@ -95,7 +95,7 @@ export default function HeroSliderV2() {
   return (
     <section className="relative w-full overflow-hidden bg-background">
       {/* Slides Container */}
-      <div className="relative aspect-square w-full md:aspect-[1920/500]">
+      <div className="relative aspect-square w-full bg-background md:aspect-[1920/500]">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -110,7 +110,7 @@ export default function HeroSliderV2() {
                   src={slide.imageMobile}
                   alt={slide.alt}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   priority={index === 0}
                   sizes="(max-width: 767px) 100vw, 0px"
                 />
