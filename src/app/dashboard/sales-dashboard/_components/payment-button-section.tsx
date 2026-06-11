@@ -25,7 +25,6 @@ export function PaymentButtonSection({
   label,
   color,
   isActive = false,
-  isRecommended = false,
   onClick,
 }: PaymentButtonProps) {
   const Icon = iconMap[icon as keyof typeof iconMap];
@@ -53,12 +52,6 @@ export function PaymentButtonSection({
           {label}
         </p>
       </div>
-
-      {isRecommended ? (
-        <span className="rounded-full bg-primary/10 px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-primary">
-          Rec.
-        </span>
-      ) : null}
     </Button>
   );
 }
