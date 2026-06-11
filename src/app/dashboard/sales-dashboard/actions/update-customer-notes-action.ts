@@ -9,10 +9,9 @@ import {
   CustomerInlineError,
   customerInlineServiceApi,
 } from "@/services/api-main/customer-inline";
-import { orderSalesServiceApi } from "@/services/api-main/order-sales/order-sales-service-api";
+import { validateEditableOrderCustomer } from "./validate-editable-order-customer";
 
 const logger = createLogger("sales-dashboard-update-customer-notes-action");
-const EDITABLE_ORDER_STATUS_ID = 22;
 
 const UpdateCustomerNotesSchema = z.object({
   orderId: z.number().int().positive(),
@@ -37,34 +36,22 @@ export async function updateCustomerNotesAction(
       notes,
     });
     const { apiContext } = await getAuthContext();
-    const dashboardResponse = await orderSalesServiceApi.findDashboardId({
-      pe_order_id: validated.orderId,
-      pe_id_seller: apiContext.pe_person_id,
-      pe_type_business: 1,
-      ...apiContext,
-    });
+    const orderCustomerValidation = await validateEditableOrderCustomer(
+      validated.orderId,
+      validated.customerId,
+      apiContext,
+    );
 
-    const dashboardDetails = dashboardResponse
-      ? orderSalesServiceApi.extractDashboardDetails(dashboardResponse)
-      : null;
-
-    if (!dashboardDetails) {
+    if (!orderCustomerValidation.success) {
       return {
         success: false,
-        message: "Nao foi possivel validar o status atual do pedido",
-      };
-    }
-
-    if (dashboardDetails.ID_STATUS_PEDIDO !== EDITABLE_ORDER_STATUS_ID) {
-      return {
-        success: false,
-        message: "Somente pedidos em orcamento podem ser editados",
+        message: orderCustomerValidation.message,
       };
     }
 
     await customerInlineServiceApi.updateField({
       ...apiContext,
-      pe_register_id: validated.customerId,
+      pe_register_id: orderCustomerValidation.orderCustomerId,
       pe_field_type: 1,
       pe_field: "ANOTACOES",
       pe_value_str: validated.notes.trim(),
@@ -75,6 +62,11 @@ export async function updateCustomerNotesAction(
 
     revalidateTag(CACHE_TAGS.orderSale(String(validated.orderId)), "seconds");
     revalidateTag(CACHE_TAGS.orderSales, "seconds");
+    revalidateTag(
+      CACHE_TAGS.customer(String(orderCustomerValidation.orderCustomerId)),
+      "seconds",
+    );
+    revalidateTag(CACHE_TAGS.customers, "seconds");
 
     return {
       success: true,

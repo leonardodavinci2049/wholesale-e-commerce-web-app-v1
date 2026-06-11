@@ -29,12 +29,33 @@ export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
 
   try {
     const { apiContext, session } = await getAuthContext();
+    const sessionCustomerId = session.user.personId ?? 0;
+
     dashboardData =
       (await getFindOrder(orderId, {
         ...apiContext,
-        customerId: session.user.personId ?? 0,
+        customerId: sessionCustomerId,
         typeBusiness: 1,
       })) ?? null;
+
+    if (
+      dashboardData?.details &&
+      dashboardData.details.customerId !== sessionCustomerId
+    ) {
+      logger.warn("Pedido carregado nao pertence ao cliente autenticado", {
+        orderId,
+        orderCustomerId: dashboardData.details.customerId,
+        sessionCustomerId,
+      });
+
+      dashboardData = {
+        summary: null,
+        details: null,
+        items: [],
+        customer: null,
+        error: "Pedido nao encontrado para o cliente autenticado",
+      };
+    }
   } catch (error) {
     logger.error("Erro ao carregar dados do pedido:", error);
   }
