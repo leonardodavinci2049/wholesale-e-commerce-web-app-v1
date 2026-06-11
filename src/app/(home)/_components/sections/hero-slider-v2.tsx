@@ -180,7 +180,7 @@ export default function HeroSliderV2() {
               brandNames.map((brand) => (
                 <div
                   key={`${brand}-${setId}`}
-                  className="mx-6 flex h-12 min-w-[110px] shrink-0 items-center justify-center md:mx-8 md:h-14 md:min-w-[130px]"
+                  className="mx-3 flex h-12 min-w-[92px] shrink-0 items-center justify-center md:mx-4 md:h-14 md:min-w-[108px]"
                 >
                   <span
                     className="text-lg font-bold md:text-xl"
