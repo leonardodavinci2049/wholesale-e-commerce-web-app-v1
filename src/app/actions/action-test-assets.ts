@@ -1,5 +1,6 @@
 "use server";
 
+import { getAuthContext } from "@/server/auth-context";
 import { assetsApiService } from "@/services/api-assets";
 import type {
   DeleteFileRequest,
@@ -32,6 +33,8 @@ export async function uploadFileAction(
   formData: FormData,
 ): Promise<ActionResponse<FileAsset>> {
   try {
+    await getAuthContext();
+
     const file = formData.get("file") as File;
     const entityType = formData.get("entityType") as string;
     const entityId = formData.get("entityId") as string;
@@ -93,6 +96,8 @@ export async function listFilesAction(
   filters: ListFilesRequest,
 ): Promise<ActionResponse<ListFilesResponse>> {
   try {
+    await getAuthContext();
+
     const result = await assetsApiService.listFiles(filters);
 
     if (isApiError(result)) {
@@ -125,6 +130,8 @@ export async function getEntityGalleryAction(
   request: EntityGalleryRequest,
 ): Promise<ActionResponse<EntityGalleryResponse>> {
   try {
+    await getAuthContext();
+
     const result = await assetsApiService.getEntityGallery(request);
 
     if (isApiError(result)) {
@@ -157,6 +164,8 @@ export async function findFileAction(
   request: FindFileRequest,
 ): Promise<ActionResponse<FileAsset>> {
   try {
+    await getAuthContext();
+
     const result = await assetsApiService.findFile(request);
 
     if (isApiError(result)) {
@@ -189,6 +198,8 @@ export async function deleteFileAction(
   request: DeleteFileRequest,
 ): Promise<ActionResponse<DeleteFileResponse>> {
   try {
+    await getAuthContext();
+
     const result = await assetsApiService.deleteFile(request);
 
     if (isApiError(result)) {

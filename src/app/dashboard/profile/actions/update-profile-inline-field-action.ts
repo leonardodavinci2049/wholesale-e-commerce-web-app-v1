@@ -109,7 +109,15 @@ export async function updateProfileInlineFieldAction(
       value,
     });
 
-    const { apiContext } = await getAuthContext();
+    const { apiContext, session } = await getAuthContext();
+
+    if (session.user.personId !== validated.customerId) {
+      return {
+        success: false,
+        message: "Não foi possível validar o cliente do perfil.",
+      };
+    }
+
     const fieldConfig = PROFILE_EDITABLE_FIELDS[validated.field];
     const normalizedValue = normalizeFieldValue(
       validated.field,

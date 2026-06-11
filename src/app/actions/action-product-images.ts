@@ -3,6 +3,7 @@
 import { revalidateTag } from "next/cache";
 import { createLogger } from "@/core/logger";
 import { CACHE_TAGS } from "@/lib/cache-config";
+import type { AuthContext } from "@/server/auth-context";
 import { getAuthContext } from "@/server/auth-context";
 import { assetsApiService } from "@/services/api-assets/assets-api-service";
 import { productInlineServiceApi } from "@/services/api-main/product-inline";
@@ -19,6 +20,7 @@ async function updateProductImagePathIfPrimary(
   productId: number,
   uploadedImageId: string,
   imageUrl: string,
+  apiContext: AuthContext["apiContext"],
 ): Promise<void> {
   try {
     const galleryResponse = await assetsApiService.getEntityGallery({
@@ -48,8 +50,6 @@ async function updateProductImagePathIfPrimary(
     logger.debug(
       `Uploaded image ${uploadedImageId} is primary for product ${productId}. Updating PATH_IMAGEM.`,
     );
-
-    const { apiContext } = await getAuthContext();
 
     await productInlineServiceApi.updateProductImagePathInline({
       pe_product_id: productId,
@@ -88,6 +88,57 @@ interface SetPrimaryImageResponse {
   error?: string;
 }
 
+function parsePositiveProductId(productId: string | undefined): number | null {
+  if (!productId) return null;
+
+  const parsedProductId = Number(productId);
+
+  if (!Number.isInteger(parsedProductId) || parsedProductId <= 0) {
+    return null;
+  }
+
+  return parsedProductId;
+}
+
+async function findProductImageOrError(
+  imageId: string,
+  productId: string,
+): Promise<
+  { success: true; image: FileAsset } | { success: false; error: string }
+> {
+  const imageDetails = await assetsApiService.findFile({ id: imageId });
+
+  if (isApiError(imageDetails)) {
+    logger.warn(`Failed to find image ${imageId}: ${imageDetails.message}`);
+
+    return {
+      success: false,
+      error: Array.isArray(imageDetails.message)
+        ? imageDetails.message.join(", ")
+        : imageDetails.message || "Imagem não encontrada",
+    };
+  }
+
+  if (
+    imageDetails.entityType !== "PRODUCT" ||
+    imageDetails.entityId !== productId
+  ) {
+    logger.warn(
+      `Rejected image ${imageId} because it does not belong to product ${productId}`,
+    );
+
+    return {
+      success: false,
+      error: "Imagem não pertence ao produto informado",
+    };
+  }
+
+  return {
+    success: true,
+    image: imageDetails,
+  };
+}
+
 /**
  * Upload image for a product
  * Used by ProductImageGallery component to upload new product images
@@ -103,6 +154,8 @@ export async function uploadProductImageAction(
   formData: FormData,
 ): Promise<UploadProductImageResponse> {
   try {
+    const { apiContext } = await getAuthContext();
+
     const file = formData.get("file") as File;
     const productId = formData.get("productId") as string;
     const tagsString = formData.get("tags") as string;
@@ -114,6 +167,15 @@ export async function uploadProductImageAction(
       return {
         success: false,
         error: "Arquivo e ID do produto são obrigatórios",
+      };
+    }
+
+    const parsedProductId = parsePositiveProductId(productId);
+
+    if (!parsedProductId) {
+      return {
+        success: false,
+        error: "ID do produto inválido",
       };
     }
 
@@ -145,9 +207,10 @@ export async function uploadProductImageAction(
     if (result.success && result.data?.id && result.data?.urls?.preview) {
       try {
         await updateProductImagePathIfPrimary(
-          Number(productId),
+          parsedProductId,
           result.data.id,
           result.data.urls.preview,
+          apiContext,
         );
       } catch (pathUpdateError) {
         // Log error but don't fail the upload - image was successfully uploaded
@@ -190,11 +253,31 @@ export async function deleteProductImageAction(
   wasPrimary?: boolean,
 ): Promise<DeleteProductImageResponse> {
   try {
+    const { apiContext } = await getAuthContext();
+
     // Validate required fields
     if (!imageId || typeof imageId !== "string") {
       return {
         success: false,
         error: "ID da imagem é obrigatório",
+      };
+    }
+
+    const parsedProductId = parsePositiveProductId(productId);
+
+    if (!parsedProductId || !productId) {
+      return {
+        success: false,
+        error: "ID do produto inválido",
+      };
+    }
+
+    const imageValidation = await findProductImageOrError(imageId, productId);
+
+    if (!imageValidation.success) {
+      return {
+        success: false,
+        error: imageValidation.error,
       };
     }
 
@@ -213,7 +296,7 @@ export async function deleteProductImageAction(
     }
 
     // If the deleted image was primary and we have productId, update PATH_IMAGEM
-    if (wasPrimary && productId) {
+    if (wasPrimary) {
       try {
         const galleryResponse = await assetsApiService.getEntityGallery({
           entityType: "PRODUCT",
@@ -225,15 +308,13 @@ export async function deleteProductImageAction(
             (img) => img.isPrimary,
           );
 
-          const { apiContext } = await getAuthContext();
-
           if (newPrimaryImage?.urls?.preview) {
             logger.debug(
               `Updating PATH_IMAGEM for product ${productId} with new primary image: ${newPrimaryImage.urls.preview}`,
             );
             try {
               await productInlineServiceApi.updateProductImagePathInline({
-                pe_product_id: Number(productId),
+                pe_product_id: parsedProductId,
                 pe_path_imagem: newPrimaryImage.urls.preview,
                 ...apiContext,
               });
@@ -252,7 +333,7 @@ export async function deleteProductImageAction(
             );
             try {
               await productInlineServiceApi.updateProductImagePathInline({
-                pe_product_id: Number(productId),
+                pe_product_id: parsedProductId,
                 pe_path_imagem: "",
                 ...apiContext,
               });
@@ -270,7 +351,7 @@ export async function deleteProductImageAction(
               );
               try {
                 await productInlineServiceApi.updateProductImagePathInline({
-                  pe_product_id: Number(productId),
+                  pe_product_id: parsedProductId,
                   pe_path_imagem: firstImage.urls.preview,
                   ...apiContext,
                 });
@@ -322,11 +403,31 @@ export async function setPrimaryImageAction(
   imageId: string,
 ): Promise<SetPrimaryImageResponse> {
   try {
+    const { apiContext } = await getAuthContext();
+
     // Validate required fields
     if (!productId || !imageId) {
       return {
         success: false,
         error: "ID do produto e da imagem são obrigatórios",
+      };
+    }
+
+    const parsedProductId = parsePositiveProductId(productId);
+
+    if (!parsedProductId) {
+      return {
+        success: false,
+        error: "ID do produto inválido",
+      };
+    }
+
+    const imageValidation = await findProductImageOrError(imageId, productId);
+
+    if (!imageValidation.success) {
+      return {
+        success: false,
+        error: imageValidation.error,
       };
     }
 
@@ -349,16 +450,11 @@ export async function setPrimaryImageAction(
       };
     }
 
-    // Get the image details to retrieve its URL for PATH_IMAGEM update
-    const imageDetails = await assetsApiService.findFile({ id: imageId });
-
-    if (!isApiError(imageDetails) && imageDetails.urls?.preview) {
+    if (imageValidation.image.urls?.preview) {
       try {
-        const { apiContext } = await getAuthContext();
-
         await productInlineServiceApi.updateProductImagePathInline({
-          pe_product_id: Number(productId),
-          pe_path_imagem: imageDetails.urls.preview,
+          pe_product_id: parsedProductId,
+          pe_path_imagem: imageValidation.image.urls.preview,
           ...apiContext,
         });
 
