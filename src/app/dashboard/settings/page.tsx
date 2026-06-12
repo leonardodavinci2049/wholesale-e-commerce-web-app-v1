@@ -7,7 +7,7 @@ const EllyIndicatesPage = () => {
         title="Dashboard"
         breadcrumbItems={[
           { label: "Dashboard", href: "#" },
-          { label: "Elly Indicates", isActive: true },
+          { label: "Indicates", isActive: true },
         ]}
       />
       <div className="flex flex-1 flex-col">

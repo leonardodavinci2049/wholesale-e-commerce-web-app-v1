@@ -118,7 +118,7 @@ export function OrderItemsSection({
                 {/* Delete button - mobile */}
                 {isEditable && (
                   <div className="col-span-2 flex items-center justify-end gap-1 sm:hidden">
-                    <ItemDetailDialog item={item} isEditable={isEditable} />
+                    <ItemDetailDialog item={item} />
                     <DeleteItemButton
                       orderId={orderId}
                       movementId={item.movementId}
@@ -160,7 +160,7 @@ export function OrderItemsSection({
                 {/* Delete button - desktop */}
                 {isEditable && (
                   <div className="col-span-1 hidden items-center justify-end gap-1 sm:flex">
-                    <ItemDetailDialog item={item} isEditable={isEditable} />
+                    <ItemDetailDialog item={item} />
                     <DeleteItemButton
                       orderId={orderId}
                       movementId={item.movementId}
