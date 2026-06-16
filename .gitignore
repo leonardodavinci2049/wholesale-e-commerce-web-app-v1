@@ -40,20 +40,26 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# others
+# deploy
 ecosystem.config.js
 .well-known
+
+# multi-tenancy 
+public/upload
+public/images
+public/slides
+src/core/config-tenant
+/src/app/globals.css
+/src/data
+/upload
+
+# agent files
 .github/
 .agents/
 .vscode
 .agent/
 AGENTS.md
+
+# project generated files
 /scripts
-/upload
 /docs
-/src/data
-src/core/config-tenant
-public/upload
-public/images
-public/slides
-/src/app/globals.css
