@@ -50,12 +50,12 @@ function formatDate(date: string | null): string {
 }
 
 function formatCpf(cpf: string): string {
-  if (!cpf || cpf.length !== 11) return cpf || "Não informado";
+  if (cpf?.length !== 11) return cpf || "Não informado";
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
 function formatCnpj(cnpj: string): string {
-  if (!cnpj || cnpj.length !== 14) return cnpj || "Não informado";
+  if (cnpj?.length !== 14) return cnpj || "Não informado";
   return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
 }
 

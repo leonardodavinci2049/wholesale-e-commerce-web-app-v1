@@ -107,7 +107,7 @@ function hasValue(value: string | number | null | undefined): boolean {
 
 function formatCep(cep: string): string {
   const digits = cep.replace(/\D/g, "");
-  if (!digits || digits.length !== 8) return cep || "Não informado";
+  if (digits?.length !== 8) return cep || "Não informado";
   return digits.replace(/(\d{5})(\d{3})/, "$1-$2");
 }
 
