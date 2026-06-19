@@ -108,7 +108,7 @@ function hasValue(value: string | number | null | undefined): boolean {
 }
 
 function formatCep(cep: string): string {
-  if (!cep || cep.length !== 8) return cep || "Não informado";
+  if (cep?.length !== 8) return cep || "Não informado";
   return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
 }
 
