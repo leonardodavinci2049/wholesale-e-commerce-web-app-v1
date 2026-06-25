@@ -32,7 +32,7 @@ async function AuthLayoutContent({ children }: { children: React.ReactNode }) {
     headers: await headers(),
   });
 
-  if (session?.user.role === "admin") {
+  if (session != null) {
     redirect("/dashboard");
   }
 
