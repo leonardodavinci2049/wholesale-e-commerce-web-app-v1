@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UserPasswordDialog } from "./user-password-dialog";
 
 type UserWithPersonId = UserWithRole;
 
@@ -96,10 +97,17 @@ export function UserTable({ users, selfId }: UserTableProps) {
                     dateStyle: "medium",
                   }).format(new Date(user.createdAt))}
                 </TableCell>
-                <TableCell className="text-right">
-                  <Button asChild variant="outline" size="sm">
-                    <Link href={`/dashboard/users/${user.id}`}>Ver</Link>
-                  </Button>
+                <TableCell>
+                  <div className="flex justify-end gap-2">
+                    <UserPasswordDialog
+                      userId={user.id}
+                      userName={user.name}
+                      userEmail={user.email}
+                    />
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/dashboard/users/${user.id}`}>Ver</Link>
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -152,9 +160,16 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 </div>
               </div>
 
-              <Button asChild variant="outline" size="sm">
-                <Link href={`/dashboard/users/${user.id}`}>Ver</Link>
-              </Button>
+              <div className="flex shrink-0 gap-2">
+                <UserPasswordDialog
+                  userId={user.id}
+                  userName={user.name}
+                  userEmail={user.email}
+                />
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/dashboard/users/${user.id}`}>Ver</Link>
+                </Button>
+              </div>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
