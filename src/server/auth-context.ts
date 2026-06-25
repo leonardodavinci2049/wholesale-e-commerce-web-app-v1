@@ -27,9 +27,6 @@ export type AuthContext = {
 export async function getAuthContext(): Promise<AuthContext> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/sign-in");
-  if (session.user.role !== "admin") {
-    redirect("/sign-in?reason=access-denied");
-  }
 
   return {
     session,
@@ -39,7 +36,7 @@ export async function getAuthContext(): Promise<AuthContext> {
       pe_organization_id: "0",
       pe_user_id: session.user.id ?? "0",
       pe_user_name: session.user.name ?? "",
-      pe_user_role: session.user.role ?? "admin",
+      pe_user_role: session.user.role ?? "user",
       pe_person_id: session.user.personId ?? 0,
     },
   };
