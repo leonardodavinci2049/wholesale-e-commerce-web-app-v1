@@ -53,16 +53,9 @@ export const loginAction = async (
     const { email, password } = validationResult.data;
 
     // Autenticar com Better-Auth
-    const signInResult = await auth.api.signInEmail({
+    await auth.api.signInEmail({
       body: { email, password },
     });
-
-    if (signInResult.user.role !== "admin") {
-      return {
-        success: false,
-        message: errorMessages.accessDenied,
-      };
-    }
 
     // Se chegou até aqui, o login foi bem-sucedido
     // O redirect será tratado pelo middleware ou pela configuração do Better-Auth
