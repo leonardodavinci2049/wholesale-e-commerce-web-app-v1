@@ -253,6 +253,15 @@ export class PhysicalProductServiceApi extends BaseApiService {
           requestBody,
         );
 
+      if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
+        return {
+          ...response,
+          data: {
+            "warranty find id": [],
+          },
+        };
+      }
+
       this.handleApiError(
         response,
         validatedParams,

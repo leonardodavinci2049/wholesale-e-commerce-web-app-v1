@@ -3,14 +3,19 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { UIOrderItemCustomer } from "@/services/api-main/physical_product";
+import type {
+  UIOrderItemCustomer,
+  UIPhysicalProductWarranty,
+} from "@/services/api-main/physical_product";
 import { formatCurrency, parseMonetaryValue } from "@/utils/common-utils";
 import { getValidImageUrl } from "@/utils/image-utils";
 
 import { BackToPurchasedProductsButton } from "./BackToPurchasedProductsButton";
+import { PurchasedProductViewTabs } from "./PurchasedProductViewTabs";
 
 interface PurchasedProductViewLayoutProps {
   item: UIOrderItemCustomer;
+  warranties: UIPhysicalProductWarranty[];
 }
 
 const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
@@ -45,6 +50,7 @@ function DetailRow({
 
 export function PurchasedProductViewLayout({
   item,
+  warranties,
 }: PurchasedProductViewLayoutProps) {
   const imageUrl = getValidImageUrl(item.imagePath);
   const hasDiscount = parseMonetaryValue(item.totalDiscountValue) > 0;
@@ -203,6 +209,10 @@ export function PurchasedProductViewLayout({
           </div>
         </CardContent>
       </Card>
+
+      <div>
+        <PurchasedProductViewTabs warranties={warranties} />
+      </div>
     </div>
   );
 }
@@ -219,6 +229,7 @@ export function PurchasedProductViewLayoutSkeleton() {
         </div>
       </div>
       <div className="h-48 rounded bg-muted" />
+      <div className="h-12 rounded bg-muted" />
     </div>
   );
 }

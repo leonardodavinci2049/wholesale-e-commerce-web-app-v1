@@ -7,8 +7,11 @@ import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-hea
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
 import {
+  PhysicalProductNotFoundError,
+  type PhysicalProductWarrantyEntity,
   physicalProductServiceApi,
   transformOrderItemCustomer,
+  transformPhysicalProductWarranties,
 } from "@/services/api-main/physical_product";
 
 import { PurchasedProductNotFound } from "./_components/PurchasedProductNotFound";
@@ -41,6 +44,7 @@ async function PurchasedProductDetailsContent({
   const { apiContext } = await getAuthContext();
 
   let entity = null;
+  let warranties: PhysicalProductWarrantyEntity[] = [];
 
   try {
     const response = await physicalProductServiceApi.findOrderItemByCustomer({
@@ -64,9 +68,36 @@ async function PurchasedProductDetailsContent({
     return <PurchasedProductNotFound movementId={movementId} />;
   }
 
-  const item = transformOrderItemCustomer(entity);
+  try {
+    const response =
+      await physicalProductServiceApi.findWarrantiesByMovementAndCustomer({
+        pe_customer_id: apiContext.pe_person_id,
+        pe_movement_id: entity.ID_MOVIMENTO,
+        pe_product_id: entity.ID_PRODUTO,
+        pe_limit: 50,
+        pe_user_id: apiContext.pe_user_id,
+        pe_user_name: apiContext.pe_user_name,
+        pe_user_role: apiContext.pe_user_role,
+        pe_person_id: apiContext.pe_person_id,
+      });
 
-  return <PurchasedProductViewLayout item={item} />;
+    warranties =
+      physicalProductServiceApi.extractWarrantiesByMovementAndCustomer(
+        response,
+      );
+  } catch (error) {
+    if (!(error instanceof PhysicalProductNotFoundError)) {
+      logger.error(
+        `Erro ao buscar garantias da movimentação ${movementId}:`,
+        error,
+      );
+    }
+  }
+
+  const item = transformOrderItemCustomer(entity);
+  const warrantyItems = transformPhysicalProductWarranties(warranties);
+
+  return <PurchasedProductViewLayout item={item} warranties={warrantyItems} />;
 }
 
 export default async function PurchasedProductDetailsPage({
