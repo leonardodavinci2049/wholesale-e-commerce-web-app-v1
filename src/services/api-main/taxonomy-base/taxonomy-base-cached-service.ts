@@ -2,6 +2,7 @@ import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
 import { createLogger } from "@/core/logger";
+import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { CACHE_TAGS } from "@/lib/cache-config";
 
 import { taxonomyBaseServiceApi } from "./taxonomy-base-service-api";
@@ -116,7 +117,11 @@ export async function getTaxonomyMenu(
     const menuItems = taxonomyBaseServiceApi.extractTaxonomyMenu(response);
     return transformTaxonomyMenuList(menuItems);
   } catch (error) {
-    logger.error("Erro ao buscar menu de taxonomias:", error);
+    if (isApiAvailabilityError(error)) {
+      logger.warn("API indisponível ao buscar menu de taxonomias", error);
+    } else {
+      logger.error("Erro ao buscar menu de taxonomias:", error);
+    }
     throw error;
   }
 }

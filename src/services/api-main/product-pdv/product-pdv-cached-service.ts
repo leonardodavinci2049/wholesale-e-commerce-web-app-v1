@@ -2,6 +2,7 @@ import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
 import { createLogger } from "@/core/logger";
+import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { CACHE_TAGS } from "@/lib/cache-config";
 
 import { productPdvServiceApi } from "./product-pdv-service-api";
@@ -59,7 +60,11 @@ export async function getProductsPdv(
     const products = productPdvServiceApi.extractProductsPdv(response);
     return transformProductPdvList(products);
   } catch (error) {
-    logger.error("Erro ao buscar produtos PDV:", error);
+    if (isApiAvailabilityError(error)) {
+      logger.warn("API indisponível ao buscar produtos PDV", error);
+    } else {
+      logger.error("Erro ao buscar produtos PDV:", error);
+    }
     throw error;
   }
 }

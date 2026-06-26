@@ -12,10 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createLogger } from "@/core/logger";
-import {
-  ApiConnectionError,
-  ApiServerError,
-} from "@/lib/axios/base-api-service";
+import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { getAuthContext } from "@/server/auth-context";
 import { getBrands } from "@/services/api-main/brand/brand-cached-service";
 import { getProductsPdv } from "@/services/api-main/product-pdv/product-pdv-cached-service";
@@ -25,10 +22,6 @@ import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/trans
 import { type CategoryOption, ProductListContent } from "./_components";
 
 const logger = createLogger("ProductListPage");
-
-function isApiUnavailableError(error: unknown): boolean {
-  return error instanceof ApiConnectionError || error instanceof ApiServerError;
-}
 
 function buildRetryHref(searchParams: Record<string, string | undefined>) {
   const query = new URLSearchParams();
@@ -159,7 +152,11 @@ async function getCategories(
     const rootItems = menuItems.filter((item) => item.parentId === 0);
     return flattenMenuItems(rootItems, menuItems);
   } catch (error) {
-    logger.error("Erro ao buscar categorias:", error);
+    if (isApiAvailabilityError(error)) {
+      logger.warn("API indisponível ao buscar categorias", error);
+    } else {
+      logger.error("Erro ao buscar categorias:", error);
+    }
     return [];
   }
 }
@@ -204,7 +201,7 @@ export default async function ProductListPage(props: ProductListPageProps) {
 
     pageData = { products, brands, categories, ptypes };
   } catch (error) {
-    if (isApiUnavailableError(error)) {
+    if (isApiAvailabilityError(error)) {
       logger.warn("API indisponível ao carregar lista de produtos", error);
 
       return (

@@ -2,6 +2,7 @@ import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
 import { createLogger } from "@/core/logger";
+import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { CACHE_TAGS } from "@/lib/cache-config";
 
 import { brandServiceApi } from "./brand-service-api";
@@ -42,7 +43,11 @@ export async function getBrands(
     const brands = brandServiceApi.extractBrands(response);
     return transformBrandList(brands);
   } catch (error) {
-    logger.error("Erro ao buscar marcas:", error);
+    if (isApiAvailabilityError(error)) {
+      logger.warn("API indisponível ao buscar marcas", error);
+    } else {
+      logger.error("Erro ao buscar marcas:", error);
+    }
     throw error;
   }
 }

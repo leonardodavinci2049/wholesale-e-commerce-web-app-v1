@@ -54,6 +54,10 @@ export class ApiServerError extends Error {
   }
 }
 
+export function isApiAvailabilityError(error: unknown): boolean {
+  return error instanceof ApiConnectionError || error instanceof ApiServerError;
+}
+
 /**
  * Interface para resposta padrão da API
  */
