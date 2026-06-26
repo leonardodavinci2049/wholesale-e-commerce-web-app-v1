@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,6 +46,10 @@ function toDate(value: string | null): string {
 
 function getItemKey(item: UIOrderItemCustomer): string {
   return `${item.orderId}-${item.movementId}`;
+}
+
+function buildDetailHref(item: UIOrderItemCustomer): string {
+  return `/dashboard/order/purchased-products/${item.movementId}`;
 }
 
 export function PurchasedProductsTable({ items }: PurchasedProductsTableProps) {
@@ -106,9 +111,12 @@ export function PurchasedProductsTable({ items }: PurchasedProductsTableProps) {
                   size="sm"
                   className="h-8 shrink-0 text-xs font-medium"
                   title="Ver detalhes da compra"
+                  asChild
                 >
-                  Detalhe
-                  <ArrowRight className="ml-1 size-3" />
+                  <Link href={buildDetailHref(item)}>
+                    Detalhe
+                    <ArrowRight className="ml-1 size-3" />
+                  </Link>
                 </Button>
               </div>
             </CardContent>
@@ -171,9 +179,12 @@ export function PurchasedProductsTable({ items }: PurchasedProductsTableProps) {
                       size="sm"
                       className="text-xs font-medium opacity-70 transition-opacity group-hover:opacity-100"
                       title="Ver detalhes da compra"
+                      asChild
                     >
-                      Detalhe
-                      <ArrowRight className="ml-1 size-3" />
+                      <Link href={buildDetailHref(item)}>
+                        Detalhe
+                        <ArrowRight className="ml-1 size-3" />
+                      </Link>
                     </Button>
                   </TableCell>
                 </TableRow>
