@@ -76,6 +76,10 @@ const data = {
           title: "Lista de Pedidos",
           url: "/dashboard/order/order-list",
         },
+        {
+          title: "Produtos Comprados",
+          url: "/dashboard/order/purchased-products",
+        },
       ],
     },
 
