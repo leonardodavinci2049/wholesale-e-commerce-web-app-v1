@@ -2,6 +2,7 @@ import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
 import { createLogger } from "@/core/logger";
+import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { CACHE_TAGS } from "@/lib/cache-config";
 
 import { ptypeServiceApi } from "./ptype-service-api";
@@ -40,7 +41,11 @@ export async function getPtypes(
     const ptypes = ptypeServiceApi.extractPtypes(response);
     return transformPtypeList(ptypes);
   } catch (error) {
-    logger.error("Erro ao buscar tipos:", error);
+    if (isApiAvailabilityError(error)) {
+      logger.warn("API indisponível ao buscar tipos", error);
+    } else {
+      logger.error("Erro ao buscar tipos:", error);
+    }
     throw error;
   }
 }

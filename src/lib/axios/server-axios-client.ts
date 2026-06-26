@@ -22,6 +22,14 @@ type AxiosConfigWithRetry = InternalAxiosRequestConfig & {
   _retryCount?: number;
 };
 
+function isExpectedApiAvailabilityError(error: AxiosError): boolean {
+  if (!error.response) {
+    return true;
+  }
+
+  return [408, 502, 503, 504].includes(error.response.status);
+}
+
 /**
  * Cliente Axios configurado para uso no servidor (Server Components e API Routes)
  * Usa API_KEY do projeto para autenticação
@@ -75,13 +83,19 @@ class ServerAxiosClient {
         return response;
       },
       async (error: AxiosError) => {
-        logger.error("Erro na requisição da API", {
+        const logPayload = {
           status: error.response?.status,
           message: error.message,
           url: error.config?.url,
           method: error.config?.method?.toUpperCase(),
           data: error.response?.data,
-        });
+        };
+
+        if (isExpectedApiAvailabilityError(error)) {
+          logger.warn("API externa indisponível ou sem resposta", logPayload);
+        } else {
+          logger.error("Erro na requisição da API", logPayload);
+        }
 
         const currentRetryCount =
           (error.config as AxiosConfigWithRetry)?._retryCount || 0;

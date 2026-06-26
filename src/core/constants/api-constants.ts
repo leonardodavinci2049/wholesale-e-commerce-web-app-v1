@@ -317,6 +317,21 @@ export const ORDER_SALES_ENDPOINTS = {
   FIND_EQUIPMENT_ID: "/order-sales/v2/order-find-equipment-id",
 } as const;
 
+// Endpoints de Physical Product
+export const PHYSICAL_PRODUCT_ENDPOINTS = {
+  ORDER_ITEM_FIND_ALL_CUSTOMER:
+    "/physical-product/v2/order-item-find-all-customer",
+  ORDER_ITEM_FIND_ID_CUSTOMER:
+    "/physical-product/v2/order-item-find-id-customer",
+  PHYSICAL_PRODUCT_FIND_ALL: "/physical-product/v2/physical-product-find-all",
+  WARRANTY_ID_CUSTOMER:
+    "/physical-product/v2/physical-product-warranty-id-customer",
+  WARRANTY_ID: "/physical-product/v2/physical-product-warranty-id",
+  WARRANTY_MOV_CUSTOMER:
+    "/physical-product/v2/physical-product-warranty-mov-customer",
+  WARRANTY_MOV: "/physical-product/v2/physical-product-warranty-mov",
+} as const;
+
 // Endpoints de Order B2B
 export const ORDER_B2B_ENDPOINTS = {
   FIND_BUDGET_CUSTOMER_ID: "/order-b2b/v2/order-find-budget-customer-id",
