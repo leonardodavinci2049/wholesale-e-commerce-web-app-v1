@@ -80,6 +80,10 @@ const data = {
           title: "Produtos Comprados",
           url: "/dashboard/order/purchased-products",
         },
+        {
+          title: "Garantia",
+          url: "/dashboard/order/warranty",
+        },
       ],
     },
 

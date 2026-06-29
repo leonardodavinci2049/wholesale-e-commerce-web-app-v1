@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye } from "lucide-react";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -111,14 +112,19 @@ function WarrantiesList({
 
               <div className="flex justify-end">
                 <Button
+                  asChild
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="h-8 text-xs font-medium"
                   title="Ver detalhes da garantia"
                 >
-                  Detalhes
-                  <Eye className="ml-1 size-3" />
+                  <Link
+                    href={`/dashboard/lacre?lacreId=${warranty.warrantyId}`}
+                  >
+                    Detalhes
+                    <Eye className="ml-1 size-3" />
+                  </Link>
                 </Button>
               </div>
             </CardContent>
@@ -171,14 +177,19 @@ function WarrantiesList({
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
+                      asChild
                       type="button"
                       variant="ghost"
                       size="sm"
                       className="text-xs font-medium opacity-70 transition-opacity group-hover:opacity-100"
                       title="Ver detalhes da garantia"
                     >
-                      Detalhes
-                      <Eye className="ml-1 size-3" />
+                      <Link
+                        href={`/dashboard/lacre?lacreId=${warranty.warrantyId}`}
+                      >
+                        Detalhes
+                        <Eye className="ml-1 size-3" />
+                      </Link>
                     </Button>
                   </TableCell>
                 </TableRow>

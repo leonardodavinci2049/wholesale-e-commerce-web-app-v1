@@ -64,6 +64,13 @@ export interface PhysicalProductWarrantyMovCustomerRequest
   pe_limit?: number;
 }
 
+export interface PhysicalProductWarrantySearchRequest
+  extends PhysicalProductBaseRequest {
+  pe_customer_id?: number;
+  PE_search?: string;
+  pe_limit?: number;
+}
+
 export interface PhysicalProductEntity {
   ID_FISICO: number;
   ID_LOJA: number;
@@ -147,6 +154,7 @@ export interface OrderItemCustomerEntity {
 
 export interface PhysicalProductWarrantyEntity {
   GARANTIA_ID: number;
+  ID_PRODUTO?: number | null;
   PRODUTO: string;
   ID_TIPO: number;
   TIPO: string;
@@ -223,6 +231,13 @@ export interface PhysicalProductWarrantyMovCustomerResponse
   extends PhysicalProductBaseResponse {
   data: {
     "warranty find id": PhysicalProductWarrantyEntity[];
+  };
+}
+
+export interface PhysicalProductWarrantySearchResponse
+  extends PhysicalProductBaseResponse {
+  data: {
+    "Warranty search": PhysicalProductWarrantyEntity[];
   };
 }
 

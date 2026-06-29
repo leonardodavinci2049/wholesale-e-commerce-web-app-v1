@@ -87,6 +87,7 @@ export interface UIOrderItemCustomer {
 
 export interface UIPhysicalProductWarranty {
   warrantyId: number;
+  productId: number | null;
   productName: string;
   typeId: number;
   type: string;
@@ -211,6 +212,7 @@ export function transformPhysicalProductWarranty(
 ): UIPhysicalProductWarranty {
   return {
     warrantyId: entity.GARANTIA_ID,
+    productId: entity.ID_PRODUTO ?? null,
     productName: entity.PRODUTO,
     typeId: entity.ID_TIPO,
     type: entity.TIPO,
