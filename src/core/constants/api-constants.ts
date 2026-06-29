@@ -330,6 +330,7 @@ export const PHYSICAL_PRODUCT_ENDPOINTS = {
   WARRANTY_MOV_CUSTOMER:
     "/physical-product/v2/physical-product-warranty-mov-customer",
   WARRANTY_MOV: "/physical-product/v2/physical-product-warranty-mov",
+  WARRANTY_SEARCH: "/physical-product/v2/physical-product-warranty-search",
 } as const;
 
 // Endpoints de Order B2B

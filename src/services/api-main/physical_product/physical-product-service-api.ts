@@ -27,6 +27,8 @@ import type {
   PhysicalProductWarrantyMovCustomerResponse,
   PhysicalProductWarrantyMovRequest,
   PhysicalProductWarrantyMovResponse,
+  PhysicalProductWarrantySearchRequest,
+  PhysicalProductWarrantySearchResponse,
 } from "./types/physical-product-types";
 import {
   PhysicalProductError,
@@ -40,6 +42,7 @@ import {
   PhysicalProductWarrantyIdSchema,
   PhysicalProductWarrantyMovCustomerSchema,
   PhysicalProductWarrantyMovSchema,
+  PhysicalProductWarrantySearchSchema,
 } from "./validation/physical-product-schemas";
 
 const logger = createLogger("PhysicalProductServiceApi");
@@ -276,6 +279,32 @@ export class PhysicalProductServiceApi extends BaseApiService {
     }
   }
 
+  async searchWarranties(
+    params: PhysicalProductWarrantySearchRequest,
+  ): Promise<PhysicalProductWarrantySearchResponse> {
+    try {
+      const validatedParams = PhysicalProductWarrantySearchSchema.parse(params);
+      const requestBody = this.buildBasePayload(validatedParams);
+
+      const response = await this.post<PhysicalProductWarrantySearchResponse>(
+        PHYSICAL_PRODUCT_ENDPOINTS.WARRANTY_SEARCH,
+        requestBody,
+      );
+
+      this.handleApiError(
+        response,
+        validatedParams,
+        "garantias de produtos físicos",
+        "PHYSICAL_PRODUCT_WARRANTY_SEARCH_ERROR",
+      );
+
+      return response;
+    } catch (error) {
+      logger.error("Erro ao pesquisar garantias de produtos físicos", error);
+      throw error;
+    }
+  }
+
   extractPhysicalProducts(
     response: PhysicalProductFindAllResponse,
   ): PhysicalProductEntity[] {
@@ -316,6 +345,12 @@ export class PhysicalProductServiceApi extends BaseApiService {
     response: PhysicalProductWarrantyMovCustomerResponse,
   ): PhysicalProductWarrantyEntity[] {
     return response.data?.["warranty find id"] ?? [];
+  }
+
+  extractWarrantySearch(
+    response: PhysicalProductWarrantySearchResponse,
+  ): PhysicalProductWarrantyEntity[] {
+    return response.data?.["Warranty search"] ?? [];
   }
 }
 

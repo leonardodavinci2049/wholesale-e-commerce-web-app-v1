@@ -53,6 +53,13 @@ export const PhysicalProductWarrantyMovCustomerSchema = z.object({
   pe_limit: z.number().int().optional(),
 });
 
+export const PhysicalProductWarrantySearchSchema = z.object({
+  ...baseContextSchema,
+  pe_customer_id: z.number().int().optional(),
+  PE_search: z.string().max(300).optional(),
+  pe_limit: z.number().int().optional(),
+});
+
 export type PhysicalProductFindAllInput = z.infer<
   typeof PhysicalProductFindAllSchema
 >;
@@ -73,4 +80,7 @@ export type PhysicalProductWarrantyMovInput = z.infer<
 >;
 export type PhysicalProductWarrantyMovCustomerInput = z.infer<
   typeof PhysicalProductWarrantyMovCustomerSchema
+>;
+export type PhysicalProductWarrantySearchInput = z.infer<
+  typeof PhysicalProductWarrantySearchSchema
 >;
