@@ -106,13 +106,31 @@ function getWarrantyStatus(warranty: PhysicalProductWarrantyEntity) {
   };
 }
 
-function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
+function InfoItem({
+  label,
+  value,
+  desktopLayout = "inline",
+}: {
+  label: string;
+  value: React.ReactNode;
+  desktopLayout?: "inline" | "stacked";
+}) {
+  const isStacked = desktopLayout === "stacked";
+
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 border-b border-border/40 last:border-b-0 text-sm gap-1">
+    <div
+      className={`flex flex-col gap-1 border-b border-border/40 py-2 text-sm last:border-b-0 ${
+        isStacked ? "" : "sm:flex-row sm:items-center sm:justify-between"
+      }`}
+    >
       <dt className="text-xs sm:text-sm font-medium text-muted-foreground uppercase sm:normal-case tracking-wider sm:tracking-normal">
         {label}
       </dt>
-      <dd className="font-semibold text-foreground sm:text-right break-all text-sm">
+      <dd
+        className={`break-all text-sm font-semibold text-foreground ${
+          isStacked ? "text-left" : "sm:text-right"
+        }`}
+      >
         {value || "Não informado"}
       </dd>
     </div>
@@ -274,16 +292,45 @@ function WarrantyDetails({
           </CardHeader>
           <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
             <dl className="grid grid-cols-2 gap-x-4 sm:gap-x-6">
-              <InfoItem label="ID da garantia" value={warranty.GARANTIA_ID} />
-              <InfoItem label="Etiqueta" value={warranty.ETIQUETA} />
-              <InfoItem label="Tipo" value={warranty.TIPO} />
-              <InfoItem label="Marca" value={warranty.MARCA} />
-              <InfoItem label="Número de série" value={warranty.N_SERIE} />
-              <InfoItem label="Código de barras" value={warranty.COD_BARRAS} />
-              <InfoItem label="Localização" value={warranty.LOCATION} />
+              <InfoItem
+                label="ID da garantia"
+                value={warranty.GARANTIA_ID}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Etiqueta"
+                value={warranty.ETIQUETA}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Tipo"
+                value={warranty.TIPO}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Marca"
+                value={warranty.MARCA}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Número de série"
+                value={warranty.N_SERIE}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Código de barras"
+                value={warranty.COD_BARRAS}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Localização"
+                value={warranty.LOCATION}
+                desktopLayout="stacked"
+              />
               <InfoItem
                 label="Valor da venda"
                 value={formatCurrency(parseMonetaryValue(warranty.VL_VENDA))}
+                desktopLayout="stacked"
               />
             </dl>
           </CardContent>
@@ -301,19 +348,30 @@ function WarrantyDetails({
           </CardHeader>
           <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
             <dl className="grid grid-cols-2 gap-x-4">
-              <InfoItem label="Pedido" value={`#${warranty.ID_PEDIDO}`} />
-              <InfoItem label="Movimento" value={`#${warranty.ID_MOVIMENTO}`} />
+              <InfoItem
+                label="Pedido"
+                value={`#${warranty.ID_PEDIDO}`}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Movimento"
+                value={`#${warranty.ID_MOVIMENTO}`}
+                desktopLayout="stacked"
+              />
               <InfoItem
                 label="Data do pedido"
                 value={formatDate(warranty.DATA_PEDIDO)}
+                desktopLayout="stacked"
               />
               <InfoItem
                 label="Status do pedido"
                 value={warranty.STATUS_PEDIDO}
+                desktopLayout="stacked"
               />
               <InfoItem
                 label="Status financeiro"
                 value={warranty.STATUS_FINANCEIRO}
+                desktopLayout="stacked"
               />
             </dl>
           </CardContent>
@@ -333,11 +391,27 @@ function WarrantyDetails({
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
-          <dl className="grid grid-cols-2 gap-x-4 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoItem label="Cliente" value={warranty.CLIENTE} />
-            <InfoItem label="Conta" value={warranty.ACCOUNT_TIPO} />
-            <InfoItem label="Status da conta" value={warranty.ACCOUNT_STATUS} />
-            <InfoItem label="Vendedor" value={warranty.VENDEDOR} />
+          <dl className="grid grid-cols-2 gap-x-4 sm:grid-cols-2 lg:grid-cols-2">
+            <InfoItem
+              label="Cliente"
+              value={warranty.CLIENTE}
+              desktopLayout="stacked"
+            />
+            <InfoItem
+              label="Conta"
+              value={warranty.ACCOUNT_TIPO}
+              desktopLayout="stacked"
+            />
+            <InfoItem
+              label="Status da conta"
+              value={warranty.ACCOUNT_STATUS}
+              desktopLayout="stacked"
+            />
+            <InfoItem
+              label="Vendedor"
+              value={warranty.VENDEDOR}
+              desktopLayout="stacked"
+            />
           </dl>
 
           <Separator className="my-4" />
