@@ -169,6 +169,7 @@ function WarrantyDetails({
             <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
               {warranty.PRODUTO || `Produto físico #${lacreId}`}
             </h1>
+            <p className=" mt-2 text-sm font-medium">SKU: {warranty.ID_PRODUTO}</p>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
               Dados da garantia vinculados ao produto comprado por{" "}
               <span className="font-medium text-foreground">

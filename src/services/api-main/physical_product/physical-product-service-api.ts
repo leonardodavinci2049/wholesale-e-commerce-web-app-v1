@@ -29,6 +29,7 @@ import type {
   PhysicalProductWarrantyMovResponse,
   PhysicalProductWarrantySearchRequest,
   PhysicalProductWarrantySearchResponse,
+  PhysicalProductWarrantyWithProductEntity,
 } from "./types/physical-product-types";
 import {
   PhysicalProductError,
@@ -325,25 +326,25 @@ export class PhysicalProductServiceApi extends BaseApiService {
 
   extractWarrantyByPhysicalId(
     response: PhysicalProductWarrantyIdResponse,
-  ): PhysicalProductWarrantyEntity | null {
+  ): PhysicalProductWarrantyWithProductEntity | null {
     return response.data?.["warranty find id customer"]?.[0] ?? null;
   }
 
   extractWarrantyByPhysicalIdAndCustomer(
     response: PhysicalProductWarrantyIdCustomerResponse,
-  ): PhysicalProductWarrantyEntity | null {
+  ): PhysicalProductWarrantyWithProductEntity | null {
     return response.data?.["Warranty mov customer"]?.[0] ?? null;
   }
 
   extractWarrantiesByMovement(
     response: PhysicalProductWarrantyMovResponse,
-  ): PhysicalProductWarrantyEntity[] {
+  ): PhysicalProductWarrantyWithProductEntity[] {
     return response.data?.["Warranty mov"] ?? [];
   }
 
   extractWarrantiesByMovementAndCustomer(
     response: PhysicalProductWarrantyMovCustomerResponse,
-  ): PhysicalProductWarrantyEntity[] {
+  ): PhysicalProductWarrantyWithProductEntity[] {
     return response.data?.["warranty find id"] ?? [];
   }
 
