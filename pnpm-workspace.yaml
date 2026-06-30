@@ -4,3 +4,7 @@ allowBuilds:
 onlyBuiltDependencies:
   - msw
   - sharp
+overrides:
+  caniuse-lite: 1.0.30001799
+  electron-to-chromium: 1.5.381
+  fs-extra: 11.3.5
