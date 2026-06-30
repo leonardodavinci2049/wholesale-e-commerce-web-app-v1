@@ -106,13 +106,31 @@ function getWarrantyStatus(warranty: PhysicalProductWarrantyEntity) {
   };
 }
 
-function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
+function InfoItem({
+  label,
+  value,
+  desktopLayout = "inline",
+}: {
+  label: string;
+  value: React.ReactNode;
+  desktopLayout?: "inline" | "stacked";
+}) {
+  const isStacked = desktopLayout === "stacked";
+
   return (
-    <div className="min-w-0 rounded-lg border border-border/60 bg-background/55 p-3">
-      <dt className="text-xs font-medium uppercase text-muted-foreground">
+    <div
+      className={`flex flex-col gap-1 border-b border-border/40 py-2 text-sm last:border-b-0 ${
+        isStacked ? "" : "sm:flex-row sm:items-center sm:justify-between"
+      }`}
+    >
+      <dt className="text-xs sm:text-sm font-medium text-muted-foreground uppercase sm:normal-case tracking-wider sm:tracking-normal">
         {label}
       </dt>
-      <dd className="mt-1 break-words text-sm font-semibold text-foreground">
+      <dd
+        className={`break-all text-sm font-semibold text-foreground ${
+          isStacked ? "text-left" : "sm:text-right"
+        }`}
+      >
         {value || "Não informado"}
       </dd>
     </div>
@@ -155,22 +173,24 @@ function WarrantyDetails({
   const warrantyDays = warranty.TEMPODEGARANTIA_DIA ?? 0;
 
   return (
-    <main className="mx-auto flex w-full max-w-350 flex-1 flex-col gap-5 p-4 md:gap-6 md:p-6">
-      <section className="rounded-3xl border border-border/60 bg-card/80 p-5 shadow-sm md:p-6">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+    <main className="mx-auto flex w-full max-w-350 flex-1 flex-col gap-4 p-3 md:gap-6 md:p-6">
+      <section className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm md:rounded-3xl md:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
-            <div className="mb-3 flex flex-wrap items-center gap-2">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
               <Badge variant={status.badgeVariant}>{status.label}</Badge>
               <Badge variant="outline">Lacre #{lacreId}</Badge>
               {warranty.STATUS_FINANCEIRO && (
                 <Badge variant="secondary">{warranty.STATUS_FINANCEIRO}</Badge>
               )}
             </div>
-            <h1 className="text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+            <h1 className="text-xl font-bold leading-tight text-foreground md:text-3xl">
               {warranty.PRODUTO || `Produto físico #${lacreId}`}
             </h1>
-            <p className=" mt-2 text-sm font-medium">SKU: {warranty.ID_PRODUTO}</p>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            <p className="mt-1 text-xs font-semibold text-muted-foreground md:text-sm">
+              SKU: {warranty.ID_PRODUTO}
+            </p>
+            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-muted-foreground md:text-sm md:leading-6">
               Dados da garantia vinculados ao produto comprado por{" "}
               <span className="font-medium text-foreground">
                 {warranty.CLIENTE || "cliente identificado"}
@@ -178,145 +198,225 @@ function WarrantyDetails({
               .
             </p>
           </div>
+        </div>
+      </section>
 
-          <div
-            className={`flex min-w-0 gap-3 rounded-2xl border p-4 ${status.tone}`}
-          >
-            <StatusIcon className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
-            <div>
-              <p className="text-sm font-semibold">Situação da cobertura</p>
-              <p className="mt-1 text-sm leading-5">{status.helper}</p>
-            </div>
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        {/* Situação da Cobertura */}
+        <div
+          className={`flex flex-col justify-between rounded-2xl border p-3.5 shadow-sm transition-all ${status.tone}`}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-wider opacity-85 md:text-xs">
+              Situação
+            </span>
+            <StatusIcon className="size-4 shrink-0" aria-hidden="true" />
+          </div>
+          <div className="mt-3">
+            <p className="text-sm font-bold leading-tight md:text-base">
+              {status.label}
+            </p>
+            <p className="mt-1 text-[10px] leading-normal opacity-90 md:text-xs">
+              {status.helper}
+            </p>
+          </div>
+        </div>
+
+        {/* Garantia até */}
+        <div className="flex flex-col justify-between rounded-2xl border border-border/60 bg-card/70 p-3.5 shadow-sm transition-all hover:border-border/80">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:text-xs">
+              Garantia até
+            </span>
+            <ShieldCheck
+              className="size-4 text-emerald-700 dark:text-emerald-300"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="mt-4">
+            <p className="text-sm font-bold leading-tight text-foreground md:text-base">
+              {formatDate(warranty.GARANTIA_LIMITE)}
+            </p>
+          </div>
+        </div>
+
+        {/* Retirada */}
+        <div className="flex flex-col justify-between rounded-2xl border border-border/60 bg-card/70 p-3.5 shadow-sm transition-all hover:border-border/80">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:text-xs">
+              Retirada
+            </span>
+            <CalendarDays
+              className="size-4 text-sky-700 dark:text-sky-300"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="mt-4">
+            <p className="text-sm font-bold leading-tight text-foreground md:text-base">
+              {formatDate(warranty.DT_RETIRADA)}
+            </p>
+          </div>
+        </div>
+
+        {/* Prazo contratado */}
+        <div className="flex flex-col justify-between rounded-2xl border border-border/60 bg-card/70 p-3.5 shadow-sm transition-all hover:border-border/80">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground md:text-xs">
+              Prazo contratado
+            </span>
+            <TimerReset
+              className="size-4 text-violet-700 dark:text-violet-300"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="mt-4">
+            <p className="text-sm font-bold leading-tight text-foreground md:text-base">
+              {warrantyDays > 0
+                ? `${warrantyDays} dia${warrantyDays === 1 ? "" : "s"}`
+                : "Polít. produto"}
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="rounded-3xl border-border/60 bg-card/70 shadow-sm">
-          <CardHeader className="gap-3">
-            <div className="flex size-10 items-center justify-center rounded-2xl border border-border/60 bg-background text-emerald-700 dark:text-emerald-300">
-              <ShieldCheck className="size-5" aria-hidden="true" />
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <Card className="rounded-2xl border-border/60 bg-card/75 shadow-sm md:rounded-3xl">
+          <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
+            <div className="flex items-center gap-2">
+              <PackageCheck className="size-4.5 text-muted-foreground" />
+              <CardTitle className="text-lg md:text-xl">Produto</CardTitle>
             </div>
-            <div>
-              <CardTitle>Garantia até</CardTitle>
-              <CardDescription>
-                {formatDate(warranty.GARANTIA_LIMITE)}
-              </CardDescription>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Card className="rounded-3xl border-border/60 bg-card/70 shadow-sm">
-          <CardHeader className="gap-3">
-            <div className="flex size-10 items-center justify-center rounded-2xl border border-border/60 bg-background text-sky-700 dark:text-sky-300">
-              <CalendarDays className="size-5" aria-hidden="true" />
-            </div>
-            <div>
-              <CardTitle>Retirada</CardTitle>
-              <CardDescription>
-                {formatDate(warranty.DT_RETIRADA)}
-              </CardDescription>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Card className="rounded-3xl border-border/60 bg-card/70 shadow-sm">
-          <CardHeader className="gap-3">
-            <div className="flex size-10 items-center justify-center rounded-2xl border border-border/60 bg-background text-violet-700 dark:text-violet-300">
-              <TimerReset className="size-5" aria-hidden="true" />
-            </div>
-            <div>
-              <CardTitle>Prazo contratado</CardTitle>
-              <CardDescription>
-                {warrantyDays > 0
-                  ? `${warrantyDays} dia${warrantyDays === 1 ? "" : "s"}`
-                  : "Conforme política do produto"}
-              </CardDescription>
-            </div>
-          </CardHeader>
-        </Card>
-      </section>
-
-      <section className="grid grid-cols-1 gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-        <Card className="rounded-3xl border-border/60 bg-card/75 shadow-sm">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <PackageCheck className="size-5 text-muted-foreground" />
-              <CardTitle>Produto</CardTitle>
-            </div>
-            <CardDescription>
+            <CardDescription className="text-xs md:text-sm">
               Identificação do item físico coberto pela garantia.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <InfoItem label="ID da garantia" value={warranty.GARANTIA_ID} />
-              <InfoItem label="Etiqueta" value={warranty.ETIQUETA} />
-              <InfoItem label="Tipo" value={warranty.TIPO} />
-              <InfoItem label="Marca" value={warranty.MARCA} />
-              <InfoItem label="Número de série" value={warranty.N_SERIE} />
-              <InfoItem label="Código de barras" value={warranty.COD_BARRAS} />
-              <InfoItem label="Localização" value={warranty.LOCATION} />
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <dl className="grid grid-cols-2 gap-x-4 sm:gap-x-6">
+              <InfoItem
+                label="ID da garantia"
+                value={warranty.GARANTIA_ID}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Etiqueta"
+                value={warranty.ETIQUETA}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Tipo"
+                value={warranty.TIPO}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Marca"
+                value={warranty.MARCA}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Número de série"
+                value={warranty.N_SERIE}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Código de barras"
+                value={warranty.COD_BARRAS}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Localização"
+                value={warranty.LOCATION}
+                desktopLayout="stacked"
+              />
               <InfoItem
                 label="Valor da venda"
                 value={formatCurrency(parseMonetaryValue(warranty.VL_VENDA))}
+                desktopLayout="stacked"
               />
             </dl>
           </CardContent>
         </Card>
 
-        <Card className="rounded-3xl border-border/60 bg-card/75 shadow-sm">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <ClipboardList className="size-5 text-muted-foreground" />
-              <CardTitle>Pedido</CardTitle>
+        <Card className="rounded-2xl border-border/60 bg-card/75 shadow-sm md:rounded-3xl">
+          <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
+            <div className="flex items-center gap-2">
+              <ClipboardList className="size-4.5 text-muted-foreground" />
+              <CardTitle className="text-lg md:text-xl">Pedido</CardTitle>
             </div>
-            <CardDescription>
+            <CardDescription className="text-xs md:text-sm">
               Compra que originou a cobertura deste produto.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <dl className="grid grid-cols-1 gap-3">
-              <InfoItem label="Pedido" value={`#${warranty.ID_PEDIDO}`} />
-              <InfoItem label="Movimento" value={`#${warranty.ID_MOVIMENTO}`} />
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+            <dl className="grid grid-cols-2 gap-x-4">
+              <InfoItem
+                label="Pedido"
+                value={`#${warranty.ID_PEDIDO}`}
+                desktopLayout="stacked"
+              />
+              <InfoItem
+                label="Movimento"
+                value={`#${warranty.ID_MOVIMENTO}`}
+                desktopLayout="stacked"
+              />
               <InfoItem
                 label="Data do pedido"
                 value={formatDate(warranty.DATA_PEDIDO)}
+                desktopLayout="stacked"
               />
               <InfoItem
                 label="Status do pedido"
                 value={warranty.STATUS_PEDIDO}
+                desktopLayout="stacked"
               />
               <InfoItem
                 label="Status financeiro"
                 value={warranty.STATUS_FINANCEIRO}
+                desktopLayout="stacked"
               />
             </dl>
           </CardContent>
         </Card>
       </section>
 
-      <Card className="rounded-3xl border-border/60 bg-card/75 shadow-sm">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <UserRound className="size-5 text-muted-foreground" />
-            <CardTitle>Cliente e atendimento</CardTitle>
+      <Card className="rounded-2xl border-border/60 bg-card/75 shadow-sm md:rounded-3xl">
+        <CardHeader className="p-4 pb-2 md:p-6 md:pb-3">
+          <div className="flex items-center gap-2">
+            <UserRound className="size-4.5 text-muted-foreground" />
+            <CardTitle className="text-lg md:text-xl">
+              Cliente e atendimento
+            </CardTitle>
           </div>
-          <CardDescription>
+          <CardDescription className="text-xs md:text-sm">
             Dados relacionados à conta e ao vendedor responsável pela compra.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoItem label="Cliente" value={warranty.CLIENTE} />
-            <InfoItem label="Conta" value={warranty.ACCOUNT_TIPO} />
-            <InfoItem label="Status da conta" value={warranty.ACCOUNT_STATUS} />
-            <InfoItem label="Vendedor" value={warranty.VENDEDOR} />
+        <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
+          <dl className="grid grid-cols-2 gap-x-4 sm:grid-cols-2 lg:grid-cols-2">
+            <InfoItem
+              label="Cliente"
+              value={warranty.CLIENTE}
+              desktopLayout="stacked"
+            />
+            <InfoItem
+              label="Conta"
+              value={warranty.ACCOUNT_TIPO}
+              desktopLayout="stacked"
+            />
+            <InfoItem
+              label="Status da conta"
+              value={warranty.ACCOUNT_STATUS}
+              desktopLayout="stacked"
+            />
+            <InfoItem
+              label="Vendedor"
+              value={warranty.VENDEDOR}
+              desktopLayout="stacked"
+            />
           </dl>
 
-          <Separator className="my-5" />
+          <Separator className="my-4" />
 
-          <p className="text-sm leading-6 text-muted-foreground">
+          <p className="text-xs leading-relaxed text-muted-foreground md:text-sm md:leading-6">
             Em caso de solicitação de troca, conserto ou devolução, apresente o
             lacre e os dados do pedido para agilizar o atendimento.
           </p>
