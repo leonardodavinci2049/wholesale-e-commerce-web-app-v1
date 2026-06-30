@@ -35,6 +35,7 @@ export type {
   PhysicalProductWarrantyMovResponse,
   PhysicalProductWarrantySearchRequest,
   PhysicalProductWarrantySearchResponse,
+  PhysicalProductWarrantyWithProductEntity,
 } from "./types/physical-product-types";
 export {
   PhysicalProductError,

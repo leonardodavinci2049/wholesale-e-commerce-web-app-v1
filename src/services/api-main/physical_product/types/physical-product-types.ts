@@ -185,6 +185,11 @@ export interface PhysicalProductWarrantyEntity {
   STATUS_GARANTIA: string;
 }
 
+export interface PhysicalProductWarrantyWithProductEntity
+  extends PhysicalProductWarrantyEntity {
+  ID_PRODUTO: number;
+}
+
 export interface PhysicalProductFindAllResponse
   extends PhysicalProductBaseResponse {
   data: {
@@ -209,28 +214,28 @@ export interface OrderItemFindIdCustomerResponse
 export interface PhysicalProductWarrantyIdResponse
   extends PhysicalProductBaseResponse {
   data: {
-    "warranty find id customer": PhysicalProductWarrantyEntity[];
+    "warranty find id customer": PhysicalProductWarrantyWithProductEntity[];
   };
 }
 
 export interface PhysicalProductWarrantyIdCustomerResponse
   extends PhysicalProductBaseResponse {
   data: {
-    "Warranty mov customer": PhysicalProductWarrantyEntity[];
+    "Warranty mov customer": PhysicalProductWarrantyWithProductEntity[];
   };
 }
 
 export interface PhysicalProductWarrantyMovResponse
   extends PhysicalProductBaseResponse {
   data: {
-    "Warranty mov": PhysicalProductWarrantyEntity[];
+    "Warranty mov": PhysicalProductWarrantyWithProductEntity[];
   };
 }
 
 export interface PhysicalProductWarrantyMovCustomerResponse
   extends PhysicalProductBaseResponse {
   data: {
-    "warranty find id": PhysicalProductWarrantyEntity[];
+    "warranty find id": PhysicalProductWarrantyWithProductEntity[];
   };
 }
 
