@@ -5,11 +5,13 @@ import { getAuthContext } from "@/server/auth-context";
 import { brandServiceApi } from "@/services/api-main/brand";
 import { transformBrandList } from "@/services/api-main/brand/transformers/transformers";
 import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
+import { productPdvServiceApi } from "@/services/api-main/product-pdv";
 import {
-  getProductsPdv,
-  searchProductsPdv,
-} from "@/services/api-main/product-pdv/product-pdv-cached-service";
-import { getTaxonomyMenu } from "@/services/api-main/taxonomy-base/taxonomy-base-cached-service";
+  transformProductPdvList,
+  transformProductPdvSearchList,
+} from "@/services/api-main/product-pdv/transformers/transformers";
+import { taxonomyBaseServiceApi } from "@/services/api-main/taxonomy-base";
+import { transformTaxonomyMenuList } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
 import { BudgetMobileBottomBar } from "./_components/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
@@ -56,20 +58,32 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
   };
 
   const productsPromise = search
-    ? searchProductsPdv({
-        search,
-        customerId,
-        flagStock,
-        limit: productLimit,
-        ...apiContext,
-      })
-    : getProductsPdv({
-        brandId,
-        taxonomyId,
-        flagStock,
-        recordsQuantity: productLimit,
-        ...apiContext,
-      });
+    ? productPdvServiceApi
+        .findProductsPdvSearch({
+          pe_search: search,
+          pe_customer_id: customerId,
+          pe_flag_stock: flagStock,
+          pe_limit: productLimit,
+          ...apiContext,
+        })
+        .then((response) =>
+          transformProductPdvSearchList(
+            productPdvServiceApi.extractProductsPdvSearch(response),
+          ),
+        )
+    : productPdvServiceApi
+        .findAllProductsPdv({
+          pe_brand_id: brandId,
+          pe_taxonomy_id: taxonomyId,
+          pe_flag_stock: flagStock,
+          pe_records_quantity: productLimit,
+          ...apiContext,
+        })
+        .then((response) =>
+          transformProductPdvList(
+            productPdvServiceApi.extractProductsPdv(response),
+          ),
+        );
 
   const brandsPromise = brandServiceApi
     .findAllBrands({
@@ -81,7 +95,17 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
       transformBrandList(brandServiceApi.extractBrands(response)),
     );
 
-  const categoriesPromise = getTaxonomyMenu(2, 0, apiContext);
+  const categoriesPromise = taxonomyBaseServiceApi
+    .findTaxonomyMenu({
+      pe_type_id: 2,
+      pe_parent_id: 0,
+      ...apiContext,
+    })
+    .then((response) =>
+      transformTaxonomyMenuList(
+        taxonomyBaseServiceApi.extractTaxonomyMenu(response),
+      ),
+    );
 
   const orderCartPromise = getOrderCart(orderId ?? 0, dashboardParams).catch(
     (error) => {

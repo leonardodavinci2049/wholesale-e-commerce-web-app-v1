@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 
 import { getAuthContext } from "@/server/auth-context";
 import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
-import { getPremiumProducts } from "@/services/api-main/product-base/product-base-cached-service";
+import { productBaseServiceApi } from "@/services/api-main/product-base";
+import { transformProductList } from "@/services/api-main/product-base/transformers/transformers";
 
 import { CartSummaryPanel } from "../_components/cart-summary-panel";
 import { MobileProductSearch } from "../_components/mobile-product-search";
@@ -46,25 +47,31 @@ export default async function ProductsBestSellingPage({
     ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
     : DEFAULT_PRODUCT_LIMIT;
 
-  const productsPromise = getPremiumProducts({
-    search: search || undefined,
-    taxonomyId: 0,
-    typeId: 0,
-    brandId: 0,
-    stockFlag: 1,
-    flagService: 0,
-    flagPromotions: 0,
-    flagHighlight: 1,
-    flagLaunch: 0,
-    recordsQuantity: productLimit,
-    pageId: 0,
-    columnId: 1,
-    orderId: 2,
-    pe_user_id: apiContext.pe_user_id,
-    pe_user_name: apiContext.pe_user_name,
-    pe_user_role: apiContext.pe_user_role,
-    pe_person_id: apiContext.pe_person_id,
-  });
+  const productsPromise = productBaseServiceApi
+    .findPremiumProducts({
+      pe_search: search || undefined,
+      pe_taxonomy_id: 0,
+      pe_type_id: 0,
+      pe_brand_id: 0,
+      pe_stock_flag: 1,
+      pe_flag_service: 0,
+      pe_flag_promotions: 0,
+      pe_flag_highlight: 1,
+      pe_flag_launch: 0,
+      pe_records_quantity: productLimit,
+      pe_page_id: 0,
+      pe_column_id: 1,
+      pe_order_id: 2,
+      pe_user_id: apiContext.pe_user_id,
+      pe_user_name: apiContext.pe_user_name,
+      pe_user_role: apiContext.pe_user_role,
+      pe_person_id: apiContext.pe_person_id,
+    })
+    .then((response) =>
+      transformProductList(
+        productBaseServiceApi.extractPremiumProducts(response),
+      ),
+    );
 
   const orderCartPromise = getOrderCart(orderId ?? 0, {
     ...apiContext,

@@ -2,8 +2,11 @@
 
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { searchProductsPdv } from "@/services/api-main/product-pdv/product-pdv-cached-service";
-import type { UIProductPdv } from "@/services/api-main/product-pdv/transformers/transformers";
+import { productPdvServiceApi } from "@/services/api-main/product-pdv";
+import {
+  transformProductPdvSearchList,
+  type UIProductPdv,
+} from "@/services/api-main/product-pdv/transformers/transformers";
 
 const logger = createLogger("sales-dashboard-search-products-action");
 
@@ -13,15 +16,17 @@ export async function searchProductsAction(
   try {
     const { apiContext } = await getAuthContext();
 
-    const products = await searchProductsPdv({
-      search: search || undefined,
-      customerId: 0,
-      flagStock: 0,
-      limit: 20,
+    const response = await productPdvServiceApi.findProductsPdvSearch({
+      pe_search: search || undefined,
+      pe_customer_id: 0,
+      pe_flag_stock: 0,
+      pe_limit: 20,
       ...apiContext,
     });
 
-    return products;
+    return transformProductPdvSearchList(
+      productPdvServiceApi.extractProductsPdvSearch(response),
+    );
   } catch (error) {
     logger.error("Erro ao buscar produtos", error);
     return [];
