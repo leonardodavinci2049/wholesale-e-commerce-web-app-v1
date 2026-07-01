@@ -4,12 +4,20 @@ import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
 import { brandServiceApi } from "@/services/api-main/brand";
 import { transformBrandList } from "@/services/api-main/brand/transformers/transformers";
-import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
+import { orderSalesServiceApi } from "@/services/api-main/order-sales";
 import {
-  getProductsPdv,
-  searchProductsPdv,
-} from "@/services/api-main/product-pdv/product-pdv-cached-service";
-import { getTaxonomyMenu } from "@/services/api-main/taxonomy-base/taxonomy-base-cached-service";
+  transformCustomerEntity,
+  transformDashboardDetailsEntity,
+  transformDashboardItemEntity,
+  transformSummaryEntity,
+} from "@/services/api-main/order-sales/transformers/transformers";
+import { productPdvServiceApi } from "@/services/api-main/product-pdv";
+import {
+  transformProductPdvList,
+  transformProductPdvSearchList,
+} from "@/services/api-main/product-pdv/transformers/transformers";
+import { taxonomyBaseServiceApi } from "@/services/api-main/taxonomy-base";
+import { transformTaxonomyMenuList } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
 import { BudgetMobileBottomBar } from "./_components/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/cart-summary-panel";
@@ -21,6 +29,44 @@ import { ProductViewSwitcher } from "./_components/product-view-switcher";
 const logger = createLogger("budget-page");
 
 const DEFAULT_PRODUCT_LIMIT = 50;
+
+async function getOrderCart(
+  orderId: number,
+  params: {
+    customerId?: number;
+    typeBusiness?: number;
+    pe_user_id: string;
+    pe_user_name: string;
+    pe_user_role: string;
+    pe_person_id: number;
+  },
+) {
+  const response = await orderSalesServiceApi.findCartId({
+    pe_order_id: orderId,
+    pe_id_customer: params.customerId,
+    pe_type_business: params.typeBusiness,
+    pe_user_id: params.pe_user_id,
+    pe_user_name: params.pe_user_name,
+    pe_user_role: params.pe_user_role,
+    pe_person_id: params.pe_person_id,
+  });
+
+  if (!response) {
+    return undefined;
+  }
+
+  const summary = orderSalesServiceApi.extractDashboardSummary(response);
+  const details = orderSalesServiceApi.extractDashboardDetails(response);
+  const items = orderSalesServiceApi.extractDashboardItems(response);
+  const customer = orderSalesServiceApi.extractDashboardCustomer(response);
+
+  return {
+    summary: summary ? transformSummaryEntity(summary) : null,
+    details: details ? transformDashboardDetailsEntity(details) : null,
+    items: items.map(transformDashboardItemEntity),
+    customer: customer ? transformCustomerEntity(customer) : null,
+  };
+}
 
 interface BudgetPageProps {
   searchParams: Promise<{
@@ -56,20 +102,32 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
   };
 
   const productsPromise = search
-    ? searchProductsPdv({
-        search,
-        customerId,
-        flagStock,
-        limit: productLimit,
-        ...apiContext,
-      })
-    : getProductsPdv({
-        brandId,
-        taxonomyId,
-        flagStock,
-        recordsQuantity: productLimit,
-        ...apiContext,
-      });
+    ? productPdvServiceApi
+        .findProductsPdvSearch({
+          pe_search: search,
+          pe_customer_id: customerId,
+          pe_flag_stock: flagStock,
+          pe_limit: productLimit,
+          ...apiContext,
+        })
+        .then((response) =>
+          transformProductPdvSearchList(
+            productPdvServiceApi.extractProductsPdvSearch(response),
+          ),
+        )
+    : productPdvServiceApi
+        .findAllProductsPdv({
+          pe_brand_id: brandId,
+          pe_taxonomy_id: taxonomyId,
+          pe_flag_stock: flagStock,
+          pe_records_quantity: productLimit,
+          ...apiContext,
+        })
+        .then((response) =>
+          transformProductPdvList(
+            productPdvServiceApi.extractProductsPdv(response),
+          ),
+        );
 
   const brandsPromise = brandServiceApi
     .findAllBrands({
@@ -81,7 +139,17 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
       transformBrandList(brandServiceApi.extractBrands(response)),
     );
 
-  const categoriesPromise = getTaxonomyMenu(2, 0, apiContext);
+  const categoriesPromise = taxonomyBaseServiceApi
+    .findTaxonomyMenu({
+      pe_type_id: 2,
+      pe_parent_id: 0,
+      ...apiContext,
+    })
+    .then((response) =>
+      transformTaxonomyMenuList(
+        taxonomyBaseServiceApi.extractTaxonomyMenu(response),
+      ),
+    );
 
   const orderCartPromise = getOrderCart(orderId ?? 0, dashboardParams).catch(
     (error) => {

@@ -5,7 +5,11 @@ import { z } from "zod";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { getProductPdvById } from "@/services/api-main/product-pdv/product-pdv-cached-service";
+import { productPdvServiceApi } from "@/services/api-main/product-pdv";
+import {
+  transformProductPdv,
+  transformRelatedCategories,
+} from "@/services/api-main/product-pdv/transformers/transformers";
 import {
   ProductViewLayout,
   ProductViewLayoutSkeleton,
@@ -30,17 +34,22 @@ async function ProductDetailsPageContent({ productId }: { productId: number }) {
   await connection();
   const { apiContext } = await getAuthContext();
 
-  const result = await getProductPdvById(productId, {
+  const response = await productPdvServiceApi.findProductPdvById({
+    pe_product_id: productId,
     ...apiContext,
     pe_type_business: 1,
   });
+  const productEntity = productPdvServiceApi.extractProductPdvById(response);
+  const product = transformProductPdv(productEntity);
 
-  if (!result) {
+  if (!product) {
     logger.warn(`Product not found or error occurred for ID: ${productId}`);
     notFound();
   }
 
-  const { product, relatedCategories } = result;
+  const relatedCategories = transformRelatedCategories(
+    productPdvServiceApi.extractRelatedCategories(response),
+  );
 
   return (
     <div className="mx-auto flex flex-1 flex-col w-full max-w-350">

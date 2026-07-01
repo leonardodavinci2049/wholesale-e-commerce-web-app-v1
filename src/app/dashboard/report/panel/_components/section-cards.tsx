@@ -5,10 +5,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getAuthContext } from "@/server/auth-context";
+import { orderB2bServiceApi } from "@/services/api-main/order-b2b";
 import {
-  getOrderStatisticsCustomer,
+  transformStatisticsCustomerEntity,
   type UIOrderStatisticsCustomer,
-} from "@/services/api-main/order-b2b";
+} from "@/services/api-main/order-b2b/transformers/transformers";
 import { formatCurrency, parseMonetaryValue } from "@/utils/common-utils";
 
 export async function SectionCards() {
@@ -17,9 +18,12 @@ export async function SectionCards() {
 
   let stats: UIOrderStatisticsCustomer | null;
   try {
-    stats = await getOrderStatisticsCustomer(customerId, {
+    const response = await orderB2bServiceApi.statisticsCustomer({
+      pe_customer_id: customerId,
       ...apiContext,
     });
+    const entity = orderB2bServiceApi.extractStatisticsCustomer(response);
+    stats = entity ? transformStatisticsCustomerEntity(entity) : null;
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Erro ao buscar estatísticas.";

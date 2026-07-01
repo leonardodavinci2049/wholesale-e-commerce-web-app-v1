@@ -1,10 +1,17 @@
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
+import { orderSalesServiceApi } from "@/services/api-main/order-sales";
 import {
-  getFindOrder,
-  type UIOrderDashboard,
-} from "@/services/api-main/order-sales/order-sales-cached-service";
+  transformCustomerEntity,
+  transformDashboardDetailsEntity,
+  transformDashboardItemEntity,
+  transformSummaryEntity,
+  type UIOrderCustomer,
+  type UIOrderDashboardDetails,
+  type UIOrderDashboardItem,
+  type UIOrderSalesSummary,
+} from "@/services/api-main/order-sales/transformers/transformers";
 import { CustomerSection } from "./_components/customer-section";
 import { HeaderOrderSection } from "./_components/header-order-section";
 import { OrderActionsSection } from "./_components/order-actions-section";
@@ -17,15 +24,61 @@ import { PurchaseDetailsSection } from "./_components/purchase-details-section";
 
 const logger = createLogger("dashboard-pdv-page");
 
+type UIOrderDashboardData = {
+  summary: UIOrderSalesSummary | null;
+  details: UIOrderDashboardDetails | null;
+  items: UIOrderDashboardItem[];
+  customer: UIOrderCustomer | null;
+  error?: string;
+};
+
 interface PdvPageProps {
   searchParams: Promise<{ orderId?: string }>;
+}
+
+async function getFindOrder(
+  orderId: number,
+  params: {
+    customerId?: number;
+    typeBusiness?: number;
+    pe_user_id: string;
+    pe_user_name: string;
+    pe_user_role: string;
+    pe_person_id: number;
+  },
+): Promise<UIOrderDashboardData | undefined> {
+  const response = await orderSalesServiceApi.findOrderId({
+    pe_order_id: orderId,
+    pe_id_customer: params.customerId,
+    pe_type_business: params.typeBusiness,
+    pe_user_id: params.pe_user_id,
+    pe_user_name: params.pe_user_name,
+    pe_user_role: params.pe_user_role,
+    pe_person_id: params.pe_person_id,
+  });
+
+  if (!response) {
+    return undefined;
+  }
+
+  const summary = orderSalesServiceApi.extractDashboardSummary(response);
+  const details = orderSalesServiceApi.extractDashboardDetails(response);
+  const items = orderSalesServiceApi.extractDashboardItems(response);
+  const customer = orderSalesServiceApi.extractDashboardCustomer(response);
+
+  return {
+    summary: summary ? transformSummaryEntity(summary) : null,
+    details: details ? transformDashboardDetailsEntity(details) : null,
+    items: items.map(transformDashboardItemEntity),
+    customer: customer ? transformCustomerEntity(customer) : null,
+  };
 }
 
 export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
   const params = await searchParams;
   const orderId = params.orderId ? Number(params.orderId) : 0;
 
-  let dashboardData: UIOrderDashboard | null = null;
+  let dashboardData: UIOrderDashboardData | null = null;
 
   try {
     const { apiContext, session } = await getAuthContext();
