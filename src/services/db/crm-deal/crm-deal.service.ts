@@ -243,6 +243,40 @@ export const CrmDealService = {
   findDealsByOrganization,
 };
 
+export interface CrmDealResult {
+  deal: CrmDeal | null;
+  error: string | null;
+}
+
+export interface CrmDealsResult {
+  deals: CrmDeal[];
+  error: string | null;
+}
+
+export async function getCrmDealByLead(params: {
+  leadId: string;
+}): Promise<CrmDealResult> {
+  const response = await CrmDealService.findDealByLead(params);
+
+  return {
+    deal: response.data ?? null,
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getCrmDealsByOrganization(params: {
+  organizationId: string;
+  status?: CrmDealStatus;
+  limit?: number;
+}): Promise<CrmDealsResult> {
+  const response = await CrmDealService.findDealsByOrganization(params);
+
+  return {
+    deals: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
 export type {
   CrmDeal,
   CrmDealStatus,

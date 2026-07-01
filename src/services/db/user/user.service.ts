@@ -1,16 +1,20 @@
+import "server-only";
+
 import { z } from "zod";
 import { MESSAGES } from "@/core/constants/globalConstants";
+import { createLogger } from "@/core/logger";
 
 import dbService, {
   ErroConexaoBancoDados,
   ErroExecucaoConsulta,
 } from "@/database/dbConnection";
+import type { User as DbUser } from "@/database/schema";
 import {
   AUTH_TABLES,
+  type User as AuthUser,
   AuthValidationError,
   mapUserEntityToDto,
   type ServiceResponse,
-  type User,
   type UserEntity,
 } from "@/database/shared/auth/auth.types";
 import { processProcedureResultMutation } from "@/database/utils/process-procedure-result.mutation";
@@ -29,6 +33,8 @@ import type {
   TblUserFindAll,
   TblUserFindById,
 } from "./types/user.type";
+
+const logger = createLogger("UserService");
 
 export class UserService {
   async execUserFindIdQuery(dataJsonDto: unknown): Promise<ResultModel> {
@@ -160,7 +166,7 @@ function handleError<T>(error: unknown, operation: string): ServiceResponse<T> {
 
 async function findUserById(params: {
   userId: string;
-}): Promise<ServiceResponse<User>> {
+}): Promise<ServiceResponse<AuthUser>> {
   try {
     validateId(params.userId, "userId");
 
@@ -188,13 +194,13 @@ async function findUserById(params: {
       error: null,
     };
   } catch (error) {
-    return handleError<User>(error, "findUserById");
+    return handleError<AuthUser>(error, "findUserById");
   }
 }
 
 async function findUsersExcludingIds(params: {
   excludeUserIds: string[];
-}): Promise<ServiceResponse<User[]>> {
+}): Promise<ServiceResponse<AuthUser[]>> {
   try {
     validateIdArray(params.excludeUserIds, "excludeUserIds");
 
@@ -239,13 +245,13 @@ async function findUsersExcludingIds(params: {
       error: null,
     };
   } catch (error) {
-    return handleError<User[]>(error, "findUsersExcludingIds");
+    return handleError<AuthUser[]>(error, "findUsersExcludingIds");
   }
 }
 
 async function findNonMemberUsers(params: {
   organizationId: string;
-}): Promise<ServiceResponse<User[]>> {
+}): Promise<ServiceResponse<AuthUser[]>> {
   try {
     validateId(params.organizationId, "organizationId");
 
@@ -273,12 +279,12 @@ async function findNonMemberUsers(params: {
       error: null,
     };
   } catch (error) {
-    return handleError<User[]>(error, "findNonMemberUsers");
+    return handleError<AuthUser[]>(error, "findNonMemberUsers");
   }
 }
 
 async function findUsersWithoutAnyOrganization(): Promise<
-  ServiceResponse<User[]>
+  ServiceResponse<AuthUser[]>
 > {
   try {
     const query = `
@@ -302,7 +308,7 @@ async function findUsersWithoutAnyOrganization(): Promise<
       error: null,
     };
   } catch (error) {
-    return handleError<User[]>(error, "findUsersWithoutAnyOrganization");
+    return handleError<AuthUser[]>(error, "findUsersWithoutAnyOrganization");
   }
 }
 
@@ -313,4 +319,161 @@ export const UserAuthService = {
   findUsersWithoutAnyOrganization,
 } as const;
 
-export type { ServiceResponse, User } from "@/database/shared/auth/auth.types";
+export type UserListItem = DbUser;
+export type UserDetail = DbUser;
+
+function transformUser(user: TblUserFindById | TblUserFindAll): DbUser {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    emailVerified: "emailVerified" in user ? user.emailVerified === 1 : false,
+    image: user.image || null,
+    twoFactorEnabled:
+      "twoFactorEnabled" in user ? user.twoFactorEnabled === 1 : false,
+    role: user.role,
+    banned: "banned" in user ? user.banned === 1 : false,
+    banReason: "banReason" in user ? user.banReason || null : null,
+    banExpires: "banExpires" in user ? user.banExpires || null : null,
+    createdAt: user.createdAt,
+    updatedAt: "updatedAt" in user ? user.updatedAt : user.createdAt,
+  };
+}
+
+export async function getUserById(userId: string): Promise<UserDetail | null> {
+  try {
+    const response = await userService.execUserFindIdQuery({
+      PE_USER_ID: userId,
+    });
+
+    if (response.statusCode !== 100200 || !response.data) {
+      logger.warn(`User not found: ${userId}`);
+      return null;
+    }
+
+    const rawUser = Array.isArray(response.data)
+      ? response.data[0]
+      : response.data;
+
+    return transformUser(rawUser);
+  } catch (error) {
+    logger.error(`Failed to fetch user by ID ${userId}:`, error);
+    return null;
+  }
+}
+
+export async function getAllUsers(
+  organizationId?: string,
+  searchTerm?: string,
+  flagMemberOff?: number,
+  qtRegistros?: number,
+  paginaId?: number,
+  colunaId?: number,
+  ordemId?: number,
+): Promise<UserListItem[]> {
+  try {
+    const response = await userService.execUserFindAllQuery({
+      PE_ORGANIZATION_ID: organizationId,
+      PE_SEARCH_USER: searchTerm,
+      PE_FLAG_MEMBER_OFF: flagMemberOff,
+      PE_QT_REGISTROS: qtRegistros,
+      PE_PAGINA_ID: paginaId,
+      PE_COLUNA_ID: colunaId,
+      PE_ORDEM_ID: ordemId,
+    });
+
+    if (response.statusCode !== 100200 || !response.data) {
+      logger.error("Error loading users:", response.message);
+      return [];
+    }
+
+    const rawUsers = Array.isArray(response.data) ? response.data : [];
+
+    return rawUsers.map(transformUser);
+  } catch (error) {
+    logger.error("Failed to fetch users:", error);
+    return [];
+  }
+}
+
+export async function getAuthUserById(
+  userId: string,
+): Promise<AuthUser | null> {
+  try {
+    const response = await UserAuthService.findUserById({ userId });
+
+    if (!response.success) {
+      logger.warn(`Auth user not found: ${userId}`);
+      return null;
+    }
+
+    return response.data;
+  } catch (error) {
+    logger.error(`Failed to fetch auth user by ID ${userId}:`, error);
+    return null;
+  }
+}
+
+export async function getNonMemberUsers(
+  organizationId: string,
+): Promise<AuthUser[]> {
+  try {
+    const response = await UserAuthService.findNonMemberUsers({
+      organizationId,
+    });
+
+    if (!response.success || !response.data) {
+      logger.error("Error loading non-member users:", response.error);
+      return [];
+    }
+
+    return response.data;
+  } catch (error) {
+    logger.error(
+      `Failed to fetch non-member users for org ${organizationId}:`,
+      error,
+    );
+    return [];
+  }
+}
+
+export async function getUsersExcludingIds(
+  excludeUserIds: string[],
+): Promise<AuthUser[]> {
+  try {
+    const response = await UserAuthService.findUsersExcludingIds({
+      excludeUserIds,
+    });
+
+    if (!response.success || !response.data) {
+      logger.error("Error loading users excluding IDs:", response.error);
+      return [];
+    }
+
+    return response.data;
+  } catch (error) {
+    logger.error("Failed to fetch users excluding IDs:", error);
+    return [];
+  }
+}
+
+export async function getUsersWithoutAnyOrganization(): Promise<AuthUser[]> {
+  try {
+    const response = await UserAuthService.findUsersWithoutAnyOrganization();
+
+    if (!response.success || !response.data) {
+      logger.error("Error loading users without organization:", response.error);
+      return [];
+    }
+
+    return response.data;
+  } catch (error) {
+    logger.error("Failed to fetch users without any organization:", error);
+    return [];
+  }
+}
+
+export type {
+  ServiceResponse,
+  User,
+} from "@/database/shared/auth/auth.types";

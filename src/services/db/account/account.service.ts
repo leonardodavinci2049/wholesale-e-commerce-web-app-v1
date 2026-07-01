@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import { createLogger } from "@/core/logger";
 import dbService, {
   ErroConexaoBancoDados,
   ErroExecucaoConsulta,
@@ -15,6 +16,8 @@ import {
   mapAccountEntityToDto,
   type ServiceResponse,
 } from "@/database/shared/auth/auth.types";
+
+const logger = createLogger("AccountService");
 
 const IdSchema = z
   .string()
@@ -137,6 +140,22 @@ export const AccountService = {
 } as const;
 
 export default AccountService;
+
+export async function getAccountsByUserId(userId: string): Promise<Account[]> {
+  try {
+    const response = await AccountService.findAccountsByUserId({ userId });
+
+    if (!response.success || !response.data) {
+      logger.error("Error loading accounts:", response.error);
+      return [];
+    }
+
+    return response.data;
+  } catch (error) {
+    logger.error(`Failed to fetch accounts for user ${userId}:`, error);
+    return [];
+  }
+}
 
 export type {
   Account,

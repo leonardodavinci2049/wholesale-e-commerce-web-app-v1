@@ -1,8 +1,11 @@
 export type {
   CrmLead,
+  CrmLeadResult,
   CrmLeadSource,
+  CrmLeadStageCountResult,
   CrmLeadStatus,
   CrmLeadSummary,
+  CrmLeadsResult,
   ModifyResponse,
   ServiceResponse,
 } from "./crm-lead.service";
@@ -11,15 +14,8 @@ export {
   CRM_LEAD_STATUSES,
   CRM_LEAD_TABLES,
   CrmLeadService,
-} from "./crm-lead.service";
-export type {
-  CrmLeadResult,
-  CrmLeadStageCountResult,
-  CrmLeadsResult,
-} from "./crm-lead-cached-service";
-export {
   getCrmLeadById,
   getCrmLeadStageCount,
   getCrmLeadsByOrganization,
   getCrmLeadsByStageGrouped,
-} from "./crm-lead-cached-service";
+} from "./crm-lead.service";

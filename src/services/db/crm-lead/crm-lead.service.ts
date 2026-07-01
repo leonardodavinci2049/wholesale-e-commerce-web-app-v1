@@ -659,6 +659,72 @@ export const CrmLeadService = {
   countLeadsByStage,
 };
 
+export interface CrmLeadsResult {
+  leads: CrmLeadSummary[];
+  error: string | null;
+}
+
+export interface CrmLeadResult {
+  lead: CrmLead | null;
+  error: string | null;
+}
+
+export interface CrmLeadStageCountResult {
+  data: Array<{ stageKey: string; count: number; total: number }>;
+  error: string | null;
+}
+
+export async function getCrmLeadById(params: {
+  leadId: string;
+  organizationId: string;
+}): Promise<CrmLeadResult> {
+  const response = await CrmLeadService.findLeadById(params);
+
+  return {
+    lead: response.data ?? null,
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getCrmLeadsByOrganization(params: {
+  organizationId: string;
+  status?: CrmLeadStatus;
+  stageKey?: string;
+  assignedUserId?: string;
+  source?: string;
+  limit?: number;
+}): Promise<CrmLeadsResult> {
+  const response = await CrmLeadService.findLeadsByOrganization(params);
+
+  return {
+    leads: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getCrmLeadsByStageGrouped(params: {
+  organizationId: string;
+  assignedUserId?: string;
+}): Promise<CrmLeadsResult> {
+  const response = await CrmLeadService.findLeadsByStageGrouped(params);
+
+  return {
+    leads: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getCrmLeadStageCount(params: {
+  organizationId: string;
+}): Promise<CrmLeadStageCountResult> {
+  const response = await CrmLeadService.countLeadsByStage(params);
+
+  return {
+    data: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
 export type {
   CrmLead,
   CrmLeadSource,

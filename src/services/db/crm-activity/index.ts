@@ -1,4 +1,5 @@
 export type {
+  CrmActivitiesResult,
   CrmActivity,
   CrmActivityType,
   ModifyResponse,
@@ -8,6 +9,5 @@ export {
   CRM_ACTIVITY_TABLES,
   CRM_ACTIVITY_TYPES,
   CrmActivityService,
+  getCrmActivitiesByLead,
 } from "./crm-activity.service";
-export type { CrmActivitiesResult } from "./crm-activity-cached-service";
-export { getCrmActivitiesByLead } from "./crm-activity-cached-service";

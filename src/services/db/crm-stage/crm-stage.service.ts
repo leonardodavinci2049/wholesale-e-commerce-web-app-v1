@@ -108,5 +108,19 @@ export const CrmStageService = {
   findStageByKey,
 };
 
+export interface CrmStagesResult {
+  stages: CrmStage[];
+  error: string | null;
+}
+
+export async function getCrmActiveStages(): Promise<CrmStagesResult> {
+  const response = await CrmStageService.findAllActiveStages();
+
+  return {
+    stages: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
 export type { CrmStage, ServiceResponse } from "./types/crm-stage.types";
 export { CRM_STAGE_KEYS, CRM_STAGE_TABLES } from "./types/crm-stage.types";
