@@ -149,6 +149,22 @@ export const CrmLeadStageHistoryService = {
   findHistoryByLead,
 };
 
+export interface CrmLeadStageHistoryResult {
+  history: CrmLeadStageHistory[];
+  error: string | null;
+}
+
+export async function getCrmLeadStageHistory(params: {
+  leadId: string;
+}): Promise<CrmLeadStageHistoryResult> {
+  const response = await CrmLeadStageHistoryService.findHistoryByLead(params);
+
+  return {
+    history: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
 export type {
   CrmLeadStageHistory,
   ModifyResponse,
