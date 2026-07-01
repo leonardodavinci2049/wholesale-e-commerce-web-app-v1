@@ -902,6 +902,63 @@ export const AgendaService = {
 
 export default AgendaService;
 
+interface AgendaEntriesParams {
+  userId: string;
+  startDate: string;
+  endDate: string;
+  status?: AgendaEntryStatus;
+  priority?: AgendaEntryPriority;
+}
+
+interface AgendaNotificationsParams {
+  userId: string;
+  dueBeforeKey: string;
+}
+
+export interface AgendaEntriesResult {
+  entries: AgendaEntry[];
+  error: string | null;
+}
+
+export interface AgendaNotificationsResult {
+  notifications: AgendaNotification[];
+  error: string | null;
+}
+
+export async function getAgendaEntriesForRange(
+  params: AgendaEntriesParams,
+): Promise<AgendaEntriesResult> {
+  const response = await AgendaService.findAgendaEntriesByUser({
+    userId: params.userId,
+    startDate: params.startDate,
+    endDate: params.endDate,
+    status: params.status,
+    priority: params.priority,
+    limit: 200,
+  });
+
+  return {
+    entries: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getAgendaNotificationsForHeader(
+  params: AgendaNotificationsParams,
+): Promise<AgendaNotificationsResult> {
+  const response = await AgendaService.findAgendaNotificationsByUser({
+    userId: params.userId,
+    unreadOnly: true,
+    dueBefore: params.dueBeforeKey,
+    limit: 12,
+  });
+
+  return {
+    notifications: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
 export type {
   AgendaEntry,
   AgendaEntryPriority,

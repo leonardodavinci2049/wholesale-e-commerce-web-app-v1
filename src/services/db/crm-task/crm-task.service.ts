@@ -316,6 +316,59 @@ export const CrmTaskService = {
   countOverdueTasks,
 };
 
+export interface CrmTasksResult {
+  tasks: CrmTaskWithLeadName[];
+  error: string | null;
+}
+
+export interface CrmTasksByLeadResult {
+  tasks: CrmTask[];
+  error: string | null;
+}
+
+export interface CrmOverdueCountResult {
+  count: number;
+  error: string | null;
+}
+
+export async function getCrmTasksByUser(params: {
+  assignedUserId: string;
+  organizationId: string;
+  status?: CrmTaskStatus;
+  limit?: number;
+}): Promise<CrmTasksResult> {
+  const response = await CrmTaskService.findTasksByUser(params);
+
+  return {
+    tasks: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getCrmTasksByLead(params: {
+  leadId: string;
+  limit?: number;
+}): Promise<CrmTasksByLeadResult> {
+  const response = await CrmTaskService.findTasksByLead(params);
+
+  return {
+    tasks: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
+export async function getCrmOverdueTaskCount(params: {
+  organizationId: string;
+  assignedUserId?: string;
+}): Promise<CrmOverdueCountResult> {
+  const response = await CrmTaskService.countOverdueTasks(params);
+
+  return {
+    count: response.data ?? 0,
+    error: response.success ? null : response.error,
+  };
+}
+
 export type {
   CrmTask,
   CrmTaskPriority,

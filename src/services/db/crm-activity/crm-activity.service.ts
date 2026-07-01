@@ -174,6 +174,23 @@ export const CrmActivityService = {
   findActivitiesByLead,
 };
 
+export interface CrmActivitiesResult {
+  activities: CrmActivity[];
+  error: string | null;
+}
+
+export async function getCrmActivitiesByLead(params: {
+  leadId: string;
+  limit?: number;
+}): Promise<CrmActivitiesResult> {
+  const response = await CrmActivityService.findActivitiesByLead(params);
+
+  return {
+    activities: response.data ?? [],
+    error: response.success ? null : response.error,
+  };
+}
+
 export type {
   CrmActivity,
   CrmActivityType,
