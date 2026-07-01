@@ -1,10 +1,8 @@
 "use server";
 
 import { createLogger } from "@/core/logger";
-import {
-  getCategories,
-  getCategoryBySlug,
-} from "@/services/api-main/category/category-web-cached-service";
+import { findCategoryBySlug, transformCategoryMenu } from "@/lib/transformers";
+import { CategoryServiceApi } from "@/services/api-main/category";
 import {
   getProductBySlug,
   getProducts,
@@ -18,6 +16,8 @@ import {
 import type { GalleryImage } from "@/types/api-assets";
 
 const logger = createLogger("ProductActions");
+const CATEGORY_MENU_TYPE_ID = 1;
+const CATEGORY_PARENT_ID = 0;
 
 /**
  * Check if error is a connection error (expected during build when API is unavailable)
@@ -33,6 +33,23 @@ function isConnectionError(error: unknown): boolean {
     );
   }
   return false;
+}
+
+async function getCategories() {
+  const response = await CategoryServiceApi.findMenu({
+    pe_id_tipo: CATEGORY_MENU_TYPE_ID,
+    pe_parent_id: CATEGORY_PARENT_ID,
+  });
+
+  return transformCategoryMenu(CategoryServiceApi.extractCategories(response));
+}
+
+async function getCategoryBySlug(
+  categorySlug: string,
+  subcategorySlug?: string,
+) {
+  const categories = await getCategories();
+  return findCategoryBySlug(categories, categorySlug, subcategorySlug);
 }
 
 /**
