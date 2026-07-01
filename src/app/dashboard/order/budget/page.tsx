@@ -2,7 +2,8 @@ import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-hea
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { getBrands } from "@/services/api-main/brand/brand-cached-service";
+import { brandServiceApi } from "@/services/api-main/brand";
+import { transformBrandList } from "@/services/api-main/brand/transformers/transformers";
 import { getOrderCart } from "@/services/api-main/order-sales/order-sales-cached-service";
 import {
   getProductsPdv,
@@ -70,11 +71,15 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
         ...apiContext,
       });
 
-  const brandsPromise = getBrands({
-    inactive: 0,
-    limit: 50,
-    ...apiContext,
-  });
+  const brandsPromise = brandServiceApi
+    .findAllBrands({
+      pe_inactive: 0,
+      pe_limit: 50,
+      ...apiContext,
+    })
+    .then((response) =>
+      transformBrandList(brandServiceApi.extractBrands(response)),
+    );
 
   const categoriesPromise = getTaxonomyMenu(2, 0, apiContext);
 

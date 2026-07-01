@@ -14,7 +14,11 @@ import {
 import { createLogger } from "@/core/logger";
 import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { getAuthContext } from "@/server/auth-context";
-import { getBrands } from "@/services/api-main/brand/brand-cached-service";
+import { brandServiceApi } from "@/services/api-main/brand";
+import {
+  transformBrandList,
+  type UIBrand,
+} from "@/services/api-main/brand/transformers/transformers";
 import { getProductsPdv } from "@/services/api-main/product-pdv/product-pdv-cached-service";
 import { getPtypes } from "@/services/api-main/ptype/ptype-cached-service";
 import { getTaxonomyMenu } from "@/services/api-main/taxonomy-base/taxonomy-base-cached-service";
@@ -161,6 +165,20 @@ async function getCategories(
   }
 }
 
+async function getBrands(apiContext: {
+  pe_user_id: string;
+  pe_user_name: string;
+  pe_user_role: string;
+  pe_person_id: number;
+}): Promise<UIBrand[]> {
+  const response = await brandServiceApi.findAllBrands({
+    pe_limit: 100,
+    ...apiContext,
+  });
+
+  return transformBrandList(brandServiceApi.extractBrands(response));
+}
+
 export default async function ProductListPage(props: ProductListPageProps) {
   await connection();
   const searchParams = await props.searchParams;
@@ -194,7 +212,7 @@ export default async function ProductListPage(props: ProductListPageProps) {
         orderId: sort.orderId,
         ...apiContext,
       }),
-      getBrands({ limit: 100, ...apiContext }),
+      getBrands(apiContext),
       getCategories(apiContext),
       getPtypes({ limit: 100, ...apiContext }),
     ]);

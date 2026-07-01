@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { getAuthContext } from "@/server/auth-context";
-import { getCustomerById } from "@/services/api-main/customer-general/customer-general-cached-service";
+import { customerGeneralServiceApi } from "@/services/api-main/customer-general";
+import {
+  transformCustomerDetail,
+  transformSellerInfo,
+} from "@/services/api-main/customer-general/transformers/transformers";
 import { CustomerDetailHeader } from "./_components/customer-detail-header";
 import { CustomerDetailSections } from "./_components/customer-detail-sections";
 
@@ -16,13 +20,20 @@ export default async function ProfilePage() {
     notFound();
   }
 
-  const result = await getCustomerById(customerId, apiContext);
+  const response = await customerGeneralServiceApi.findCustomerById({
+    pe_customer_id: customerId,
+    ...apiContext,
+  });
+  const customerEntity =
+    customerGeneralServiceApi.extractCustomerById(response);
 
-  if (!result) {
+  if (!customerEntity) {
     notFound();
   }
 
-  const { customer, seller } = result;
+  const sellerEntity = customerGeneralServiceApi.extractSellerInfo(response);
+  const customer = transformCustomerDetail(customerEntity);
+  const seller = sellerEntity ? transformSellerInfo(sellerEntity) : null;
 
   return (
     <>

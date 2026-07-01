@@ -7,11 +7,12 @@ import dbService from "@/database/dbConnection";
 import { AUTH_TABLES } from "@/database/shared/auth/auth.types";
 import { auth } from "@/lib/auth/auth";
 import { getAuthContext } from "@/server/auth-context";
+import { customerGeneralServiceApi } from "@/services/api-main/customer-general";
 import {
-  getCustomerById,
-  getCustomers,
-} from "@/services/api-main/customer-general/customer-general-cached-service";
-import type { UICustomerListItem } from "@/services/api-main/customer-general/transformers/transformers";
+  transformCustomerDetail,
+  transformCustomerList,
+  type UICustomerListItem,
+} from "@/services/api-main/customer-general/transformers/transformers";
 import { getCustomerUserValidationMessage } from "./customer-user-rules";
 import { addCustomerUserSchema } from "./schema";
 
@@ -38,14 +39,17 @@ export async function searchCustomersAction(
   try {
     const { apiContext } = await getAuthContext();
 
-    const customers = await getCustomers({
-      search: search.trim() || undefined,
-      qtRegistros: 50,
+    const response = await customerGeneralServiceApi.findAllCustomers({
+      pe_search: search.trim() || undefined,
+      pe_qt_registros: 50,
       pe_user_id: apiContext.pe_user_id,
       pe_user_name: apiContext.pe_user_name,
       pe_user_role: apiContext.pe_user_role,
       pe_person_id: apiContext.pe_person_id,
     });
+    const customers = transformCustomerList(
+      customerGeneralServiceApi.extractCustomers(response),
+    );
 
     return { success: true, customers };
   } catch (error) {
@@ -75,18 +79,21 @@ export async function addCustomerAsUserAction(
   try {
     const { apiContext } = await getAuthContext();
 
-    const detail = await getCustomerById(customerId, {
+    const response = await customerGeneralServiceApi.findCustomerById({
+      pe_customer_id: customerId,
       pe_user_id: apiContext.pe_user_id,
       pe_user_name: apiContext.pe_user_name,
       pe_user_role: apiContext.pe_user_role,
       pe_person_id: customerId,
     });
+    const customerEntity =
+      customerGeneralServiceApi.extractCustomerById(response);
 
-    if (!detail) {
+    if (!customerEntity) {
       return { success: false, message: "Cliente não encontrado" };
     }
 
-    const { customer } = detail;
+    const customer = transformCustomerDetail(customerEntity);
     const name = (customer.name || "").trim();
     const email = (customer.email || "").trim().toLowerCase();
 
