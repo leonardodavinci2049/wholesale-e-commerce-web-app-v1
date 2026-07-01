@@ -1,14 +1,4 @@
 export {
-  getBudgetByCustomerId,
-  getDashboardByCustomerId,
-  getOrderFindLatest,
-  getOrderItemQt,
-  getOrderStatisticsCustomer,
-  type UIBudgetOrderDetail,
-  type UIDashboardOrderDetail,
-} from "./order-b2b-cached-service";
-
-export {
   OrderB2bServiceApi,
   orderB2bServiceApi,
 } from "./order-b2b-service-api";

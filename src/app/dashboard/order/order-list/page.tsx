@@ -2,7 +2,11 @@ import { connection } from "next/server";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { getCustomerOrders } from "@/services/api-main/order-reports/order-reports-cached-service";
+import { orderReportsServiceApi } from "@/services/api-main/order-reports";
+import {
+  transformCustomerAllList,
+  type UIOrderListItem,
+} from "@/services/api-main/order-reports/transformers/transformers";
 import { OrderListContent } from "./_components/order-list-content";
 import {
   DEFAULT_ORDER_LIST_LIMIT,
@@ -28,6 +32,42 @@ function toOptionalNumber(value?: string): number | undefined {
   }
 
   return parsed;
+}
+
+async function getCustomerOrders(params: {
+  orderId?: number;
+  customerId?: number;
+  sellerId?: number;
+  orderStatusId?: number;
+  financialStatusId?: number;
+  locationId?: number;
+  initialDate?: string;
+  finalDate?: string;
+  limit?: number;
+  pe_user_id: string;
+  pe_user_name: string;
+  pe_user_role: string;
+  pe_person_id: number;
+}): Promise<UIOrderListItem[]> {
+  const response = await orderReportsServiceApi.findCustomerAll({
+    pe_order_id: params.orderId,
+    pe_customer_id: params.customerId,
+    pe_seller_id: params.sellerId,
+    pe_order_status_id: params.orderStatusId,
+    pe_financial_status_id: params.financialStatusId,
+    pe_location_id: params.locationId,
+    pe_initial_date: params.initialDate,
+    pe_final_date: params.finalDate,
+    pe_limit: params.limit,
+    pe_user_id: params.pe_user_id,
+    pe_user_name: params.pe_user_name,
+    pe_user_role: params.pe_user_role,
+    pe_person_id: params.pe_person_id,
+  });
+
+  return transformCustomerAllList(
+    orderReportsServiceApi.extractCustomerAll(response),
+  );
 }
 
 export default async function OrderListPage(props: OrderListPageProps) {

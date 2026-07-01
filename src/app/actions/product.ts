@@ -1,23 +1,34 @@
 "use server";
 
 import { createLogger } from "@/core/logger";
-import { findCategoryBySlug, transformCategoryMenu } from "@/lib/transformers";
-import { CategoryServiceApi } from "@/services/api-main/category";
 import {
-  getProductBySlug,
-  getProducts,
-  getProductsByCategory,
-  getProductsBySlug,
-  getProductsByTaxonomy,
-  getProductWithRelated,
-  getRelatedProducts,
-  type ProductWithRelated,
-} from "@/services/api-main/product/product-web-cached-service";
+  findCategoryBySlug,
+  transformCategoryMenu,
+  transformProductDetail,
+  transformProductList,
+  transformRelatedProducts,
+  type UIProduct,
+  type UITaxonomyItem,
+} from "@/lib/transformers";
+import { CategoryServiceApi } from "@/services/api-main/category";
+import { ProductWebServiceApi } from "@/services/api-main/product";
+import type { ProductWebFindByIdResponse } from "@/services/api-main/product/types/product-types";
+import { ProductWebNotFoundError } from "@/services/api-main/product/types/product-types";
 import type { GalleryImage } from "@/types/api-assets";
 
 const logger = createLogger("ProductActions");
 const CATEGORY_MENU_TYPE_ID = 1;
 const CATEGORY_PARENT_ID = 0;
+
+interface ProductSlugResolution {
+  fullSlug: string;
+  productId: number;
+}
+
+export interface ProductWithRelated {
+  product: UIProduct;
+  relatedProducts: UIProduct[];
+}
 
 /**
  * Check if error is a connection error (expected during build when API is unavailable)
@@ -52,8 +63,108 @@ async function getCategoryBySlug(
   return findCategoryBySlug(categories, categorySlug, subcategorySlug);
 }
 
+function resolveProductSlug(slug: string[]): ProductSlugResolution | undefined {
+  const fullSlug = slug.join("/").replace(/^\/+|\/+$/g, "");
+
+  if (!fullSlug) {
+    return undefined;
+  }
+
+  const lastSegment = fullSlug.split("-").at(-1);
+  const productId =
+    lastSegment && /^\d+$/.test(lastSegment)
+      ? Number.parseInt(lastSegment, 10)
+      : 0;
+
+  return {
+    fullSlug,
+    productId: productId > 0 ? productId : 0,
+  };
+}
+
+function normalizeSlugForCompare(value: string | null | undefined): string {
+  return (value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function isCloseSlugMatch(
+  requestedSlug: string,
+  candidateSlug: string,
+): boolean {
+  const requested = normalizeSlugForCompare(requestedSlug);
+  const candidate = normalizeSlugForCompare(candidateSlug);
+
+  if (!requested || !candidate) {
+    return false;
+  }
+
+  if (requested === candidate) {
+    return true;
+  }
+
+  return (
+    (candidate.startsWith(requested) &&
+      candidate.length - requested.length <= 5) ||
+    (requested.startsWith(candidate) &&
+      requested.length - candidate.length <= 5)
+  );
+}
+
+async function findProductResponseBySlugFallback(
+  resolution: ProductSlugResolution,
+): Promise<ProductWebFindByIdResponse | undefined> {
+  if (resolution.productId > 0) {
+    return undefined;
+  }
+
+  const searchTerm = resolution.fullSlug.replace(/-/g, " ");
+  const searchResponse = await ProductWebServiceApi.findProducts({
+    pe_produto: searchTerm,
+    pe_qt_registros: 10,
+    pe_pagina_id: 0,
+  });
+  const candidates = ProductWebServiceApi.extractProductList(searchResponse);
+  const candidate = candidates.find(
+    (product) =>
+      product.ID_PRODUTO > 0 &&
+      product.SLUG &&
+      isCloseSlugMatch(resolution.fullSlug, product.SLUG),
+  );
+
+  if (!candidate) {
+    return undefined;
+  }
+
+  return ProductWebServiceApi.findProductById({
+    pe_id_produto: candidate.ID_PRODUTO,
+    pe_slug_produto: candidate.SLUG ?? resolution.fullSlug,
+  });
+}
+
+async function findProductResponseByResolution(
+  resolution: ProductSlugResolution,
+): Promise<ProductWebFindByIdResponse | undefined> {
+  try {
+    return await ProductWebServiceApi.findProductById({
+      pe_id_produto: resolution.productId,
+      pe_slug_produto: resolution.fullSlug,
+    });
+  } catch (error) {
+    if (error instanceof ProductWebNotFoundError) {
+      return findProductResponseBySlugFallback(resolution);
+    }
+
+    throw error;
+  }
+}
+
 /**
- * Fetch all products (cached via 'use cache' in service)
+ * Fetch all products
  */
 export async function fetchProductsAction(
   params: {
@@ -68,7 +179,20 @@ export async function fetchProductsAction(
   } = {},
 ) {
   try {
-    return await getProducts(params);
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: params.taxonomyId ?? 0,
+      pe_id_marca: params.brandId ?? 0,
+      pe_qt_registros: params.limit ?? 100,
+      pe_pagina_id: Math.max(0, (params.page ?? 1) - 1),
+      pe_produto: params.searchTerm ?? "",
+      pe_coluna_id: params.sortCol ?? 1,
+      pe_ordem_id: params.sortOrd ?? 1,
+      pe_flag_estoque: params.stockOnly ? 1 : 0,
+    });
+
+    return transformProductList(
+      ProductWebServiceApi.extractProductList(response),
+    );
   } catch (error) {
     // Don't log connection errors (expected during build when API is unavailable)
     if (!isConnectionError(error)) {
@@ -79,7 +203,7 @@ export async function fetchProductsAction(
 }
 
 /**
- * Fetch all categories (cached via 'use cache' in service)
+ * Fetch all categories
  */
 export async function fetchCategoriesAction() {
   try {
@@ -93,11 +217,24 @@ export async function fetchCategoriesAction() {
 }
 
 /**
- * Fetch a product by its slug (cached via 'use cache' in service)
+ * Fetch a product by its slug
  */
 export async function fetchProductBySlugAction(slug: string[]) {
   try {
-    return await getProductBySlug(slug);
+    const resolution = resolveProductSlug(slug);
+
+    if (!resolution) {
+      logger.error("Invalid empty product slug");
+      return undefined;
+    }
+
+    const response = await findProductResponseByResolution(resolution);
+    if (!response) {
+      return undefined;
+    }
+
+    const product = ProductWebServiceApi.extractProduct(response);
+    return product ? transformProductDetail(product) : undefined;
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch product by slug:", error);
@@ -114,7 +251,44 @@ export async function fetchProductWithRelatedAction(
   slug: string[],
 ): Promise<ProductWithRelated | undefined> {
   try {
-    return await getProductWithRelated(slug);
+    const resolution = resolveProductSlug(slug);
+
+    if (!resolution) {
+      logger.error("Invalid empty product slug");
+      return undefined;
+    }
+
+    const response = await findProductResponseByResolution(resolution);
+    if (!response) {
+      return undefined;
+    }
+
+    const product = ProductWebServiceApi.extractProduct(response);
+    if (!product) {
+      return undefined;
+    }
+
+    const taxonomy: UITaxonomyItem[] = ProductWebServiceApi.extractTaxonomies(
+      response,
+    )
+      .filter((t) => t.TAXONOMIA && t.ID_TAXONOMY)
+      .sort((a, b) => (a.LEVEL ?? 0) - (b.LEVEL ?? 0))
+      .map((t) => ({
+        id: String(t.ID_TAXONOMY),
+        name: t.TAXONOMIA as string,
+        slug: t.SLUG || "",
+        level: t.LEVEL ?? 0,
+      }));
+
+    const relatedProducts = transformRelatedProducts(
+      ProductWebServiceApi.extractRelatedProducts(response),
+    ).filter((p) => p.id !== String(product.ID_PRODUTO));
+    const transformedProduct = transformProductDetail(product);
+
+    return {
+      product: { ...transformedProduct, taxonomy },
+      relatedProducts,
+    };
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch product with related:", error);
@@ -124,14 +298,26 @@ export async function fetchProductWithRelatedAction(
 }
 
 /**
- * Fetch related products (cached via 'use cache' in service)
+ * Fetch related products
  */
 export async function fetchRelatedProductsAction(
   productId: string,
   taxonomyId: string,
 ) {
   try {
-    return await getRelatedProducts(productId, taxonomyId);
+    const parsedTaxonomyId = Number.parseInt(taxonomyId, 10);
+    if (Number.isNaN(parsedTaxonomyId) || parsedTaxonomyId <= 0) {
+      return [];
+    }
+
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: parsedTaxonomyId,
+      pe_qt_registros: 10,
+    });
+
+    return transformProductList(
+      ProductWebServiceApi.extractProductList(response),
+    ).filter((p) => p.id !== productId);
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch related products:", error);
@@ -141,7 +327,7 @@ export async function fetchRelatedProductsAction(
 }
 
 /**
- * Fetch category by slug (cached via 'use cache' in service)
+ * Fetch category by slug
  */
 export async function fetchCategoryBySlugAction(
   categorySlug: string,
@@ -158,14 +344,29 @@ export async function fetchCategoryBySlugAction(
 }
 
 /**
- * Fetch products by category (cached via 'use cache' in service)
+ * Fetch products by category
  */
 export async function fetchProductsByCategoryAction(
   categoryId: string,
   subcategoryId?: string,
 ) {
   try {
-    return await getProductsByCategory(categoryId, subcategoryId);
+    const idToUse = subcategoryId || categoryId;
+    const taxonomyId = Number.parseInt(idToUse, 10);
+
+    if (Number.isNaN(taxonomyId) || taxonomyId <= 0) {
+      logger.warn(`Invalid categoryId/subcategoryId: ${idToUse}`);
+      return [];
+    }
+
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: taxonomyId,
+      pe_qt_registros: 30,
+    });
+
+    return transformProductList(
+      ProductWebServiceApi.extractProductList(response),
+    );
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch products by category:", error);
@@ -175,7 +376,7 @@ export async function fetchProductsByCategoryAction(
 }
 
 /**
- * Fetch products by taxonomy slug (cached via 'use cache' in service)
+ * Fetch products by taxonomy slug
  */
 export async function fetchProductsBySlugAction(
   slugTaxonomy: string,
@@ -185,7 +386,17 @@ export async function fetchProductsBySlugAction(
   sortOrd: number = 1,
 ) {
   try {
-    return await getProductsBySlug(slugTaxonomy, limit, page, sortCol, sortOrd);
+    const response = await ProductWebServiceApi.findProducts({
+      pe_slug_taxonomy: slugTaxonomy,
+      pe_qt_registros: limit,
+      pe_pagina_id: Math.max(0, (page ?? 1) - 1),
+      pe_coluna_id: sortCol,
+      pe_ordem_id: sortOrd,
+    });
+
+    return transformProductList(
+      ProductWebServiceApi.extractProductList(response),
+    );
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch products by slug:", error);
@@ -207,15 +418,28 @@ export async function fetchProductsByTaxonomyAction(
   stockOnly?: boolean,
 ) {
   try {
-    return await getProductsByTaxonomy(
-      slugOrId,
-      taxonomyId,
-      limit,
-      page,
-      sortCol,
-      sortOrd,
-      stockOnly,
-    );
+    const stockFlag = stockOnly ? 1 : 0;
+    const hasValidTaxonomyId = taxonomyId !== undefined && taxonomyId > 0;
+
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: hasValidTaxonomyId ? taxonomyId : 0,
+      pe_slug_taxonomy: hasValidTaxonomyId ? "" : slugOrId,
+      pe_qt_registros: limit,
+      pe_pagina_id: Math.max(0, (page ?? 1) - 1),
+      pe_coluna_id: sortCol,
+      pe_ordem_id: sortOrd,
+      pe_flag_estoque: stockFlag,
+    });
+    const products = ProductWebServiceApi.extractProductList(response);
+
+    if (products.length === 0) {
+      logger.info(
+        `No products found for taxonomy: ${slugOrId} (ID: ${taxonomyId ?? "n/a"})`,
+      );
+      return [];
+    }
+
+    return transformProductList(products);
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch products by taxonomy:", error);
@@ -225,8 +449,7 @@ export async function fetchProductsByTaxonomyAction(
 }
 
 /**
- * Fetch product image gallery from Assets API (with cache)
- * Delegates to cached service for automatic caching and deduplication
+ * Fetch product image gallery from Assets API
  */
 export async function fetchProductGalleryAction(
   productId: string,

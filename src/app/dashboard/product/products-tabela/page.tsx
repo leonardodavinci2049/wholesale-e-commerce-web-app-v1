@@ -19,10 +19,21 @@ import {
   transformBrandList,
   type UIBrand,
 } from "@/services/api-main/brand/transformers/transformers";
-import { getProductsPdv } from "@/services/api-main/product-pdv/product-pdv-cached-service";
-import { getPtypes } from "@/services/api-main/ptype/ptype-cached-service";
-import { getTaxonomyMenu } from "@/services/api-main/taxonomy-base/taxonomy-base-cached-service";
-import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
+import { productPdvServiceApi } from "@/services/api-main/product-pdv";
+import {
+  transformProductPdvList,
+  type UIProductPdv,
+} from "@/services/api-main/product-pdv/transformers/transformers";
+import { ptypeServiceApi } from "@/services/api-main/ptype";
+import {
+  transformPtypeList,
+  type UIPtype,
+} from "@/services/api-main/ptype/transformers/transformers";
+import { taxonomyBaseServiceApi } from "@/services/api-main/taxonomy-base";
+import {
+  transformTaxonomyMenuList,
+  type UITaxonomyMenuItem,
+} from "@/services/api-main/taxonomy-base/transformers/transformers";
 import { type CategoryOption, ProductListContent } from "./_components";
 
 const logger = createLogger("ProductListPage");
@@ -152,7 +163,14 @@ async function getCategories(
   apiContext: Record<string, unknown>,
 ): Promise<CategoryOption[]> {
   try {
-    const menuItems = await getTaxonomyMenu(2, 0, apiContext);
+    const response = await taxonomyBaseServiceApi.findTaxonomyMenu({
+      pe_type_id: 2,
+      pe_parent_id: 0,
+      ...apiContext,
+    });
+    const menuItems = transformTaxonomyMenuList(
+      taxonomyBaseServiceApi.extractTaxonomyMenu(response),
+    );
     const rootItems = menuItems.filter((item) => item.parentId === 0);
     return flattenMenuItems(rootItems, menuItems);
   } catch (error) {
@@ -177,6 +195,56 @@ async function getBrands(apiContext: {
   });
 
   return transformBrandList(brandServiceApi.extractBrands(response));
+}
+
+async function getProductsPdv(params: {
+  search?: string;
+  taxonomyId?: number;
+  typeId?: number;
+  brandId?: number;
+  flagStock?: number;
+  recordsQuantity?: number;
+  pageId?: number;
+  columnId?: number;
+  orderId?: number;
+  pe_user_id: string;
+  pe_user_name: string;
+  pe_user_role: string;
+  pe_person_id: number;
+}): Promise<UIProductPdv[]> {
+  const response = await productPdvServiceApi.findAllProductsPdv({
+    pe_search: params.search,
+    pe_taxonomy_id: params.taxonomyId,
+    pe_type_id: params.typeId,
+    pe_brand_id: params.brandId,
+    pe_flag_stock: params.flagStock,
+    pe_records_quantity: params.recordsQuantity,
+    pe_page_id: params.pageId,
+    pe_column_id: params.columnId,
+    pe_order_id: params.orderId,
+    pe_user_id: params.pe_user_id,
+    pe_user_name: params.pe_user_name,
+    pe_user_role: params.pe_user_role,
+    pe_person_id: params.pe_person_id,
+  });
+
+  return transformProductPdvList(
+    productPdvServiceApi.extractProductsPdv(response),
+  );
+}
+
+async function getPtypes(apiContext: {
+  pe_user_id: string;
+  pe_user_name: string;
+  pe_user_role: string;
+  pe_person_id: number;
+}): Promise<UIPtype[]> {
+  const response = await ptypeServiceApi.findAllPtypes({
+    pe_limit: 100,
+    ...apiContext,
+  });
+
+  return transformPtypeList(ptypeServiceApi.extractPtypes(response));
 }
 
 export default async function ProductListPage(props: ProductListPageProps) {
@@ -214,7 +282,7 @@ export default async function ProductListPage(props: ProductListPageProps) {
       }),
       getBrands(apiContext),
       getCategories(apiContext),
-      getPtypes({ limit: 100, ...apiContext }),
+      getPtypes(apiContext),
     ]);
 
     pageData = { products, brands, categories, ptypes };
