@@ -10,9 +10,38 @@ export const metadata: Metadata = {
   metadataBase: new URL(publicEnvs.NEXT_PUBLIC_APP_URL),
   title: `${companyInfo.meta.titleMain} | ${companyInfo.meta.titleCaption}`,
   description: companyInfo.meta.description,
+  applicationName: companyInfo.name,
   keywords: [companyInfo.meta.keywords],
   alternates: {
     canonical: "/",
+  },
+  icons: {
+    icon: [
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+      {
+        url: "/app-icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: companyInfo.name,
+  },
+  other: {
+    "apple-mobile-web-app-title": companyInfo.name,
   },
   openGraph: {
     type: "website",
