@@ -1,8 +1,9 @@
 import { getAuthContext } from "@/server/auth-context";
+import { orderB2bServiceApi } from "@/services/api-main/order-b2b";
 import {
-  getOrderFindLatest,
+  transformFindLatestEntity,
   type UIOrderFindLatest,
-} from "@/services/api-main/order-b2b";
+} from "@/services/api-main/order-b2b/transformers/transformers";
 import { ChartAreaInteractive } from "./chart-area-interactive";
 import { DataTable } from "./data-table";
 
@@ -12,7 +13,13 @@ export async function ReportPanelContent() {
 
   let orders: UIOrderFindLatest[];
   try {
-    orders = await getOrderFindLatest(customerId, { ...apiContext });
+    const response = await orderB2bServiceApi.findLatest({
+      pe_customer_id: customerId,
+      ...apiContext,
+    });
+    orders = orderB2bServiceApi
+      .extractFindLatest(response)
+      .map(transformFindLatestEntity);
   } catch (error) {
     const message =
       error instanceof Error
