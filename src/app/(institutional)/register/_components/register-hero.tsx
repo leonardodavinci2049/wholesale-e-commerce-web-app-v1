@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { WHATSAPP_PRECADASTRO_URL } from "../_lib/whatsapp";
 import { TrackedCta } from "./tracked-cta";
@@ -44,11 +44,6 @@ export function RegisterHero() {
               Falar com vendas no WhatsApp
             </TrackedCta>
           </div>
-
-          <p className="mt-5 inline-flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <ShieldCheck className="size-4 shrink-0 text-primary" />
-            Análise comercial. Não pedimos senha nesta etapa.
-          </p>
         </div>
       </div>
     </section>
