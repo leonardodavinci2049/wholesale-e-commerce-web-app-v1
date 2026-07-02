@@ -5,7 +5,6 @@ import { RegisterHero } from "./register-hero";
 import { RegisterSteps } from "./register-steps";
 import { RegisterTrustSection } from "./register-trust-section";
 import { RegisterViewTracker } from "./register-view-tracker";
-import { ResellerBenefits } from "./reseller-benefits";
 
 export function RegisterLandingContent() {
   return (

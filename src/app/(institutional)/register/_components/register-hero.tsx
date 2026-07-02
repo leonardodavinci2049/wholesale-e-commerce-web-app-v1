@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { WHATSAPP_PRECADASTRO_URL } from "../_lib/whatsapp";
 import { TrackedCta } from "./tracked-cta";
