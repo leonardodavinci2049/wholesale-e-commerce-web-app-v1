@@ -153,7 +153,7 @@ export default function HeroSliderV2() {
 
         {/* CTA Buttons */}
         <div className="absolute bottom-10 left-1/2 z-30 flex w-full max-w-[calc(100%-2rem)] -translate-x-1/2 items-center justify-center gap-2 px-2 sm:w-auto sm:max-w-none sm:px-0 md:bottom-14 md:gap-4">
-          <Link href="/contact" className="min-w-0 flex-1 sm:flex-none">
+          <Link href="/register" className="min-w-0 flex-1 sm:flex-none">
             <Button
               size="lg"
               className="h-9 w-full cursor-pointer px-3 text-xs font-semibold shadow-lg shadow-black/15 sm:h-12 sm:w-80 sm:px-8 sm:text-base lg:text-lg"
@@ -165,7 +165,7 @@ export default function HeroSliderV2() {
               <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-5 sm:w-5" />
             </Button>
           </Link>
-          <Link href="/contact" className="min-w-0 flex-1 sm:flex-none">
+          <Link href="/register" className="min-w-0 flex-1 sm:flex-none">
             <Button
               size="lg"
               variant="secondary"
