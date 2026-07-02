@@ -6,9 +6,11 @@
 
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { brandNames } from "@/data/brand-names";
 
 const slides = [
@@ -111,7 +113,7 @@ export default function HeroSliderV2() {
                   alt={slide.alt}
                   fill
                   className="object-contain"
-                  priority={index === 0}
+                  loading="eager"
                   sizes="(max-width: 767px) 100vw, 0px"
                 />
               </div>
@@ -123,7 +125,7 @@ export default function HeroSliderV2() {
                   alt={slide.alt}
                   fill
                   className="object-cover"
-                  priority={index === 0}
+                  loading="eager"
                   sizes="(min-width: 768px) 100vw, 0px"
                 />
               </div>
@@ -148,6 +150,32 @@ export default function HeroSliderV2() {
         >
           <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
         </button>
+
+        {/* CTA Buttons */}
+        <div className="absolute bottom-10 left-1/2 z-30 flex w-full max-w-[calc(100%-2rem)] -translate-x-1/2 items-center justify-center gap-2 px-2 sm:w-auto sm:max-w-none sm:px-0 md:bottom-14 md:gap-4">
+          <Link href="/contact" className="min-w-0 flex-1 sm:flex-none">
+            <Button
+              size="lg"
+              className="h-9 w-full cursor-pointer px-3 text-xs font-semibold shadow-lg shadow-black/15 sm:h-12 sm:w-80 sm:px-8 sm:text-base lg:text-lg"
+            >
+              <span className="sm:hidden">Cadastrar-se</span>
+              <span className="hidden sm:inline">
+                Cadastrar-se Gratuitamente
+              </span>
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-5 sm:w-5" />
+            </Button>
+          </Link>
+          <Link href="/contact" className="min-w-0 flex-1 sm:flex-none">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="h-9 w-full cursor-pointer border border-secondary/30 px-3 text-xs font-semibold shadow-lg shadow-black/15 sm:h-12 sm:w-72 sm:px-6 sm:text-base lg:text-lg"
+            >
+              <span className="sm:hidden">Consultor</span>
+              <span className="hidden sm:inline">Falar com Consultor</span>
+            </Button>
+          </Link>
+        </div>
 
         {/* Dots Navigation */}
         <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 md:bottom-6">
