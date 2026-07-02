@@ -12,7 +12,6 @@ export function RegisterLandingContent() {
     <main className="pb-16">
       <RegisterViewTracker />
       <RegisterHero />
-      <ResellerBenefits />
       <RegisterSteps />
 
       <section
