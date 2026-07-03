@@ -132,6 +132,9 @@ export class CustomerGeneralServiceApi extends BaseApiService {
       this.checkStoredProcedureError(response);
       return response;
     } catch (error) {
+      if (error instanceof CustomerError) {
+        throw error;
+      }
       logger.error("Erro ao criar cliente", error);
       throw error;
     }
