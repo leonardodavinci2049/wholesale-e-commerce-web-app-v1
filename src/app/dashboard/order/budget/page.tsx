@@ -101,7 +101,9 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
     typeBusiness,
   };
 
-  const productsPromise = search
+  const shouldUseSearchEndpoint = search && !brandId && !taxonomyId;
+
+  const productsPromise = shouldUseSearchEndpoint
     ? productPdvServiceApi
         .findProductsPdvSearch({
           pe_search: search,
@@ -117,6 +119,7 @@ export default async function BudgetPage({ searchParams }: BudgetPageProps) {
         )
     : productPdvServiceApi
         .findAllProductsPdv({
+          pe_search: search,
           pe_brand_id: brandId,
           pe_taxonomy_id: taxonomyId,
           pe_flag_stock: flagStock,
