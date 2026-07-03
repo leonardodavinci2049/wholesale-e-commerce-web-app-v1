@@ -32,9 +32,6 @@ export function RegisterSteps() {
           <h2 className="text-2xl font-bold sm:text-3xl lg:text-4xl">
             Como funciona o cadastro
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            Processo simples, sem criação de senha nesta etapa.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
