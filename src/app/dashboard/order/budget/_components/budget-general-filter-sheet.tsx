@@ -10,19 +10,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import { BudgetGeneralFilterPanel } from "./budget-general-filter-panel";
 
 interface BudgetGeneralFilterSheetProps {
   flagStock: number;
-  brands: UIBrand[];
-  selectedBrandId?: number;
 }
 
 export function BudgetGeneralFilterSheet({
   flagStock,
-  brands,
-  selectedBrandId,
 }: BudgetGeneralFilterSheetProps) {
   return (
     <Sheet>
@@ -46,11 +41,7 @@ export function BudgetGeneralFilterSheet({
           <SheetTitle className="text-base">Filtro geral</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto p-4">
-          <BudgetGeneralFilterPanel
-            brands={brands}
-            selectedBrandId={selectedBrandId}
-            flagStock={flagStock}
-          />
+          <BudgetGeneralFilterPanel flagStock={flagStock} />
         </div>
       </SheetContent>
     </Sheet>
