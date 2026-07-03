@@ -2,6 +2,7 @@
 
 import {
   AlertCircle,
+  ArrowRight,
   CheckCircle2,
   ClipboardList,
   Loader2,
@@ -58,6 +59,8 @@ const INITIAL_VALUES: FormValues = {
 };
 
 const UF_OPTIONS = formatStateOptions();
+const FORM_CONTROL_CLASS =
+  "border-border/70 bg-input shadow-inner dark:border-border/60 dark:bg-input/80";
 
 const onlyDigits = (value: string): string => value.replace(/\D/g, "");
 
@@ -195,21 +198,26 @@ export function RegisterForm() {
   const isDuplicate = state?.status === "error" && state.isDuplicate === true;
 
   return (
-    <Card className="shadow-md">
-      <CardContent className="flex flex-col gap-6 px-5 py-6 sm:px-8 sm:py-8">
-        <header className="flex flex-col gap-2">
+    <Card className="group/form-card relative overflow-hidden border-border/60 shadow-lg ring-1 ring-primary/5">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/8 to-transparent"
+      />
+      <CardContent className="relative flex flex-col gap-5 px-4 py-5 sm:px-7 sm:py-6">
+        <header className="flex flex-col gap-1.5">
           <div className="inline-flex items-center gap-2 text-primary">
-            <ClipboardList className="size-5" />
+            <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/10">
+              <ClipboardList className="size-4" />
+            </span>
             <span className="text-xs font-semibold uppercase tracking-wide">
-              Formulário de pré-cadastro
+              Pré-cadastro
             </span>
           </div>
-          <h2 className="text-xl font-bold sm:text-2xl">
+          <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
             Solicite seu acesso comercial
           </h2>
           <p className="text-sm text-muted-foreground">
-            Este é um pré-cadastro comercial. Você não precisa criar senha
-            agora. Informe dados reais para agilizar a análise.
+            É rápido e não exige senha nesta etapa.
           </p>
         </header>
 
@@ -295,10 +303,10 @@ export function RegisterForm() {
               <Input
                 id={fieldId("name")}
                 name="name"
+                className={FORM_CONTROL_CLASS}
                 value={values.name}
                 onChange={(e) => setField("name", e.target.value)}
                 disabled={isPending}
-                placeholder="Seu nome completo"
                 autoComplete="name"
                 aria-invalid={!!errors?.name}
                 aria-describedby={errors?.name ? errorId("name") : undefined}
@@ -318,10 +326,10 @@ export function RegisterForm() {
                 id={fieldId("email")}
                 name="email"
                 type="email"
+                className={FORM_CONTROL_CLASS}
                 value={values.email}
                 onChange={(e) => setField("email", e.target.value)}
                 disabled={isPending}
-                placeholder="comercial@suaempresa.com.br"
                 autoComplete="email"
                 aria-invalid={!!errors?.email}
                 aria-describedby={errors?.email ? errorId("email") : undefined}
@@ -342,10 +350,10 @@ export function RegisterForm() {
                     id={fieldId("cnpj")}
                     name="cnpj"
                     inputMode="numeric"
+                    className={FORM_CONTROL_CLASS}
                     value={values.cnpj}
                     onChange={(e) => setField("cnpj", maskCnpj(e.target.value))}
                     disabled={isPending}
-                    placeholder="00.000.000/0000-00"
                     aria-invalid={!!errors?.cnpj}
                     aria-describedby={
                       errors?.cnpj ? errorId("cnpj") : undefined
@@ -364,10 +372,10 @@ export function RegisterForm() {
                   <Input
                     id={fieldId("companyName")}
                     name="companyName"
+                    className={FORM_CONTROL_CLASS}
                     value={values.companyName}
                     onChange={(e) => setField("companyName", e.target.value)}
                     disabled={isPending}
-                    placeholder="Nome da empresa"
                     aria-invalid={!!errors?.companyName}
                     aria-describedby={
                       errors?.companyName ? errorId("companyName") : undefined
@@ -388,10 +396,10 @@ export function RegisterForm() {
                   id={fieldId("cpf")}
                   name="cpf"
                   inputMode="numeric"
+                  className={FORM_CONTROL_CLASS}
                   value={values.cpf}
                   onChange={(e) => setField("cpf", maskCpf(e.target.value))}
                   disabled={isPending}
-                  placeholder="000.000.000-00"
                   aria-invalid={!!errors?.cpf}
                   aria-describedby={errors?.cpf ? errorId("cpf") : undefined}
                 />
@@ -409,10 +417,10 @@ export function RegisterForm() {
                 id={fieldId("phone")}
                 name="phone"
                 inputMode="numeric"
+                className={FORM_CONTROL_CLASS}
                 value={values.phone}
                 onChange={(e) => setField("phone", maskPhone(e.target.value))}
                 disabled={isPending}
-                placeholder="(00) 0000-0000"
                 autoComplete="tel"
                 aria-invalid={!!errors?.phone}
                 aria-describedby={errors?.phone ? errorId("phone") : undefined}
@@ -431,12 +439,12 @@ export function RegisterForm() {
                 id={fieldId("whatsapp")}
                 name="whatsapp"
                 inputMode="numeric"
+                className={FORM_CONTROL_CLASS}
                 value={values.whatsapp}
                 onChange={(e) =>
                   setField("whatsapp", maskPhone(e.target.value))
                 }
                 disabled={isPending}
-                placeholder="(00) 00000-0000"
                 autoComplete="tel"
                 aria-invalid={!!errors?.whatsapp}
                 aria-describedby={
@@ -459,11 +467,11 @@ export function RegisterForm() {
                   id={fieldId("zipCode")}
                   name="zipCode"
                   inputMode="numeric"
+                  className={FORM_CONTROL_CLASS}
                   value={values.zipCode}
                   onChange={(e) => setField("zipCode", maskCep(e.target.value))}
                   onBlur={handleCepLookup}
                   disabled={isPending || cepStatus.state === "loading"}
-                  placeholder="00000-000"
                   aria-invalid={!!errors?.zipCode}
                   aria-describedby={
                     errors?.zipCode ? errorId("zipCode") : undefined
@@ -495,9 +503,9 @@ export function RegisterForm() {
                   aria-describedby={
                     errors?.state ? errorId("state") : undefined
                   }
-                  className="w-full"
+                  className={cn("w-full", FORM_CONTROL_CLASS)}
                 >
-                  <SelectValue placeholder="Selecione" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {UF_OPTIONS.map((uf) => (
@@ -520,10 +528,10 @@ export function RegisterForm() {
               <Input
                 id={fieldId("address")}
                 name="address"
+                className={FORM_CONTROL_CLASS}
                 value={values.address}
                 onChange={(e) => setField("address", e.target.value)}
                 disabled={isPending}
-                placeholder="Rua, avenida..."
                 autoComplete="street-address"
                 aria-invalid={!!errors?.address}
                 aria-describedby={
@@ -543,10 +551,10 @@ export function RegisterForm() {
               <Input
                 id={fieldId("addressNumber")}
                 name="addressNumber"
+                className={FORM_CONTROL_CLASS}
                 value={values.addressNumber}
                 onChange={(e) => setField("addressNumber", e.target.value)}
                 disabled={isPending}
-                placeholder="123"
                 aria-invalid={!!errors?.addressNumber}
                 aria-describedby={
                   errors?.addressNumber ? errorId("addressNumber") : undefined
@@ -565,10 +573,10 @@ export function RegisterForm() {
               <Input
                 id={fieldId("complement")}
                 name="complement"
+                className={FORM_CONTROL_CLASS}
                 value={values.complement}
                 onChange={(e) => setField("complement", e.target.value)}
                 disabled={isPending}
-                placeholder="Sala, andar, ponto de referência (opcional)"
                 aria-invalid={!!errors?.complement}
                 aria-describedby={
                   errors?.complement ? errorId("complement") : undefined
@@ -587,6 +595,7 @@ export function RegisterForm() {
               <Input
                 id={fieldId("neighborhood")}
                 name="neighborhood"
+                className={FORM_CONTROL_CLASS}
                 value={values.neighborhood}
                 onChange={(e) => setField("neighborhood", e.target.value)}
                 disabled={isPending}
@@ -608,6 +617,7 @@ export function RegisterForm() {
               <Input
                 id={fieldId("city")}
                 name="city"
+                className={FORM_CONTROL_CLASS}
                 value={values.city}
                 onChange={(e) => setField("city", e.target.value)}
                 disabled={isPending}
@@ -627,23 +637,23 @@ export function RegisterForm() {
               <Textarea
                 id={fieldId("notes")}
                 name="notes"
+                className={FORM_CONTROL_CLASS}
                 value={values.notes}
                 onChange={(e) => setField("notes", e.target.value)}
                 disabled={isPending}
                 rows={3}
-                placeholder="Ex.: quais linhas de produto você procura? (opcional)"
                 aria-invalid={!!errors?.notes}
                 aria-describedby={errors?.notes ? errorId("notes") : undefined}
               />
             </FormField>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             <Button
               type="submit"
               size="lg"
               disabled={isPending}
-              className="w-full cursor-pointer"
+              className="w-full cursor-pointer shadow-md transition-transform active:scale-[0.99]"
             >
               {isPending ? (
                 <>
@@ -651,12 +661,15 @@ export function RegisterForm() {
                   Enviando pré-cadastro...
                 </>
               ) : (
-                "Enviar pré-cadastro"
+                <>
+                  Enviar pré-cadastro
+                  <ArrowRight className="ml-2 size-4" />
+                </>
               )}
             </Button>
             <p className="text-center text-xs text-muted-foreground">
-              Campos marcados como obrigatórios ajudam nossa equipe a validar
-              seu perfil de compra.
+              Seus dados são usados apenas para análise do cadastro e contato
+              comercial.
             </p>
           </div>
         </form>
@@ -680,10 +693,10 @@ function PersonTypeButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "h-9 rounded-3xl border px-3 text-sm font-medium transition-colors",
+        "h-10 rounded-xl border px-3 text-sm font-medium transition-all active:scale-[0.98]",
         active
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border bg-input/50 text-foreground hover:bg-muted",
+          ? "border-primary bg-primary text-primary-foreground shadow-sm"
+          : "border-border bg-input/40 text-foreground hover:border-primary/40 hover:bg-muted",
       )}
     >
       {label}
@@ -736,24 +749,24 @@ function FormField({
 
 function RegisterSuccessCard() {
   return (
-    <Card className="shadow-md">
-      <CardContent className="flex flex-col items-center gap-4 px-5 py-10 text-center sm:px-8">
-        <span className="inline-flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <CheckCircle2 className="size-7" />
+    <Card className="relative overflow-hidden border-chart-2/30 shadow-lg ring-1 ring-chart-2/10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-chart-2/10 to-transparent"
+      />
+      <CardContent className="relative flex flex-col items-center gap-4 px-5 py-9 text-center sm:px-8">
+        <span className="inline-flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-chart-2/20 to-chart-4/20 text-chart-2 shadow-sm">
+          <CheckCircle2 className="size-8" />
         </span>
-        <h2 className="text-xl font-bold sm:text-2xl">
+        <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
           Pré-cadastro recebido!
         </h2>
         <p className="max-w-md text-sm text-muted-foreground">
-          Pré-cadastro recebido com sucesso. Vamos analisar suas informações e
-          retornar pelo WhatsApp ou e-mail informado.
+          Vamos analisar suas informações e retornar pelo WhatsApp ou e-mail
+          informado.
         </p>
         <div className="mt-2 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button
-            asChild
-            variant="outline"
-            className="w-full cursor-pointer sm:w-auto"
-          >
+          <Button asChild className="w-full cursor-pointer shadow-md sm:w-auto">
             <a
               href={WHATSAPP_PRECADASTRO_URL}
               target="_blank"
@@ -765,7 +778,7 @@ function RegisterSuccessCard() {
           </Button>
           <Button
             asChild
-            variant="ghost"
+            variant="outline"
             className="w-full cursor-pointer sm:w-auto"
           >
             <Link href="/sign-in">
