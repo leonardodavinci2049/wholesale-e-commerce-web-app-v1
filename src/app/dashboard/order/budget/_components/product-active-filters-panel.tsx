@@ -75,14 +75,14 @@ export function ProductActiveFiltersPanel({
         aria-hidden="true"
       />
       <div className="min-w-0 flex-1">
-        <span className="font-medium">Filtros ativos:</span>
+        <span className="font-medium">Filtros ativos: </span>
         <ul className="mt-0.5 space-y-0.5 sm:mt-0 sm:inline-flex sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1 sm:space-y-0">
           {activeFilters.map((filter) => (
             <li
               className="min-w-0 leading-tight sm:inline-flex"
               key={filter.label}
             >
-              <span className="font-medium">{filter.label}:</span>{" "}
+              <span className="font-medium">{filter.label}:&nbsp; </span>{" "}
               <span className="break-words">{filter.value}</span>
             </li>
           ))}

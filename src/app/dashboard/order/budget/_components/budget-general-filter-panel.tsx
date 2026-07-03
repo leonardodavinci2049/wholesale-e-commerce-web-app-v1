@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
+import { SheetClose } from "@/components/ui/sheet";
 
 import { BudgetStockFilterPanel } from "./budget-stock-filter-panel";
 
@@ -45,16 +46,18 @@ export function BudgetGeneralFilterPanel({
       </div>
 
       <div className="sticky bottom-0 mt-auto border-t border-border/60 bg-background/95 pt-4 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-11 w-full rounded-xl"
-          onClick={handleClearFilters}
-          disabled={isPending || !hasActiveFilters}
-        >
-          <RotateCcw className="size-4" aria-hidden="true" />
-          Limpar filtros
-        </Button>
+        <SheetClose asChild>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 w-full rounded-xl"
+            onClick={handleClearFilters}
+            disabled={isPending || !hasActiveFilters}
+          >
+            <RotateCcw className="size-4" aria-hidden="true" />
+            Limpar filtros
+          </Button>
+        </SheetClose>
       </div>
     </div>
   );
