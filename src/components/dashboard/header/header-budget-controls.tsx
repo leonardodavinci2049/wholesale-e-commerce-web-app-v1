@@ -1,11 +1,12 @@
 "use client";
 
 import { LayoutGrid, List, Search, X } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useBudgetProductSearch } from "@/hooks/use-budget-product-search";
 
 const BUDGET_ROUTE = "/dashboard/order/budget";
 const STORAGE_KEY = "budget:product-view-mode";
@@ -14,15 +15,22 @@ type ViewMode = "grid" | "list";
 
 export function HeaderBudgetControls() {
   const pathname = usePathname();
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mode, setMode] = useState<ViewMode>("grid");
   const [hydrated, setHydrated] = useState(false);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentSearchValue = searchParams.get("search") ?? "";
+  const {
+    value,
+    isPending,
+    handleChange,
+    handleCompositionStart,
+    handleCompositionEnd,
+    commitSearch,
+    clearSearch,
+  } = useBudgetProductSearch({ initialValue: currentSearchValue });
 
   useEffect(() => {
     setPortalTarget(document.getElementById(SEARCH_PANEL_CONTAINER_ID));
@@ -69,41 +77,6 @@ export function HeaderBudgetControls() {
       new CustomEvent("budget-view-mode-change", { detail: newMode }),
     );
   };
-
-  const currentSearchValue = searchParams.get("search") ?? "";
-
-  const buildSearchParams = useCallback(
-    (searchValue: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      const trimmed = searchValue.trim();
-
-      if (trimmed) {
-        params.set("search", trimmed);
-      } else {
-        params.delete("search");
-      }
-
-      params.delete("limit");
-
-      return params;
-    },
-    [searchParams],
-  );
-
-  const handleSearch = useCallback(
-    (value: string) => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-        const params = buildSearchParams(value);
-        startTransition(() => {
-          router.push(`${BUDGET_ROUTE}?${params.toString()}`, {
-            scroll: false,
-          });
-        });
-      }, 400);
-    },
-    [buildSearchParams, router],
-  );
 
   // Close search on escape
   useEffect(() => {
@@ -170,27 +143,35 @@ export function HeaderBudgetControls() {
               <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
               <Input
                 id="header-product-search-v2"
+                type="search"
                 placeholder="Digite o modelo para consultar rápido"
-                key={currentSearchValue}
-                defaultValue={currentSearchValue}
-                onChange={(e) => handleSearch(e.target.value)}
+                value={value}
+                onChange={(e) => handleChange(e.target.value)}
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={(e) =>
+                  handleCompositionEnd(e.currentTarget.value)
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    commitSearch(e.currentTarget.value);
+                    e.currentTarget.blur();
+                  }
+                }}
                 aria-label="Buscar produto"
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect="off"
+                enterKeyHint="search"
+                spellCheck={false}
                 className={isPending ? "pl-10 opacity-60 pr-10" : "pl-10 pr-10"}
                 autoFocus
               />
-              {currentSearchValue && (
+              {value && (
                 <button
                   type="button"
-                  onClick={() => {
-                    const input = document.getElementById(
-                      "header-product-search-v2",
-                    ) as HTMLInputElement;
-                    if (input) {
-                      input.value = "";
-                      handleSearch("");
-                    }
-                  }}
+                  onClick={clearSearch}
                   className="absolute inset-y-0 right-3 my-auto text-muted-foreground hover:text-foreground"
+                  aria-label="Limpar busca"
                 >
                   <X className="h-4 w-4" />
                 </button>

@@ -10,6 +10,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
+import { ProductActiveFiltersPanel } from "./product-active-filters-panel";
 import { ProductSearchBar } from "./product-search-bar";
 
 const STORAGE_KEY = "budget:product-view-mode";
@@ -98,6 +99,13 @@ export function ProductViewSwitcher({
       <section className="hidden sm:block rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
         <ProductSearchBar {...searchProps} viewToggleButton={toggleButton} />
       </section>
+
+      <ProductActiveFiltersPanel
+        brands={searchProps.brands}
+        selectedBrandId={searchProps.selectedBrandId}
+        categories={searchProps.categories}
+        selectedTaxonomyId={searchProps.selectedTaxonomyId}
+      />
 
       {hydrated && mode === "list" ? list : grid}
     </div>
