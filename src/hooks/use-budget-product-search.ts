@@ -19,6 +19,11 @@ export function useBudgetProductSearch({
   const [value, setValue] = useState(initialValue);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isComposingRef = useRef(false);
+  const searchParamsRef = useRef(searchParams);
+
+  useEffect(() => {
+    searchParamsRef.current = searchParams;
+  }, [searchParams]);
 
   const clearScheduledSearch = useCallback(() => {
     if (debounceRef.current) {
@@ -35,24 +40,21 @@ export function useBudgetProductSearch({
 
   useEffect(() => clearScheduledSearch, [clearScheduledSearch]);
 
-  const buildHref = useCallback(
-    (searchValue: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      const trimmed = searchValue.trim();
+  const buildHref = useCallback((searchValue: string) => {
+    const params = new URLSearchParams(searchParamsRef.current.toString());
+    const trimmed = searchValue.trim();
 
-      if (trimmed) {
-        params.set("search", trimmed);
-      } else {
-        params.delete("search");
-      }
+    if (trimmed) {
+      params.set("search", trimmed);
+    } else {
+      params.delete("search");
+    }
 
-      params.delete("limit");
+    params.delete("limit");
 
-      const queryString = params.toString();
-      return queryString ? `${BUDGET_ROUTE}?${queryString}` : BUDGET_ROUTE;
-    },
-    [searchParams],
-  );
+    const queryString = params.toString();
+    return queryString ? `${BUDGET_ROUTE}?${queryString}` : BUDGET_ROUTE;
+  }, []);
 
   const commitSearch = useCallback(
     (searchValue: string) => {

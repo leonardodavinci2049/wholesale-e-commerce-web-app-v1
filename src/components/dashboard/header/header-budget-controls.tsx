@@ -144,7 +144,7 @@ export function HeaderBudgetControls() {
               <Input
                 id="header-product-search-v2"
                 type="search"
-                placeholder="Digite o modelo para consultar rápido"
+                placeholder="Digite o termo de pesquisa..."
                 value={value}
                 onChange={(e) => handleChange(e.target.value)}
                 onCompositionStart={handleCompositionStart}
