@@ -2,6 +2,7 @@
 
 import {
   AlertCircle,
+  ArrowRight,
   CheckCircle2,
   ClipboardList,
   Loader2,
@@ -197,18 +198,27 @@ export function RegisterForm() {
   const isDuplicate = state?.status === "error" && state.isDuplicate === true;
 
   return (
-    <Card className="shadow-md">
-      <CardContent className="flex flex-col gap-6 px-5 py-6 sm:px-8 sm:py-8">
-        <header className="flex flex-col gap-2">
+    <Card className="group/form-card relative overflow-hidden border-border/60 shadow-lg ring-1 ring-primary/5">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/8 to-transparent"
+      />
+      <CardContent className="relative flex flex-col gap-5 px-4 py-5 sm:px-7 sm:py-6">
+        <header className="flex flex-col gap-1.5">
           <div className="inline-flex items-center gap-2 text-primary">
-            <ClipboardList className="size-5" />
+            <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/10">
+              <ClipboardList className="size-4" />
+            </span>
             <span className="text-xs font-semibold uppercase tracking-wide">
-              Formulário de pré-cadastro
+              Pré-cadastro
             </span>
           </div>
-          <h2 className="text-xl font-bold sm:text-2xl">
+          <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
             Solicite seu acesso comercial
           </h2>
+          <p className="text-sm text-muted-foreground">
+            É rápido e não exige senha nesta etapa.
+          </p>
         </header>
 
         {isDuplicate && (
@@ -638,12 +648,12 @@ export function RegisterForm() {
             </FormField>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             <Button
               type="submit"
               size="lg"
               disabled={isPending}
-              className="w-full cursor-pointer"
+              className="w-full cursor-pointer shadow-md transition-transform active:scale-[0.99]"
             >
               {isPending ? (
                 <>
@@ -651,12 +661,15 @@ export function RegisterForm() {
                   Enviando pré-cadastro...
                 </>
               ) : (
-                "Enviar pré-cadastro"
+                <>
+                  Enviar pré-cadastro
+                  <ArrowRight className="ml-2 size-4" />
+                </>
               )}
             </Button>
             <p className="text-center text-xs text-muted-foreground">
-              Campos marcados como obrigatórios ajudam nossa equipe a validar
-              seu perfil de compra.
+              Seus dados são usados apenas para análise do cadastro e contato
+              comercial.
             </p>
           </div>
         </form>
@@ -680,10 +693,10 @@ function PersonTypeButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "h-9 rounded-3xl border px-3 text-sm font-medium transition-colors",
+        "h-10 rounded-xl border px-3 text-sm font-medium transition-all active:scale-[0.98]",
         active
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border bg-input/50 text-foreground hover:bg-muted",
+          ? "border-primary bg-primary text-primary-foreground shadow-sm"
+          : "border-border bg-input/40 text-foreground hover:border-primary/40 hover:bg-muted",
       )}
     >
       {label}
@@ -736,24 +749,24 @@ function FormField({
 
 function RegisterSuccessCard() {
   return (
-    <Card className="shadow-md">
-      <CardContent className="flex flex-col items-center gap-4 px-5 py-10 text-center sm:px-8">
-        <span className="inline-flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <CheckCircle2 className="size-7" />
+    <Card className="relative overflow-hidden border-chart-2/30 shadow-lg ring-1 ring-chart-2/10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-chart-2/10 to-transparent"
+      />
+      <CardContent className="relative flex flex-col items-center gap-4 px-5 py-9 text-center sm:px-8">
+        <span className="inline-flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-chart-2/20 to-chart-4/20 text-chart-2 shadow-sm">
+          <CheckCircle2 className="size-8" />
         </span>
-        <h2 className="text-xl font-bold sm:text-2xl">
+        <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
           Pré-cadastro recebido!
         </h2>
         <p className="max-w-md text-sm text-muted-foreground">
-          Pré-cadastro recebido com sucesso. Vamos analisar suas informações e
-          retornar pelo WhatsApp ou e-mail informado.
+          Vamos analisar suas informações e retornar pelo WhatsApp ou e-mail
+          informado.
         </p>
         <div className="mt-2 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button
-            asChild
-            variant="outline"
-            className="w-full cursor-pointer sm:w-auto"
-          >
+          <Button asChild className="w-full cursor-pointer shadow-md sm:w-auto">
             <a
               href={WHATSAPP_PRECADASTRO_URL}
               target="_blank"
@@ -765,7 +778,7 @@ function RegisterSuccessCard() {
           </Button>
           <Button
             asChild
-            variant="ghost"
+            variant="outline"
             className="w-full cursor-pointer sm:w-auto"
           >
             <Link href="/sign-in">
