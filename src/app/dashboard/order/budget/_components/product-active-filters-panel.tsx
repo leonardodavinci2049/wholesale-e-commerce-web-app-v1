@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useTransition } from "react";
 
@@ -15,6 +15,7 @@ interface ProductActiveFiltersPanelProps {
   selectedBrandId?: number;
   categories: UITaxonomyMenuItem[];
   selectedTaxonomyId?: number;
+  flagStock: number;
 }
 
 export function ProductActiveFiltersPanel({
@@ -22,6 +23,7 @@ export function ProductActiveFiltersPanel({
   selectedBrandId,
   categories,
   selectedTaxonomyId,
+  flagStock,
 }: ProductActiveFiltersPanelProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,9 +39,12 @@ export function ProductActiveFiltersPanel({
   );
 
   const activeFilters = [
-    selectedCategory ? `Categoria: ${selectedCategory.name}` : null,
-    selectedBrand ? `Marca: ${selectedBrand.name}` : null,
-  ].filter(Boolean);
+    selectedCategory
+      ? { label: "Categoria", value: selectedCategory.name }
+      : null,
+    selectedBrand ? { label: "Marca", value: selectedBrand.name } : null,
+    flagStock === 1 ? { label: "Geral", value: "Apenas em estoque" } : null,
+  ].filter((filter) => filter !== null);
 
   if (activeFilters.length === 0) {
     return null;
@@ -49,6 +54,7 @@ export function ProductActiveFiltersPanel({
     const params = new URLSearchParams(searchParams.toString());
     params.delete("brandId");
     params.delete("taxonomyId");
+    params.delete("flagStock");
     params.delete("limit");
 
     const queryString = params.toString();
@@ -61,18 +67,32 @@ export function ProductActiveFiltersPanel({
 
   return (
     <div
-      className="flex min-h-11 items-center gap-2 overflow-hidden rounded-xl border border-border/70 bg-muted/20 px-3 py-2 text-sm sm:px-4"
+      className="flex items-start gap-2 rounded-lg border border-yellow-200/80 bg-yellow-50/80 px-2.5 py-2 text-xs text-yellow-950 shadow-xs dark:border-yellow-900/60 dark:bg-yellow-950/20 dark:text-yellow-100 sm:items-center sm:px-3 sm:text-sm"
       aria-live="polite"
     >
-      <div className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap text-muted-foreground">
-        <span className="font-medium text-foreground">Filtros ativos:</span>{" "}
-        {activeFilters.join(" • ")}
+      <Info
+        className="mt-0.5 size-4 shrink-0 text-yellow-700 dark:text-yellow-300 sm:mt-0"
+        aria-hidden="true"
+      />
+      <div className="min-w-0 flex-1">
+        <span className="font-medium">Filtros ativos:</span>
+        <ul className="mt-0.5 space-y-0.5 sm:mt-0 sm:inline-flex sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1 sm:space-y-0">
+          {activeFilters.map((filter) => (
+            <li
+              className="min-w-0 leading-tight sm:inline-flex"
+              key={filter.label}
+            >
+              <span className="font-medium">{filter.label}:</span>{" "}
+              <span className="break-words">{filter.value}</span>
+            </li>
+          ))}
+        </ul>
       </div>
       <Button
         type="button"
         variant="outline"
         size="sm"
-        className="h-8 shrink-0 gap-1 rounded-lg px-2 text-xs sm:px-3"
+        className="h-7 shrink-0 gap-1 rounded-md border-yellow-300 bg-background/80 px-2 text-xs text-yellow-950 hover:bg-yellow-100 dark:border-yellow-800 dark:text-yellow-100 dark:hover:bg-yellow-950/50"
         onClick={clearProductFilters}
         disabled={isPending}
       >
