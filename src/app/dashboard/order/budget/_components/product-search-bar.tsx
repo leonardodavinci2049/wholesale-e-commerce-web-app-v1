@@ -7,6 +7,7 @@ import { useBudgetProductSearch } from "@/hooks/use-budget-product-search";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
+import { BudgetBrandFilterSheet } from "./budget-brand-filter-sheet";
 import { BudgetCategoryFilterSheet } from "./budget-category-filter-sheet";
 import { BudgetGeneralFilterSheet } from "./budget-general-filter-sheet";
 
@@ -76,11 +77,11 @@ export function ProductSearchBar({
           categories={categories}
           selectedTaxonomyId={selectedTaxonomyId}
         />
-        <BudgetGeneralFilterSheet
+        <BudgetBrandFilterSheet
           brands={brands}
           selectedBrandId={selectedBrandId}
-          flagStock={flagStock}
         />
+        <BudgetGeneralFilterSheet flagStock={flagStock} />
       </div>
     </div>
   );

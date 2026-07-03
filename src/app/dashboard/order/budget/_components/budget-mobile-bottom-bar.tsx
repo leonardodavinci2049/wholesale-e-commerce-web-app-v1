@@ -4,6 +4,7 @@ import {
   LayoutGrid,
   MessageCircle,
   ShoppingCart,
+  Tags,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import {
@@ -16,6 +17,7 @@ import { companyInfo } from "@/data/info-company";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
+import { BudgetBrandFilterPanel } from "./budget-brand-filter-panel";
 import { BudgetCategoryFilterPanel } from "./budget-category-filter-panel";
 import { BudgetGeneralFilterPanel } from "./budget-general-filter-panel";
 
@@ -68,13 +70,22 @@ export function BudgetMobileBottomBar({
       </MobileBottomBarSheet>
 
       <MobileBottomBarSheet
+        icon={<Tags className="h-5 w-5" />}
+        label="Marcas"
+        sheetTitle="Marcas"
+      >
+        <BudgetBrandFilterPanel
+          brands={brands}
+          selectedBrandId={selectedBrandId}
+        />
+      </MobileBottomBarSheet>
+
+      <MobileBottomBarSheet
         icon={<Filter className="h-5 w-5" />}
         label="Filtro geral"
         sheetTitle="Filtro geral"
       >
         <BudgetGeneralFilterPanel
-          brands={brands}
-          selectedBrandId={selectedBrandId}
           flagStock={flagStock}
           stockSwitchId="mobile-stock-filter-v2"
         />
