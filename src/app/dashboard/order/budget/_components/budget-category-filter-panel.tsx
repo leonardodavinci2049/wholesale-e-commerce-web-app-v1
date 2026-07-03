@@ -219,15 +219,15 @@ export function BudgetCategoryFilterPanel({
                           className="size-4 shrink-0 text-muted-foreground"
                           aria-hidden="true"
                         />
-                        <span className="min-w-0 flex-1 truncate">
-                          {item.name}
+                        <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
+                          <span className="truncate">{item.name}</span>
+                          {typeof item.productCount === "number" &&
+                            item.productCount > 0 && (
+                              <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                                ({item.productCount})
+                              </span>
+                            )}
                         </span>
-                        {typeof item.productCount === "number" &&
-                          item.productCount > 0 && (
-                            <span className="ml-auto shrink-0 text-xs text-muted-foreground">
-                              ({item.productCount})
-                            </span>
-                          )}
                       </button>
                     </SheetClose>
                     {hasChildren && (
