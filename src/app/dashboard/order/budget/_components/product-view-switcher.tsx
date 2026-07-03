@@ -105,6 +105,7 @@ export function ProductViewSwitcher({
         selectedBrandId={searchProps.selectedBrandId}
         categories={searchProps.categories}
         selectedTaxonomyId={searchProps.selectedTaxonomyId}
+        flagStock={searchProps.flagStock}
       />
 
       {hydrated && mode === "list" ? list : grid}
