@@ -8,9 +8,18 @@ import {
   Loader2,
   LogIn,
   MessageCircle,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect, useId, useRef, useState } from "react";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
+import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -122,7 +131,9 @@ export function RegisterForm() {
   const [cepStatus, setCepStatus] = useState<CepStatus>({ state: "idle" });
 
   const formRef = useRef<HTMLFormElement>(null);
+  const feedbackRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
+  const lastCepLookupRef = useRef<string | null>(null);
   const personType = (values.personType as PersonType) ?? "PJ";
   const isPJ = personType === "PJ";
   const errors = state?.status === "error" ? state.errors : undefined;
@@ -140,38 +151,75 @@ export function RegisterForm() {
     trackEvent("register_form_start");
   };
 
-  const handleCepLookup = async (): Promise<void> => {
-    const digits = onlyDigits(values.zipCode);
-    if (digits.length !== 8) return;
+  const handleCepLookup = useCallback(
+    async (
+      options: { force?: boolean; showInvalidMessage?: boolean } = {},
+    ): Promise<void> => {
+      const digits = onlyDigits(values.zipCode);
+      if (digits.length !== 8) {
+        if (options.showInvalidMessage) {
+          setCepStatus({
+            state: "error",
+            message: "Informe um CEP com 8 dígitos para buscar o endereço.",
+          });
+        }
+        return;
+      }
 
-    setCepStatus({ state: "loading" });
-    try {
-      const address = await fetchAddressByCep(values.zipCode);
-      if (!address) {
+      if (!options.force && lastCepLookupRef.current === digits) return;
+
+      lastCepLookupRef.current = digits;
+      setCepStatus({ state: "loading" });
+      try {
+        const address = await fetchAddressByCep(values.zipCode);
+        if (!address) {
+          setCepStatus({
+            state: "error",
+            message:
+              "Não conseguimos localizar esse CEP. Você pode preencher o endereço manualmente.",
+          });
+          return;
+        }
+
+        setValues((prev) => ({
+          ...prev,
+          zipCode: address.cep || prev.zipCode,
+          address: address.street || prev.address,
+          complement: prev.complement || address.complement || "",
+          neighborhood: address.neighborhood || prev.neighborhood,
+          city: address.city || prev.city,
+          state: address.state || prev.state,
+        }));
+        setCepStatus({
+          state: "success",
+          message: "Endereço preenchido pelo CEP.",
+        });
+      } catch {
         setCepStatus({
           state: "error",
           message:
             "Não conseguimos localizar esse CEP. Você pode preencher o endereço manualmente.",
         });
-        return;
       }
+    },
+    [values.zipCode],
+  );
 
-      setValues((prev) => ({
-        ...prev,
-        address: address.street || prev.address,
-        neighborhood: address.neighborhood || prev.neighborhood,
-        city: address.city || prev.city,
-        state: address.state || prev.state,
-      }));
-      setCepStatus({ state: "success" });
-    } catch {
-      setCepStatus({
-        state: "error",
-        message:
-          "Não conseguimos localizar esse CEP. Você pode preencher o endereço manualmente.",
-      });
+  useEffect(() => {
+    const digits = onlyDigits(values.zipCode);
+
+    if (digits.length < 8) {
+      lastCepLookupRef.current = null;
+      if (cepStatus.state !== "idle") {
+        setCepStatus({ state: "idle" });
+      }
+      return;
     }
-  };
+
+    if (digits.length === 8) {
+      void handleCepLookup();
+    }
+  }, [values.zipCode, cepStatus.state, handleCepLookup]);
 
   // Tracking de resultado + foco no primeiro campo inválido.
   useEffect(() => {
@@ -183,19 +231,35 @@ export function RegisterForm() {
     trackEvent("register_submit_error", {
       duplicate: state.isDuplicate === true,
     });
+    toast.error(
+      state.isDuplicate
+        ? "Cadastro já existente. Confira o aviso no formulário."
+        : "Não foi possível enviar o pré-cadastro. Confira o aviso no formulário.",
+      {
+        description: state.message,
+      },
+    );
+
+    feedbackRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
 
     const firstInvalid = formRef.current?.querySelector<HTMLElement>(
       '[aria-invalid="true"]',
     );
-    firstInvalid?.focus();
+    firstInvalid?.focus({ preventScroll: true });
   }, [state]);
 
   // Sucesso: substitui o formulário pela confirmação.
   if (state?.status === "success") {
-    return <RegisterSuccessCard />;
+    return <RegisterSuccessCard customerId={state.customerId} />;
   }
 
   const isDuplicate = state?.status === "error" && state.isDuplicate === true;
+  const cepDigits = onlyDigits(values.zipCode);
+  const canLookupCep =
+    cepDigits.length === 8 && !isPending && cepStatus.state !== "loading";
 
   return (
     <Card className="group/form-card relative overflow-hidden border-border/60 shadow-lg ring-1 ring-primary/5">
@@ -221,39 +285,41 @@ export function RegisterForm() {
           </p>
         </header>
 
-        {isDuplicate && (
-          <Alert>
-            <AlertCircle />
-            <AlertTitle>Cadastro já existente</AlertTitle>
-            <AlertDescription>
-              {state?.status === "error" ? state.message : null}{" "}
-              <Link
-                href="/sign-in"
-                className="font-medium text-primary underline-offset-4 hover:underline"
-              >
-                Ir para o login
-              </Link>{" "}
-              ou{" "}
-              <a
-                href={WHATSAPP_PRECADASTRO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-primary underline-offset-4 hover:underline"
-              >
-                falar no WhatsApp
-              </a>
-              .
-            </AlertDescription>
-          </Alert>
-        )}
+        <div ref={feedbackRef}>
+          {isDuplicate && (
+            <Alert className="border-amber-300 bg-amber-50 text-amber-950 dark:border-amber-500/50 dark:bg-amber-950/30 dark:text-amber-100">
+              <AlertCircle className="text-amber-600 dark:text-amber-300" />
+              <AlertTitle>Cadastro já existente</AlertTitle>
+              <AlertDescription>
+                {state?.status === "error" ? state.message : null}{" "}
+                <Link
+                  href="/sign-in"
+                  className="font-medium text-amber-800 underline-offset-4 hover:underline dark:text-amber-200"
+                >
+                  Ir para o login
+                </Link>{" "}
+                ou{" "}
+                <a
+                  href={WHATSAPP_PRECADASTRO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-amber-800 underline-offset-4 hover:underline dark:text-amber-200"
+                >
+                  falar no WhatsApp
+                </a>
+                .
+              </AlertDescription>
+            </Alert>
+          )}
 
-        {state?.status === "error" && !isDuplicate && (
-          <Alert variant="destructive">
-            <AlertCircle />
-            <AlertTitle>Não foi possível enviar</AlertTitle>
-            <AlertDescription>{state.message}</AlertDescription>
-          </Alert>
-        )}
+          {state?.status === "error" && !isDuplicate && (
+            <Alert variant="destructive">
+              <AlertCircle />
+              <AlertTitle>Não foi possível enviar</AlertTitle>
+              <AlertDescription>{state.message}</AlertDescription>
+            </Alert>
+          )}
+        </div>
 
         <form
           ref={formRef}
@@ -470,7 +536,6 @@ export function RegisterForm() {
                   className={FORM_CONTROL_CLASS}
                   value={values.zipCode}
                   onChange={(e) => setField("zipCode", maskCep(e.target.value))}
-                  onBlur={handleCepLookup}
                   disabled={isPending || cepStatus.state === "loading"}
                   aria-invalid={!!errors?.zipCode}
                   aria-describedby={
@@ -480,6 +545,22 @@ export function RegisterForm() {
                 {cepStatus.state === "loading" ? (
                   <Spinner className="size-4 shrink-0 text-muted-foreground" />
                 ) : null}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-10 shrink-0 cursor-pointer px-3"
+                  disabled={!canLookupCep}
+                  onClick={() =>
+                    void handleCepLookup({
+                      force: true,
+                      showInvalidMessage: true,
+                    })
+                  }
+                >
+                  <Search className="mr-2 size-4" />
+                  Buscar
+                </Button>
               </div>
             </FormField>
 
@@ -747,7 +828,7 @@ function FormField({
   );
 }
 
-function RegisterSuccessCard() {
+function RegisterSuccessCard({ customerId }: { customerId?: number }) {
   return (
     <Card className="relative overflow-hidden border-chart-2/30 shadow-lg ring-1 ring-chart-2/10">
       <div
@@ -765,6 +846,17 @@ function RegisterSuccessCard() {
           Vamos analisar suas informações e retornar pelo WhatsApp ou e-mail
           informado.
         </p>
+        {customerId ? (
+          <div className="w-full max-w-md rounded-lg border border-chart-2/30 bg-chart-2/10 px-4 py-3 text-sm">
+            <p className="font-semibold text-foreground">
+              Seu número de cadastro é {customerId}.
+            </p>
+            <p className="mt-1 text-muted-foreground">
+              Anote esse número e informe ao atendimento quando entrar em
+              contato.
+            </p>
+          </div>
+        ) : null}
         <div className="mt-2 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button asChild className="w-full cursor-pointer shadow-md sm:w-auto">
             <a

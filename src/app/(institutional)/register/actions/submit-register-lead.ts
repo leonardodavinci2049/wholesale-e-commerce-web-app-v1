@@ -1,5 +1,6 @@
 "use server";
 
+import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import {
   ApiValidationError,
@@ -15,7 +16,7 @@ import { PERSON_TYPE_ID, registerLeadSchema } from "../schema";
 const logger = createLogger("SubmitRegisterLead");
 
 export type RegisterLeadState =
-  | { status: "success"; message: string }
+  | { status: "success"; message: string; customerId?: number }
   | {
       status: "error";
       message: string;
@@ -116,14 +117,20 @@ export async function submitRegisterLead(
   const personTypeId = isPJ ? PERSON_TYPE_ID.PJ : PERSON_TYPE_ID.PF;
 
   const payload: CustomerCreateRequest = {
+    // Contexto fixo para submissões públicas, sem usuário logado.
+    pe_user_id: serverEnvs.USER_ID,
+    pe_user_name: serverEnvs.USER_NAME,
+    pe_user_role: serverEnvs.USER_ROLE,
+    pe_person_id: serverEnvs.PERSON_ID,
     pe_name: data.name,
     pe_email: data.email,
     pe_person_type_id: personTypeId,
     ...(isPJ
-      ? { pe_cnpj: data.cnpj, pe_company_name: data.companyName }
+      ? { pe_cnpj: data.cnpj, pe_company_name: data.companyName, pe_cpf: "" }
       : { pe_cpf: data.cpf }),
     pe_phone: data.phone || undefined,
     pe_whatsapp: data.whatsapp,
+    pe_image: "",
     pe_zip_code: data.zipCode,
     pe_address: data.address,
     pe_address_number: data.addressNumber,
@@ -135,11 +142,15 @@ export async function submitRegisterLead(
   };
 
   try {
-    await customerGeneralServiceApi.createCustomer(payload);
-    return { status: "success", message: SUCCESS_MESSAGE };
-  } catch (error) {
-    logger.error("Erro ao criar pré-cadastro de cliente", error);
+    const response = await customerGeneralServiceApi.createCustomer(payload);
+    const customerId = response.data?.[0]?.sp_return_id || response.recordId;
 
+    return {
+      status: "success",
+      message: SUCCESS_MESSAGE,
+      customerId: customerId > 0 ? customerId : undefined,
+    };
+  } catch (error) {
     const apiMessage =
       error instanceof Error ? error.message.toLowerCase() : "";
 
@@ -156,6 +167,8 @@ export async function submitRegisterLead(
         values: rawValues,
       };
     }
+
+    logger.error("Erro ao criar pré-cadastro de cliente", error);
 
     if (isApiAvailabilityError(error)) {
       return {
