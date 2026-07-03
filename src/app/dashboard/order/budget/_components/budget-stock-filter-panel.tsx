@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useTransition } from "react";
 
 import { Label } from "@/components/ui/label";
+import { SheetClose } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
@@ -53,12 +54,14 @@ export function BudgetStockFilterPanel({
         >
           Apenas em estoque
         </Label>
-        <Switch
-          id={switchId}
-          checked={flagStock === 1}
-          onCheckedChange={handleStockToggle}
-          disabled={isPending}
-        />
+        <SheetClose asChild>
+          <Switch
+            id={switchId}
+            checked={flagStock === 1}
+            onCheckedChange={handleStockToggle}
+            disabled={isPending}
+          />
+        </SheetClose>
       </div>
     </div>
   );

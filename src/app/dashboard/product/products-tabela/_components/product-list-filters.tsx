@@ -174,7 +174,7 @@ export function ProductListFilters({
       );
       activeFilters.push({
         type: "category" as const,
-        label: `Categoria: ${selectedCategory?.name || filters.selectedCategory}`,
+        label: `Categoria:  ${selectedCategory?.name || filters.selectedCategory}`,
         value: filters.selectedCategory,
       });
     }
