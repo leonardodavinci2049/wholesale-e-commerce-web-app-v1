@@ -26,6 +26,7 @@ export function CartSummaryPanel({
 }: CartSummaryPanelProps) {
   const itemCount = items.length;
   const itemLabel = itemCount === 1 ? "item" : "itens";
+  const displayOrderId = summary?.orderId ?? orderId;
 
   return (
     <div className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-card/95 shadow-xs">
@@ -34,9 +35,9 @@ export function CartSummaryPanel({
           <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-semibold text-foreground">
             Carrinho
-            {summary?.orderId ? (
+            {displayOrderId ? (
               <span className="ml-2 text-xs font-semibold text-muted-foreground">
-                #{summary.orderId}
+                #{displayOrderId}
               </span>
             ) : null}
           </span>
