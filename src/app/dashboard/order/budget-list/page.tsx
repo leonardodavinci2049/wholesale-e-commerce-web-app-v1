@@ -50,7 +50,7 @@ async function getCustomerBudgets(params: {
   pe_user_role: string;
   pe_person_id: number;
 }): Promise<UIOrderListItem[]> {
-  const response = await orderReportsServiceApi.findCustomerAll({
+  const response = await orderReportsServiceApi.orderFindCustomerAll({
     pe_order_id: params.orderId,
     pe_customer_id: params.customerId,
     pe_seller_id: params.sellerId,
@@ -67,7 +67,7 @@ async function getCustomerBudgets(params: {
   });
 
   return transformCustomerAllList(
-    orderReportsServiceApi.extractCustomerAll(response),
+    orderReportsServiceApi.extractOrderFindCustomerAll(response),
   );
 }
 

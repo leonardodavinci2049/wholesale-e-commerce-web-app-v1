@@ -57,7 +57,7 @@ export class OrderReportsServiceApi extends BaseApiService {
 
   // === Métodos de consulta ===
 
-  async findCustomerAll(
+  async orderFindCustomerAll(
     params: Partial<OrderReportsFindAllFilters> = {},
   ): Promise<OrderFindCustomerAllResponse> {
     try {
@@ -93,7 +93,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     }
   }
 
-  async findCustomerId(
+  async orderFindCustomerId(
     params: OrderReportsFindByIdRequest,
   ): Promise<OrderFindCustomerIdResponse> {
     try {
@@ -124,7 +124,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     }
   }
 
-  async findLatestAll(
+  async orderFindLatestAll(
     params: Partial<OrderReportsFindAllFilters> = {},
   ): Promise<OrderFindLatestAllResponse> {
     try {
@@ -160,7 +160,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     }
   }
 
-  async findLatestId(
+  async orderFindLatestId(
     params: OrderReportsFindByIdRequest,
   ): Promise<OrderFindLatestIdResponse> {
     try {
@@ -191,7 +191,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     }
   }
 
-  async findSaleAll(
+  async orderFindSaleAll(
     params: Partial<OrderReportsFindAllFilters> = {},
   ): Promise<OrderFindSaleAllResponse> {
     try {
@@ -227,7 +227,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     }
   }
 
-  async findSaleId(
+  async orderFindSaleId(
     params: OrderReportsFindByIdRequest,
   ): Promise<OrderFindSaleIdResponse> {
     try {
@@ -258,7 +258,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     }
   }
 
-  async findSellerAll(
+  async orderFindSellerAll(
     params: Partial<OrderReportsFindAllFilters> = {},
   ): Promise<OrderFindSellerAllResponse> {
     try {
@@ -317,23 +317,25 @@ export class OrderReportsServiceApi extends BaseApiService {
 
   // === Extractors para listas ===
 
-  extractCustomerAll(
+  extractOrderFindCustomerAll(
     response: OrderFindCustomerAllResponse,
   ): OrderCustomerAllEntity[] {
     return response.data?.["customer orders"] ?? [];
   }
 
-  extractLatestAll(
+  extractOrderFindLatestAll(
     response: OrderFindLatestAllResponse,
   ): OrderReportListEntity[] {
     return response.data?.["Last orders"] ?? [];
   }
 
-  extractSaleAll(response: OrderFindSaleAllResponse): OrderReportListEntity[] {
+  extractOrderFindSaleAll(
+    response: OrderFindSaleAllResponse,
+  ): OrderReportListEntity[] {
     return response.data?.["Orders Sale All"] ?? [];
   }
 
-  extractSellerAll(
+  extractOrderFindSellerAll(
     response: OrderFindSellerAllResponse,
   ): OrderReportListEntity[] {
     return response.data?.["seller orders"] ?? [];
@@ -341,97 +343,97 @@ export class OrderReportsServiceApi extends BaseApiService {
 
   // === Extractors para detalhe (by ID) ===
 
-  extractCustomerIdSummary(
+  extractOrderFindCustomerIdSummary(
     response: OrderFindCustomerIdResponse,
   ): OrderSummaryEntity | null {
     return response.data?.["Customer Orders Summary"]?.[0] ?? null;
   }
 
-  extractCustomerIdItems(
+  extractOrderFindCustomerIdItems(
     response: OrderFindCustomerIdResponse,
   ): OrderReportItemEntity[] {
     return response.data?.["Customer Order Items"] ?? [];
   }
 
-  extractCustomerIdStatusHistory(
+  extractOrderFindCustomerIdStatusHistory(
     response: OrderFindCustomerIdResponse,
   ): OrderStatusHistoryEntity | null {
     return response.data?.["Status History"]?.[0] ?? null;
   }
 
-  extractCustomerIdCustomerInfo(
+  extractOrderFindCustomerIdCustomerInfo(
     response: OrderFindCustomerIdResponse,
   ): OrderCustomerInfoEntity | null {
     return response.data?.["Customer Information"]?.[0] ?? null;
   }
 
-  extractCustomerIdSellerInfo(
+  extractOrderFindCustomerIdSellerInfo(
     response: OrderFindCustomerIdResponse,
   ): OrderSellerInfoEntity | null {
     return response.data?.["Seller Information"]?.[0] ?? null;
   }
 
-  extractLatestIdSummary(
+  extractOrderFindLatestIdSummary(
     response: OrderFindLatestIdResponse,
   ): OrderSummaryEntity | null {
     return response.data?.["Latest Orders Summary"]?.[0] ?? null;
   }
 
-  extractLatestIdItems(
+  extractOrderFindLatestIdItems(
     response: OrderFindLatestIdResponse,
   ): OrderReportItemEntity[] {
     return response.data?.["Latest Order Items"] ?? [];
   }
 
-  extractLatestIdStatusHistory(
+  extractOrderFindLatestIdStatusHistory(
     response: OrderFindLatestIdResponse,
   ): OrderStatusHistoryEntity | null {
     return response.data?.["Status History"]?.[0] ?? null;
   }
 
-  extractLatestIdCustomerInfo(
+  extractOrderFindLatestIdCustomerInfo(
     response: OrderFindLatestIdResponse,
   ): OrderCustomerInfoEntity | null {
     return response.data?.["Customer Information"]?.[0] ?? null;
   }
 
-  extractLatestIdSellerInfo(
+  extractOrderFindLatestIdSellerInfo(
     response: OrderFindLatestIdResponse,
   ): OrderSellerInfoEntity | null {
     return response.data?.["Seller Information"]?.[0] ?? null;
   }
 
-  extractSaleIdSummary(
+  extractOrderFindSaleIdSummary(
     response: OrderFindSaleIdResponse,
   ): OrderSummaryEntity | null {
     return response.data?.["Order Summary"]?.[0] ?? null;
   }
 
-  extractSaleIdItems(
+  extractOrderFindSaleIdItems(
     response: OrderFindSaleIdResponse,
   ): OrderSaleDetailEntity[] {
     return response.data?.["Order Items"] ?? [];
   }
 
-  extractSaleIdCustomerInfo(
+  extractOrderFindSaleIdCustomerInfo(
     response: OrderFindSaleIdResponse,
   ): OrderCustomerInfoEntity | null {
     return response.data?.["Customer Information"]?.[0] ?? null;
   }
 
-  extractSaleIdSellerInfo(
+  extractOrderFindSaleIdSellerInfo(
     response: OrderFindSaleIdResponse,
   ): OrderSellerInfoEntity | null {
     return response.data?.["Seller Information"]?.[0] ?? null;
   }
 
-  extractSaleIdTradingInfo(
+  extractOrderFindSaleIdTradingInfo(
     response: OrderFindSaleIdResponse,
   ): OrderTradingInfoEntity | null {
     return response.data?.["Trading Information"]?.[0] ?? null;
   }
 
-  extractSaleIdShippingInfo(
+  extractOrderFindSaleIdShippingInfo(
     response: OrderFindSaleIdResponse,
   ): OrderShippingInfoEntity | null {
     return response.data?.["Shipping Information"]?.[0] ?? null;
@@ -439,7 +441,9 @@ export class OrderReportsServiceApi extends BaseApiService {
 
   // === Validators ===
 
-  isValidCustomerAllList(response: OrderFindCustomerAllResponse): boolean {
+  isValidOrderFindCustomerAllList(
+    response: OrderFindCustomerAllResponse,
+  ): boolean {
     return (
       isApiSuccess(response.statusCode) &&
       !!response.data &&
@@ -447,7 +451,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     );
   }
 
-  isValidLatestAllList(response: OrderFindLatestAllResponse): boolean {
+  isValidOrderFindLatestAllList(response: OrderFindLatestAllResponse): boolean {
     return (
       isApiSuccess(response.statusCode) &&
       !!response.data &&
@@ -455,7 +459,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     );
   }
 
-  isValidSaleAllList(response: OrderFindSaleAllResponse): boolean {
+  isValidOrderFindSaleAllList(response: OrderFindSaleAllResponse): boolean {
     return (
       isApiSuccess(response.statusCode) &&
       !!response.data &&
@@ -463,7 +467,7 @@ export class OrderReportsServiceApi extends BaseApiService {
     );
   }
 
-  isValidSellerAllList(response: OrderFindSellerAllResponse): boolean {
+  isValidOrderFindSellerAllList(response: OrderFindSellerAllResponse): boolean {
     return (
       isApiSuccess(response.statusCode) &&
       !!response.data &&

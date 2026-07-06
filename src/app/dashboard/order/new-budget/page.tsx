@@ -18,8 +18,8 @@ const NewBudgetPage = () => {
                 {/* Cabeçalho */}
                 <div>
                   <h1 className="text-3xl font-bold">Novo Orçamento</h1>
-                  <p className="text-muted-foreground mt-2">  
-                   Crie um novo orçamento
+                  <p className="text-muted-foreground mt-2">
+                    Crie um novo orçamento
                   </p>
                 </div>
               </div>
