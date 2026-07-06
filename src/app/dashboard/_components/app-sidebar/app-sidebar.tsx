@@ -64,7 +64,7 @@ const data = {
 
         {
           title: "Novo Orçamento",
-          url: "/dashboard/order/budget",
+          url: "/dashboard/order/new-budget",
         },
       ],
     },
@@ -76,6 +76,11 @@ const data = {
         {
           title: "Lista de Pedidos",
           url: "/dashboard/order/order-list",
+        },
+
+        {
+          title: "Lista de Orçamentos",
+          url: "/dashboard/order/budget-list",
         },
         {
           title: "Produtos Comprados",
