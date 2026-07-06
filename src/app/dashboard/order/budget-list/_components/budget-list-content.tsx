@@ -4,6 +4,7 @@ import { LoaderCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import type { UIOrderListItem } from "@/services/api-main/order-reports/transformers/transformers";
+import { CreateBudgetButton } from "../../_components/create-budget-button";
 import {
   type BudgetListFiltersValues,
   type BudgetListSearchParams,
@@ -120,15 +121,18 @@ export function BudgetListContent({
   return (
     <div className="space-y-6">
       <section className="space-y-2 py-1">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
           <div className="min-w-0 space-y-1">
             <h1 className="text-2xl font-semibold tracking-tight">
               Listagem de orçamentos
             </h1>
           </div>
 
-          <div className="shrink-0 whitespace-nowrap rounded-lg border border-border/70 bg-card px-3 py-1.5 text-xs font-medium shadow-sm">
-            {orders.length} orçamento{orders.length === 1 ? "" : "s"}
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="whitespace-nowrap rounded-lg border border-border/70 bg-card px-3 py-1.5 text-xs font-medium shadow-sm">
+              {orders.length} orçamento{orders.length === 1 ? "" : "s"}
+            </div>
+            <CreateBudgetButton size="sm" />
           </div>
         </div>
 
