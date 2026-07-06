@@ -68,7 +68,7 @@ const data = {
         },
 
         {
-          title: "Catálogo de Produtos",
+          title: "Catálogo",
           url: "/dashboard/",
         },
 
@@ -116,11 +116,7 @@ const data = {
         {
           title: "Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
-        },
-        {
-          title: "Tabela",
-          url: "/dashboard/product/products-tabela",
-        },
+        }
       ],
     },
 
@@ -149,6 +145,11 @@ const data = {
     },
   ],
   projects: [
+    {
+      name: "Home",
+      url: "/dashboard",
+      icon: House,
+    },
     {
       name: "Agenda",
       url: "/dashboard/agenda/agenda-panel",
