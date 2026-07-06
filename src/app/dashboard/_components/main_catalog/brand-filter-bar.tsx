@@ -19,7 +19,7 @@ interface BrandFilterBarProps {
   showHeader?: boolean;
 }
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 
 export function BrandFilterBar({
   brands,

@@ -10,7 +10,7 @@ import type { UIBrand } from "@/services/api-main/brand/transformers/transformer
 
 import { BrandFilterBar } from "./brand-filter-bar";
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 
 interface BudgetBrandFilterPanelProps {
   brands: UIBrand[];

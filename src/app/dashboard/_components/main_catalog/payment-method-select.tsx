@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { PAYMENT_METHODS } from "@/data/payment-methods";
 import { cn } from "@/lib/utils";
 
-import { updatePaymentAction } from "../actions/update-payment-action";
+import { updatePaymentAction } from "../../_actions/update-payment-action";
 
 interface PaymentMethodSelectProps {
   orderId: number;

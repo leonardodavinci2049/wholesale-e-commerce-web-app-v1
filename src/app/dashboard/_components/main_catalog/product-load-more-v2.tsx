@@ -6,7 +6,7 @@ import { useCallback, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 const PAGE_SIZE = 50;
 
 interface ProductLoadMoreV2Props {

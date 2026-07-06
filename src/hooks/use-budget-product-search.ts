@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
-const BUDGET_ROUTE = "/dashboard/order/budget";
+const BUDGET_ROUTE = "/dashboard";
 const SEARCH_DEBOUNCE_MS = 800;
 
 interface UseBudgetProductSearchOptions {

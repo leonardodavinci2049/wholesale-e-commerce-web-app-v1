@@ -13,9 +13,7 @@ export function DashboardSearchContent() {
   function handleSearch() {
     const trimmed = query.trim();
     if (!trimmed) return;
-    router.push(
-      `/dashboard/order/budget?search=${encodeURIComponent(trimmed)}`,
-    );
+    router.push(`/dashboard?search=${encodeURIComponent(trimmed)}`);
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {

@@ -34,7 +34,7 @@ const modules = [
   {
     title: "Meu Carrinho",
     description: "Adicione novos produtos ao carrinho.",
-    href: "/dashboard/order/budget",
+    href: "/dashboard",
     icon: ShoppingCart,
     color: "text-amber-500",
     bgColor: "bg-amber-500/10",

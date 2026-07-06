@@ -10,7 +10,7 @@ import { SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 const MAX_LEVELS = 3;
 
 interface BudgetCategoryFilterPanelProps {

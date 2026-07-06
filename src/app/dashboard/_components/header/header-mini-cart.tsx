@@ -1,4 +1,4 @@
-import { CartSummaryPanel } from "@/app/dashboard/order/budget/_components/cart-summary-panel";
+import { CartSummaryPanel } from "@/app/dashboard/_components/main_catalog/cart-summary-panel";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
@@ -14,7 +14,7 @@ import { HeaderMiniCartClient } from "./header-mini-cart-client";
 
 const logger = createLogger("header-mini-cart");
 
-const BUDGET_HREF = "/dashboard/order/budget";
+const BUDGET_HREF = "/dashboard";
 
 async function getOrderCart(
   orderId: number,

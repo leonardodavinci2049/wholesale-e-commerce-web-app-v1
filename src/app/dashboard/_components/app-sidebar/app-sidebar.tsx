@@ -63,7 +63,7 @@ const data = {
         },
 
         {
-          title: "Carrinho",
+          title: "Novo Orçamento",
           url: "/dashboard/order/budget",
         },
       ],
