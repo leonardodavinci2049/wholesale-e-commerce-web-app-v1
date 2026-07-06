@@ -71,7 +71,6 @@ const data = {
           title: "Catálogo",
           url: "/dashboard/",
         },
-
       ],
     },
     {
@@ -116,7 +115,7 @@ const data = {
         {
           title: "Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
-        }
+        },
       ],
     },
 
