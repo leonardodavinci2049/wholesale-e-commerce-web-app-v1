@@ -90,8 +90,8 @@ export default async function BudgetListPage(props: BudgetListPageProps) {
       customerId: apiContext.pe_person_id,
       sellerId: 0,
       orderStatusId: Number(BUDGET_ORDER_STATUS_ID),
-      financialStatusId: toOptionalNumber(currentFilters.financialStatusId),
-      locationId: toOptionalNumber(currentFilters.locationId),
+      financialStatusId: 0,
+      locationId: 0,
       initialDate: currentFilters.initialDate,
       finalDate: currentFilters.finalDate,
       limit:

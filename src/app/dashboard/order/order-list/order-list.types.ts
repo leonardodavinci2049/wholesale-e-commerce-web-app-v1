@@ -6,10 +6,6 @@ function formatDateForInput(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-function getPreviousMonthStart(referenceDate: Date): Date {
-  return new Date(referenceDate.getFullYear(), referenceDate.getMonth() - 1, 1);
-}
-
 function getTomorrow(referenceDate: Date): Date {
   const tomorrow = new Date(referenceDate);
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -17,12 +13,17 @@ function getTomorrow(referenceDate: Date): Date {
   return tomorrow;
 }
 
+function getOneYearBefore(referenceDate: Date): Date {
+  const date = new Date(referenceDate);
+  date.setFullYear(date.getFullYear() - 1);
+
+  return date;
+}
+
 export interface OrderListSearchParams {
   orderId?: string;
-  customerId?: string;
   orderStatusId?: string;
   financialStatusId?: string;
-  locationId?: string;
   initialDate?: string;
   finalDate?: string;
   limit?: string;
@@ -30,10 +31,8 @@ export interface OrderListSearchParams {
 
 export interface OrderListFiltersValues {
   orderId: string;
-  customerId: string;
   orderStatusId: string;
   financialStatusId: string;
-  locationId: string;
   initialDate: string;
   finalDate: string;
   limit: string;
@@ -45,19 +44,19 @@ export interface OrderListStatusOption {
 }
 
 export const DEFAULT_ORDER_LIST_ID = "0";
-export const DEFAULT_ORDER_LIST_LIMIT = "20";
+export const DEFAULT_ORDER_LIST_LIMIT = "50";
 
 export function getDefaultOrderListFilters(
   referenceDate: Date = new Date(),
 ): OrderListFiltersValues {
+  const tomorrow = getTomorrow(referenceDate);
+
   return {
     orderId: "",
-    customerId: "",
     orderStatusId: DEFAULT_ORDER_LIST_ID,
     financialStatusId: "-1",
-    locationId: DEFAULT_ORDER_LIST_ID,
-    initialDate: formatDateForInput(getPreviousMonthStart(referenceDate)),
-    finalDate: formatDateForInput(getTomorrow(referenceDate)),
+    initialDate: formatDateForInput(getOneYearBefore(tomorrow)),
+    finalDate: formatDateForInput(tomorrow),
     limit: DEFAULT_ORDER_LIST_LIMIT,
   };
 }
@@ -68,10 +67,8 @@ export function normalizeOrderListFilters(
 ): OrderListFiltersValues {
   return {
     orderId: filters.orderId ?? defaults.orderId,
-    customerId: filters.customerId ?? defaults.customerId,
     orderStatusId: filters.orderStatusId ?? defaults.orderStatusId,
     financialStatusId: filters.financialStatusId ?? defaults.financialStatusId,
-    locationId: filters.locationId ?? defaults.locationId,
     initialDate: filters.initialDate ?? defaults.initialDate,
     finalDate: filters.finalDate ?? defaults.finalDate,
     limit: filters.limit ?? defaults.limit,

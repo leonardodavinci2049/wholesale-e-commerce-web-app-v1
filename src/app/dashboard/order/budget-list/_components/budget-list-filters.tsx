@@ -36,7 +36,6 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import type { BudgetListFiltersValues } from "../budget-list.types";
-import { CustomerSearch } from "./customer-search";
 
 interface BudgetListFiltersProps {
   filters: BudgetListFiltersValues;
@@ -48,20 +47,6 @@ interface BudgetListFiltersProps {
 }
 
 const LIMIT_OPTIONS = ["20", "50", "100"];
-
-const FINANCIAL_STATUS_OPTIONS = [
-  { value: "17", label: "CONCLUÍDO" },
-  { value: "0", label: "INEXISTENTE" },
-  { value: "18", label: "EM ABERTO" },
-];
-
-const LOCATION_OPTIONS = [
-  { value: "1", label: "SETOR VENDAS" },
-  { value: "3", label: "SETOR FINANCEIRO" },
-  { value: "19", label: "LOJA FÍSICA" },
-  { value: "2", label: "SETOR RMA" },
-  { value: "41", label: "SITE E-COMMERCE" },
-];
 
 function parseIsoDate(value: string): Date | undefined {
   if (!value) return undefined;
@@ -245,13 +230,6 @@ function DatePickerField({
   );
 }
 
-function normalizeForSearch(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toUpperCase();
-}
-
 function QuickFilters({
   filters,
   onFilterChange,
@@ -272,228 +250,7 @@ function QuickFilters({
           onChange={(event) => onFilterChange("orderId", event.target.value)}
         />
       </div>
-
-      <CustomerSearch
-        value={filters.customerId}
-        onChange={(value) => onFilterChange("customerId", value)}
-      />
     </div>
-  );
-}
-
-function FinancialStatusSelect({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  const selectedLabel =
-    FINANCIAL_STATUS_OPTIONS.find((o) => o.value === value)?.label ?? null;
-
-  const normalizedSearch = normalizeForSearch(search);
-  const filtered = search
-    ? FINANCIAL_STATUS_OPTIONS.filter((o) =>
-        normalizeForSearch(o.label).includes(normalizedSearch),
-      )
-    : FINANCIAL_STATUS_OPTIONS;
-
-  return (
-    <PopoverPrimitive.Root
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (!next) setSearch("");
-      }}
-    >
-      <PopoverPrimitive.Trigger asChild>
-        <Button
-          id="financialStatusId"
-          type="button"
-          variant="outline"
-          className={cn(
-            "h-11 w-full justify-between rounded-xl border-border/70 bg-background px-3 text-left font-normal shadow-xs hover:bg-muted/40",
-            !selectedLabel && "text-muted-foreground",
-          )}
-        >
-          <span className="truncate">{selectedLabel ?? "Todos os status"}</span>
-          <ChevronRight className="size-4 rotate-90 text-muted-foreground" />
-        </Button>
-      </PopoverPrimitive.Trigger>
-
-      <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Content
-          align="start"
-          sideOffset={8}
-          className="z-60 w-(--radix-popover-trigger-width) min-w-56 rounded-xl border border-border/70 bg-background shadow-2xl outline-none"
-        >
-          <div className="border-b border-border/60 p-2">
-            <Input
-              type="text"
-              autoComplete="off"
-              placeholder="Buscar status\u2026"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-9 text-sm"
-            />
-          </div>
-
-          <div className="max-h-56 overflow-y-auto p-1">
-            <button
-              type="button"
-              className={cn(
-                "flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted/60",
-                !selectedLabel && "bg-primary/10 font-medium text-primary",
-              )}
-              onClick={() => {
-                onChange("-1");
-                setOpen(false);
-                setSearch("");
-              }}
-            >
-              Todos os status
-            </button>
-
-            {filtered.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={cn(
-                  "flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted/60",
-                  value === option.value &&
-                    "bg-primary/10 font-medium text-primary",
-                )}
-                onClick={() => {
-                  onChange(option.value);
-                  setOpen(false);
-                  setSearch("");
-                }}
-              >
-                {option.label}
-              </button>
-            ))}
-
-            {filtered.length === 0 && (
-              <p className="px-3 py-4 text-center text-sm text-muted-foreground">
-                Nenhum status encontrado
-              </p>
-            )}
-          </div>
-        </PopoverPrimitive.Content>
-      </PopoverPrimitive.Portal>
-    </PopoverPrimitive.Root>
-  );
-}
-
-function LocationSelect({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  const selectedLabel =
-    LOCATION_OPTIONS.find((o) => o.value === value)?.label ?? null;
-
-  const normalizedSearch = normalizeForSearch(search);
-  const filtered = search
-    ? LOCATION_OPTIONS.filter((o) =>
-        normalizeForSearch(o.label).includes(normalizedSearch),
-      )
-    : LOCATION_OPTIONS;
-
-  return (
-    <PopoverPrimitive.Root
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (!next) setSearch("");
-      }}
-    >
-      <PopoverPrimitive.Trigger asChild>
-        <Button
-          id="locationId"
-          type="button"
-          variant="outline"
-          className={cn(
-            "h-11 w-full justify-between rounded-xl border-border/70 bg-background px-3 text-left font-normal shadow-xs hover:bg-muted/40",
-            !selectedLabel && "text-muted-foreground",
-          )}
-        >
-          <span className="truncate">
-            {selectedLabel ?? "Todas as localizações"}
-          </span>
-          <ChevronRight className="size-4 rotate-90 text-muted-foreground" />
-        </Button>
-      </PopoverPrimitive.Trigger>
-
-      <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Content
-          align="start"
-          sideOffset={8}
-          className="z-60 w-(--radix-popover-trigger-width) min-w-56 rounded-xl border border-border/70 bg-background shadow-2xl outline-none"
-        >
-          <div className="border-b border-border/60 p-2">
-            <Input
-              type="text"
-              autoComplete="off"
-              placeholder="Buscar localização\u2026"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-9 text-sm"
-            />
-          </div>
-
-          <div className="max-h-56 overflow-y-auto p-1">
-            <button
-              type="button"
-              className={cn(
-                "flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted/60",
-                !selectedLabel && "bg-primary/10 font-medium text-primary",
-              )}
-              onClick={() => {
-                onChange("0");
-                setOpen(false);
-                setSearch("");
-              }}
-            >
-              Todas as localizações
-            </button>
-
-            {filtered.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={cn(
-                  "flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted/60",
-                  value === option.value &&
-                    "bg-primary/10 font-medium text-primary",
-                )}
-                onClick={() => {
-                  onChange(option.value);
-                  setOpen(false);
-                  setSearch("");
-                }}
-              >
-                {option.label}
-              </button>
-            ))}
-
-            {filtered.length === 0 && (
-              <p className="px-3 py-4 text-center text-sm text-muted-foreground">
-                Nenhuma localização encontrada
-              </p>
-            )}
-          </div>
-        </PopoverPrimitive.Content>
-      </PopoverPrimitive.Portal>
-    </PopoverPrimitive.Root>
   );
 }
 
@@ -503,22 +260,6 @@ function OperationalFilters({
 }: Pick<BudgetListFiltersProps, "filters" | "onFilterChange">) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <div className="space-y-2">
-        <Label htmlFor="locationId">Localização</Label>
-        <LocationSelect
-          value={filters.locationId}
-          onChange={(value) => onFilterChange("locationId", value)}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="financialStatusId">Status financeiro</Label>
-        <FinancialStatusSelect
-          value={filters.financialStatusId}
-          onChange={(value) => onFilterChange("financialStatusId", value)}
-        />
-      </div>
-
       <div className="space-y-2">
         <Label htmlFor="limit">Limite de registros</Label>
         <Select
