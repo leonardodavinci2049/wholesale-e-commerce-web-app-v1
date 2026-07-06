@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Command,
   GalleryVerticalEnd,
+  House,
   PackageSearch,
   PieChart,
   Settings,
@@ -62,7 +63,7 @@ const data = {
         },
 
         {
-          title: "Carrinho",
+          title: "Novo Orçamento",
           url: "/dashboard/order/budget",
         },
       ],
@@ -147,6 +148,12 @@ const data = {
       url: "/dashboard/crm",
       icon: PieChart,
     },
+    {
+      name: "Welcome",
+      url: "/dashboard/welcome",
+      icon: House,
+    },
+
     {
       name: "Configurações",
       url: "/dashboard/settings/",

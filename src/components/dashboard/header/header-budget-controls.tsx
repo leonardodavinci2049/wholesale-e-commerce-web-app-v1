@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useBudgetProductSearch } from "@/hooks/use-budget-product-search";
 
-const BUDGET_ROUTE = "/dashboard/order/budget";
+const BUDGET_ROUTE = "/dashboard";
 const STORAGE_KEY = "budget:product-view-mode";
 const SEARCH_PANEL_CONTAINER_ID = "budget-search-panel-container";
 type ViewMode = "grid" | "list";

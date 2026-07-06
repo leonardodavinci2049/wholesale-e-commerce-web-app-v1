@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-import { addItemAction } from "../actions/add-item-action";
+import { addItemAction } from "../../_actions/add-item-action";
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 const ADD_ITEM_SUCCESS_TOAST_DURATION_MS = 1000;
 
 interface ProductAddButtonV2Props {
