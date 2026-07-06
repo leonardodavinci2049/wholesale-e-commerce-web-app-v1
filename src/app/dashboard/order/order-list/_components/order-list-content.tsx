@@ -27,10 +27,8 @@ function getFiltersFromSearchParams(
   return normalizeOrderListFilters(
     {
       orderId: searchParams.get("orderId") ?? undefined,
-      customerId: searchParams.get("customerId") ?? undefined,
       orderStatusId: searchParams.get("orderStatusId") ?? undefined,
       financialStatusId: searchParams.get("financialStatusId") ?? undefined,
-      locationId: searchParams.get("locationId") ?? undefined,
       initialDate: searchParams.get("initialDate") ?? undefined,
       finalDate: searchParams.get("finalDate") ?? undefined,
       limit: searchParams.get("limit") ?? undefined,
@@ -45,14 +43,12 @@ function countActiveFilters(
 ): number {
   return [
     filters.orderId !== defaultFilters.orderId ? filters.orderId : "",
-    filters.customerId !== defaultFilters.customerId ? filters.customerId : "",
     filters.orderStatusId !== defaultFilters.orderStatusId
       ? filters.orderStatusId
       : "",
     filters.financialStatusId !== defaultFilters.financialStatusId
       ? filters.financialStatusId
       : "",
-    filters.locationId !== defaultFilters.locationId ? filters.locationId : "",
     filters.initialDate !== defaultFilters.initialDate
       ? filters.initialDate
       : "",
@@ -88,20 +84,12 @@ export function OrderListContent({
       params.set("orderId", nextFilters.orderId);
     }
 
-    if (nextFilters.customerId !== defaultFilters.customerId) {
-      params.set("customerId", nextFilters.customerId);
-    }
-
     if (nextFilters.orderStatusId !== defaultFilters.orderStatusId) {
       params.set("orderStatusId", nextFilters.orderStatusId);
     }
 
     if (nextFilters.financialStatusId !== defaultFilters.financialStatusId) {
       params.set("financialStatusId", nextFilters.financialStatusId);
-    }
-
-    if (nextFilters.locationId !== defaultFilters.locationId) {
-      params.set("locationId", nextFilters.locationId);
     }
 
     if (nextFilters.initialDate !== defaultFilters.initialDate) {
@@ -196,7 +184,7 @@ export function OrderListContent({
         </div>
 
         <OrderLoadMore
-          currentLimit={Number(filters.limit) || 20}
+          currentLimit={Number(filters.limit) || 50}
           totalLoaded={orders.length}
         />
       </section>

@@ -90,7 +90,7 @@ export default async function OrderListPage(props: OrderListPageProps) {
       sellerId: 0,
       orderStatusId: toOptionalNumber(currentFilters.orderStatusId),
       financialStatusId: toOptionalNumber(currentFilters.financialStatusId),
-      locationId: toOptionalNumber(currentFilters.locationId),
+      locationId: 0,
       initialDate: currentFilters.initialDate,
       finalDate: currentFilters.finalDate,
       limit:
