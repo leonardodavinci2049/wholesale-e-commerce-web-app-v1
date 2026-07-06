@@ -66,6 +66,12 @@ const data = {
           title: "Novo Orçamento",
           url: "/dashboard/order/new-budget",
         },
+
+        {
+          title: "Catálogo de Produtos",
+          url: "/dashboard/",
+        },
+
       ],
     },
     {
@@ -94,7 +100,7 @@ const data = {
     },
 
     {
-      title: "Catálogo de Produtos",
+      title: "Produtos",
       url: "#",
       icon: PackageSearch,
       items: [
