@@ -1,29 +1,32 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
-const BUDGET_ROUTE = "/dashboard";
 const SEARCH_DEBOUNCE_MS = 800;
 
-interface UseBudgetProductSearchOptions {
+interface UseProductSearchOptions {
   initialValue: string;
 }
 
-export function useBudgetProductSearch({
-  initialValue,
-}: UseBudgetProductSearchOptions) {
+export function useProductSearch({ initialValue }: UseProductSearchOptions) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState(initialValue);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isComposingRef = useRef(false);
   const searchParamsRef = useRef(searchParams);
+  const pathnameRef = useRef(pathname);
 
   useEffect(() => {
     searchParamsRef.current = searchParams;
   }, [searchParams]);
+
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
 
   const clearScheduledSearch = useCallback(() => {
     if (debounceRef.current) {
@@ -53,7 +56,8 @@ export function useBudgetProductSearch({
     params.delete("limit");
 
     const queryString = params.toString();
-    return queryString ? `${BUDGET_ROUTE}?${queryString}` : BUDGET_ROUTE;
+    const route = pathnameRef.current;
+    return queryString ? `${route}?${queryString}` : route;
   }, []);
 
   const commitSearch = useCallback(

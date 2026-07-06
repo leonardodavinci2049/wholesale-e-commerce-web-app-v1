@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useBudgetProductSearch } from "@/hooks/use-budget-product-search";
+import { useProductSearch } from "@/hooks/use-product-search";
 
 const BUDGET_ROUTE = "/dashboard";
 const STORAGE_KEY = "budget:product-view-mode";
@@ -30,7 +30,7 @@ export function HeaderBudgetControls() {
     handleCompositionEnd,
     commitSearch,
     clearSearch,
-  } = useBudgetProductSearch({ initialValue: currentSearchValue });
+  } = useProductSearch({ initialValue: currentSearchValue });
 
   useEffect(() => {
     setPortalTarget(document.getElementById(SEARCH_PANEL_CONTAINER_ID));

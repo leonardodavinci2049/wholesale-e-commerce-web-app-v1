@@ -19,10 +19,10 @@ import { productBaseServiceApi } from "@/services/api-main/product-base";
 import { transformProductList } from "@/services/api-main/product-base/transformers/transformers";
 
 import { CartSummaryPanel } from "../_components/cart-summary-panel";
-import { MobileProductSearch } from "../_components/mobile-product-search";
 import { ProductGrid } from "../_components/product-grid";
 import { ProductList } from "../_components/product-list";
 import { ProductLoadMore } from "../_components/product-load-more";
+import { ProductSearchBar } from "../_components/product-search-bar";
 import { ProductViewSwitcher } from "../_components/product-view-switcher";
 import { SaleMobileBottomBar } from "../_components/sale-mobile-bottom-bar";
 
@@ -167,6 +167,8 @@ export default async function ProductsBestSellingPage({
           <div className="flex min-w-0 flex-col gap-4">
             <ProductViewSwitcher
               searchDefaultValue={search}
+              searchPlaceholder="Buscar produto mais vendido..."
+              searchAriaLabel="Buscar produto mais vendido"
               grid={
                 <ProductGrid products={products} orderId={effectiveOrderId} />
               }
@@ -196,7 +198,13 @@ export default async function ProductsBestSellingPage({
 
       <SaleMobileBottomBar
         cartItemCount={cartItems.length}
-        searchContent={<MobileProductSearch defaultValue={search} />}
+        searchContent={
+          <ProductSearchBar
+            defaultValue={search}
+            placeholder="Buscar produto mais vendido..."
+            ariaLabel="Buscar produto mais vendido"
+          />
+        }
         cartContent={
           <CartSummaryPanel
             items={cartItems}

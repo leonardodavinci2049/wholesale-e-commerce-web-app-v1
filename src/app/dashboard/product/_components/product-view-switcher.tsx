@@ -15,12 +15,16 @@ interface ProductViewSwitcherProps {
   grid: ReactNode;
   list: ReactNode;
   searchDefaultValue: string;
+  searchPlaceholder?: string;
+  searchAriaLabel?: string;
 }
 
 export function ProductViewSwitcher({
   grid,
   list,
   searchDefaultValue,
+  searchPlaceholder,
+  searchAriaLabel,
 }: ProductViewSwitcherProps) {
   const [mode, setMode] = useState<ViewMode>("grid");
   const [hydrated, setHydrated] = useState(false);
@@ -90,6 +94,8 @@ export function ProductViewSwitcher({
       <section className="hidden sm:block rounded-2xl border border-border/50 bg-card/90 p-3 shadow-sm sm:p-4">
         <ProductSearchBar
           defaultValue={searchDefaultValue}
+          placeholder={searchPlaceholder}
+          ariaLabel={searchAriaLabel}
           viewToggleButton={toggleButton}
         />
       </section>
