@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 
 interface ProductActiveFiltersPanelProps {
   brands: UIBrand[];

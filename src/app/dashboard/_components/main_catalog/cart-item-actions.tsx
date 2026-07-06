@@ -6,8 +6,8 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { deleteItemAction } from "../actions/delete-item-action";
-import { updateQuantityAction } from "../actions/update-quantity-action";
+import { deleteItemAction } from "../../_actions/delete-item-action";
+import { updateQuantityAction } from "../../_actions/update-quantity-action";
 
 interface CartItemActionsProps {
   movementId: number;

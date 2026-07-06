@@ -8,7 +8,7 @@ import { SheetClose } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
-const ROUTE = "/dashboard/order/budget";
+const ROUTE = "/dashboard";
 
 interface BudgetStockFilterPanelProps {
   flagStock: number;

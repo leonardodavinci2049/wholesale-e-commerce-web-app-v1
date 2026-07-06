@@ -1,228 +1,257 @@
-import {
-  ArrowRight,
-  BadgeCheck,
-  BarChart3,
-  Bolt,
-  CalendarDays,
-  ClipboardList,
-  LayoutGrid,
-  PackageSearch,
-  ShieldCheck,
-  ShoppingCart,
-  TriangleAlert,
-} from "lucide-react";
-import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { companyInfo } from "@/data/info-company";
-
+import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { serverEnvs } from "@/core/config/envs.server";
+import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { DashboardMobileBottomBar } from "./_components/dashboard-mobile-bottom-bar";
-import { SiteHeaderWithBreadcrumb } from "./_components/header/site-header-with-breadcrumb";
+import { brandServiceApi } from "@/services/api-main/brand";
+import { transformBrandList } from "@/services/api-main/brand/transformers/transformers";
+import { orderSalesServiceApi } from "@/services/api-main/order-sales";
+import {
+  transformCustomerEntity,
+  transformDashboardDetailsEntity,
+  transformDashboardItemEntity,
+  transformSummaryEntity,
+} from "@/services/api-main/order-sales/transformers/transformers";
+import { productPdvServiceApi } from "@/services/api-main/product-pdv";
+import {
+  transformProductPdvList,
+  transformProductPdvSearchList,
+} from "@/services/api-main/product-pdv/transformers/transformers";
+import { taxonomyBaseServiceApi } from "@/services/api-main/taxonomy-base";
+import { transformTaxonomyMenuList } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
-const modules = [
-  {
-    title: "Orçamentos e Pedidos",
-    description: "Gerencie pedidos, orçamentos e status de entrega.",
-    href: "/dashboard/sales-dashboard",
-    icon: BadgeCheck,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
-    borderColor: "group-hover:border-blue-500/50",
-  },
-  {
-    title: "Meu Carrinho",
-    description: "Adicione novos produtos ao carrinho.",
-    href: "/dashboard/order/budget",
-    icon: ShoppingCart,
-    color: "text-amber-500",
-    bgColor: "bg-amber-500/10",
-    borderColor: "group-hover:border-amber-500/50",
-  },
-  {
-    title: "Produtos em Destaque",
-    description: "Confira os produtos em destaque.",
-    href: "/dashboard/product/products-on-sale",
-    icon: PackageSearch,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "group-hover:border-emerald-500/50",
-  },
-  {
-    title: "Lançamentos",
-    description: "Confira os lançamentos.",
-    href: "/dashboard/product/products-new-releases",
-    icon: Bolt,
-    color: "text-indigo-500",
-    bgColor: "bg-indigo-500/10",
-    borderColor: "group-hover:border-indigo-500/50",
-  },
-  {
-    title: "Os mais Vendidos",
-    description: "Confira os mais vendidos.",
-    href: "/dashboard/product/products-best-selling",
-    icon: BarChart3,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-    borderColor: "group-hover:border-purple-500/50",
-  },
-  {
-    title: "MInhas Compras",
-    description: "Confira suas compras.",
-    href: "/dashboard/order/order-list",
-    icon: ClipboardList,
-    color: "text-rose-500",
-    bgColor: "bg-rose-500/10",
-    borderColor: "group-hover:border-rose-500/50",
-  },
-  {
-    title: "Relatórios",
-    description: "Acesse os relatórios.",
-    href: "/dashboard/report/panel",
-    icon: BarChart3,
-    color: "text-sky-500",
-    bgColor: "bg-sky-500/10",
-    borderColor: "group-hover:border-sky-500/50",
-  },
-  {
-    title: "Meu Cadastro",
-    description: "Confira seus dados cadastrais.",
-    href: "/dashboard/profile",
-    icon: ShieldCheck,
-    color: "text-sky-500",
-    bgColor: "bg-sky-500/10",
-    borderColor: "group-hover:border-sky-500/50",
-  },
-  {
-    title: "Agenda",
-    description: "Organize seus compromissos, visitas e retornos.",
-    href: "/dashboard/agenda/agenda-panel",
-    icon: CalendarDays,
-    color: "text-slate-500",
-    bgColor: "bg-slate-500/10",
-    borderColor: "group-hover:border-slate-500/50",
-  },
-];
+import { BudgetMobileBottomBar } from "./_components/main_catalog/budget-mobile-bottom-bar";
+import { CartSummaryPanel } from "./_components/main_catalog/cart-summary-panel";
+import { ProductGrid } from "./_components/main_catalog/product-grid";
+import { ProductList } from "./_components/main_catalog/product-list";
+import { ProductLoadMoreV2 } from "./_components/main_catalog/product-load-more-v2";
+import { ProductViewSwitcher } from "./_components/main_catalog/product-view-switcher";
 
-function getInitials(name?: string | null) {
-  if (!name) return "US";
+const logger = createLogger("dashboard-page");
 
-  const initials = name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
+const DEFAULT_PRODUCT_LIMIT = 50;
 
-  return initials || "US";
+async function getOrderCart(
+  orderId: number,
+  params: {
+    customerId?: number;
+    typeBusiness?: number;
+    pe_user_id: string;
+    pe_user_name: string;
+    pe_user_role: string;
+    pe_person_id: number;
+  },
+) {
+  const response = await orderSalesServiceApi.findCartId({
+    pe_order_id: orderId,
+    pe_id_customer: params.customerId,
+    pe_type_business: params.typeBusiness,
+    pe_user_id: params.pe_user_id,
+    pe_user_name: params.pe_user_name,
+    pe_user_role: params.pe_user_role,
+    pe_person_id: params.pe_person_id,
+  });
+
+  if (!response) {
+    return undefined;
+  }
+
+  const summary = orderSalesServiceApi.extractDashboardSummary(response);
+  const details = orderSalesServiceApi.extractDashboardDetails(response);
+  const items = orderSalesServiceApi.extractDashboardItems(response);
+  const customer = orderSalesServiceApi.extractDashboardCustomer(response);
+
+  return {
+    summary: summary ? transformSummaryEntity(summary) : null,
+    details: details ? transformDashboardDetailsEntity(details) : null,
+    items: items.map(transformDashboardItemEntity),
+    customer: customer ? transformCustomerEntity(customer) : null,
+  };
 }
 
-export default async function DashboardPage() {
-  const { session, authWarning } = await getAuthContext();
+interface DashboardPageProps {
+  searchParams: Promise<{
+    search?: string;
+    orderId?: string;
+    brandId?: string;
+    taxonomyId?: string;
+    flagStock?: string;
+    limit?: string;
+  }>;
+}
 
-  const { user } = session;
-  const firstName = user?.name?.split(" ")[0] || "Vendedor";
-  const userInitials = getInitials(user?.name);
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
+  const { session, apiContext } = await getAuthContext();
+
+  const customerId = session.user.personId ?? 0;
+  const typeBusiness = serverEnvs.TYPE_BUSINESS;
+
+  const params = await searchParams;
+  const search = params.search?.trim() ?? "";
+  const orderId = params.orderId ? Number(params.orderId) : undefined;
+  const brandId = params.brandId ? Number(params.brandId) : undefined;
+  const taxonomyId = params.taxonomyId ? Number(params.taxonomyId) : undefined;
+  const flagStock = params.flagStock === "1" ? 1 : 0;
+  const productLimit = params.limit
+    ? Math.max(DEFAULT_PRODUCT_LIMIT, Number(params.limit))
+    : DEFAULT_PRODUCT_LIMIT;
+
+  const dashboardParams = {
+    ...apiContext,
+    customerId,
+    typeBusiness,
+  };
+
+  const shouldUseSearchEndpoint = search && !brandId && !taxonomyId;
+
+  const productsPromise = shouldUseSearchEndpoint
+    ? productPdvServiceApi
+        .findProductsPdvSearch({
+          pe_search: search,
+          pe_customer_id: customerId,
+          pe_flag_stock: flagStock,
+          pe_limit: productLimit,
+          ...apiContext,
+        })
+        .then((response) =>
+          transformProductPdvSearchList(
+            productPdvServiceApi.extractProductsPdvSearch(response),
+          ),
+        )
+    : productPdvServiceApi
+        .findAllProductsPdv({
+          pe_search: search,
+          pe_brand_id: brandId,
+          pe_taxonomy_id: taxonomyId,
+          pe_flag_stock: flagStock,
+          pe_records_quantity: productLimit,
+          ...apiContext,
+        })
+        .then((response) =>
+          transformProductPdvList(
+            productPdvServiceApi.extractProductsPdv(response),
+          ),
+        );
+
+  const brandsPromise = brandServiceApi
+    .findAllBrands({
+      pe_inactive: 0,
+      pe_limit: 50,
+      ...apiContext,
+    })
+    .then((response) =>
+      transformBrandList(brandServiceApi.extractBrands(response)),
+    );
+
+  const categoriesPromise = taxonomyBaseServiceApi
+    .findTaxonomyMenu({
+      pe_type_id: 2,
+      pe_parent_id: 0,
+      ...apiContext,
+    })
+    .then((response) =>
+      transformTaxonomyMenuList(
+        taxonomyBaseServiceApi.extractTaxonomyMenu(response),
+      ),
+    );
+
+  const orderCartPromise = getOrderCart(orderId ?? 0, dashboardParams).catch(
+    (error) => {
+      logger.error("Erro ao carregar carrinho do pedido:", error);
+      return undefined;
+    },
+  );
+
+  const [products, brands, categories, orderCart] = await Promise.all([
+    productsPromise.catch((error) => {
+      logger.error("Erro ao carregar produtos:", error);
+      return [];
+    }),
+    brandsPromise.catch((error) => {
+      logger.error("Erro ao carregar marcas:", error);
+      return [];
+    }),
+    categoriesPromise.catch((error) => {
+      logger.error("Erro ao carregar categorias:", error);
+      return [];
+    }),
+    orderCartPromise,
+  ]);
+
+  const cartItems = orderCart?.items ?? [];
+  const summary = orderCart?.summary;
+  const selectedPaymentId = orderCart?.details?.paymentFormId;
+  const effectiveOrderId = orderCart?.details?.orderId ?? orderId;
+
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_28%),radial-gradient(circle_at_top_right,rgba(148,163,184,0.1),transparent_20%)]" />
-
+    <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+5rem)] xl:pb-0">
       <SiteHeaderWithBreadcrumb
-        title="Início"
-        breadcrumbItems={[{ label: "Início", isActive: true }]}
+        title="Novo Orçamento"
+        breadcrumbItems={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Vendas", href: "#" },
+          { label: "Novo Orçamento", isActive: true },
+        ]}
       />
 
-      <main className="mx-auto flex w-full max-w-350 flex-1 flex-col gap-3 p-3 md:p-4 lg:p-5">
-        {authWarning ? (
-          <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-950 dark:text-amber-100">
-            <TriangleAlert className="text-amber-600 dark:text-amber-300" />
-            <AlertTitle>{authWarning.title}</AlertTitle>
-            <AlertDescription className="text-amber-900/80 dark:text-amber-100/80">
-              {authWarning.description}
-            </AlertDescription>
-          </Alert>
-        ) : null}
+      <div id="budget-search-panel-container" className="sm:hidden" />
 
-        <Card className="overflow-hidden border-border/60 bg-linear-to-br from-card via-card to-muted/30 shadow-sm animate-in fade-in slide-in-from-bottom-3 duration-500">
-          <CardContent className="relative px-4 py-2 sm:px-6 sm:py-3">
-            <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_65%)] lg:block" />
+      <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
+        <div className="mx-auto grid w-full max-w-350 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <ProductViewSwitcher
+              searchProps={{
+                defaultValue: search,
+                flagStock,
+                brands,
+                selectedBrandId: brandId,
+                categories,
+                selectedTaxonomyId: taxonomyId,
+              }}
+              grid={
+                <ProductGrid products={products} orderId={effectiveOrderId} />
+              }
+              list={
+                <ProductList products={products} orderId={effectiveOrderId} />
+              }
+            />
 
-            <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <Avatar className="size-12 border border-border/60 shadow-sm sm:size-14">
-                  <AvatarImage
-                    src={user.image ?? ""}
-                    alt={user.name ?? firstName}
-                  />
-                  <AvatarFallback className="bg-primary/10 text-primary text-lg font-semibold sm:text-xl">
-                    {userInitials}
-                  </AvatarFallback>
-                </Avatar>
+            <ProductLoadMoreV2
+              currentLimit={productLimit}
+              totalLoaded={products.length}
+            />
+          </div>
 
-                <div className="space-y-2">
-                  <div className="space-y-1">
-                    <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                      Olá, {firstName}!
-                    </h1>
-                    <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-                      Bem-vindo à <strong>{companyInfo.name}</strong>.
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <aside className="hidden xl:block">
+            <div className="sticky top-4">
+              <CartSummaryPanel
+                items={cartItems}
+                summary={summary}
+                orderId={effectiveOrderId}
+                selectedPaymentId={selectedPaymentId}
+              />
             </div>
-          </CardContent>
-        </Card>
-
-        <section className="grid grid-cols-1 gap-4 pb-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <Card className="border-border/60 bg-card/70 animate-in fade-in slide-in-from-bottom-5 duration-700">
-            <CardHeader className="space-y-0.5 px-4 py-2">
-              <CardTitle className="flex items-center gap-2 text-base tracking-tight">
-                <LayoutGrid className="size-5 text-foreground/80" />
-                Acesso rápido
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-1">
-              {modules.map((mod, index) => (
-                <Link
-                  key={mod.title}
-                  href={mod.href}
-                  prefetch={false}
-                  className="group block rounded-2xl outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <div
-                    className={`flex items-start gap-3 px-3 py-3 ${
-                      index < modules.length - 1
-                        ? "border-b border-border/50"
-                        : ""
-                    }`}
-                  >
-                    <div
-                      className={`mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl ${mod.bgColor} ${mod.color}`}
-                    >
-                      <mod.icon className="size-4.5 stroke-[1.75]" />
-                    </div>
-
-                    <div className="min-w-0 grow">
-                      <p className="text-sm font-medium text-foreground">
-                        {mod.title}
-                      </p>
-                      <p className="line-clamp-1 text-xs text-muted-foreground sm:text-sm">
-                        {mod.description}
-                      </p>
-                    </div>
-
-                    <ArrowRight className="mt-1 size-4 shrink-0 text-foreground/40 transition-transform duration-300 group-hover:translate-x-1" />
-                  </div>
-                </Link>
-              ))}
-            </CardContent>
-          </Card>
-        </section>
+          </aside>
+        </div>
       </main>
 
-      <DashboardMobileBottomBar />
+      <BudgetMobileBottomBar
+        cartItemCount={cartItems.length}
+        flagStock={flagStock}
+        brands={brands}
+        selectedBrandId={brandId}
+        categories={categories}
+        selectedTaxonomyId={taxonomyId}
+        cartContent={
+          <CartSummaryPanel
+            items={cartItems}
+            summary={summary}
+            orderId={effectiveOrderId}
+            selectedPaymentId={selectedPaymentId}
+          />
+        }
+      />
     </div>
   );
 }
