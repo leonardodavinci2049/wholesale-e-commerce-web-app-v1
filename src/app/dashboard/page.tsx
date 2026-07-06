@@ -1,6 +1,7 @@
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
+import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
 import { getAuthContext } from "@/server/auth-context";
 import { brandServiceApi } from "@/services/api-main/brand";
 import { transformBrandList } from "@/services/api-main/brand/transformers/transformers";
@@ -163,10 +164,13 @@ export default async function DashboardPage({
     },
   );
 
-  const [products, brands, categories, orderCart] = await Promise.all([
+  const [productResult, brands, categories, orderCart] = await Promise.all([
     productsPromise.catch((error) => {
       logger.error("Erro ao carregar produtos:", error);
-      return [];
+      return {
+        items: [],
+        isApiUnavailable: isApiAvailabilityError(error),
+      };
     }),
     brandsPromise.catch((error) => {
       logger.error("Erro ao carregar marcas:", error);
@@ -179,6 +183,11 @@ export default async function DashboardPage({
     orderCartPromise,
   ]);
 
+  const products = Array.isArray(productResult)
+    ? productResult
+    : productResult.items;
+  const isProductApiUnavailable =
+    !Array.isArray(productResult) && productResult.isApiUnavailable;
   const cartItems = orderCart?.items ?? [];
   const summary = orderCart?.summary;
   const selectedPaymentId = orderCart?.details?.paymentFormId;
@@ -210,17 +219,27 @@ export default async function DashboardPage({
                 selectedTaxonomyId: taxonomyId,
               }}
               grid={
-                <ProductGrid products={products} orderId={effectiveOrderId} />
+                <ProductGrid
+                  products={products}
+                  orderId={effectiveOrderId}
+                  isApiUnavailable={isProductApiUnavailable}
+                />
               }
               list={
-                <ProductList products={products} orderId={effectiveOrderId} />
+                <ProductList
+                  products={products}
+                  orderId={effectiveOrderId}
+                  isApiUnavailable={isProductApiUnavailable}
+                />
               }
             />
 
-            <ProductLoadMoreV2
-              currentLimit={productLimit}
-              totalLoaded={products.length}
-            />
+            {!isProductApiUnavailable && (
+              <ProductLoadMoreV2
+                currentLimit={productLimit}
+                totalLoaded={products.length}
+              />
+            )}
           </div>
 
           <aside className="hidden xl:block">
