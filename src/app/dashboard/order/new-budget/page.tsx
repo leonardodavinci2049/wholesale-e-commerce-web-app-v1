@@ -1,6 +1,13 @@
-import { ShoppingCart } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ClipboardList,
+  PackagePlus,
+  ShoppingCart,
+} from "lucide-react";
 import Link from "next/link";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { Button } from "@/components/ui/button";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
@@ -60,54 +67,95 @@ const NewBudgetPage = async () => {
           { label: "Criar Orçamento", isActive: true },
         ]}
       />
-      <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-6">
-          <div className="flex flex-col gap-6 py-6">
-            <div className="px-4 lg:px-6">
-              <div className="space-y-6">
-                <div>
-                  <h1 className="text-3xl font-bold">Novo Orçamento</h1>
+      <div className="flex flex-1 flex-col px-4 py-6 lg:px-6">
+        <div className="@container/main flex flex-1 items-center justify-center">
+          <section className="w-full max-w-3xl overflow-hidden rounded-3xl border border-border/70 bg-background shadow-sm">
+            <div className="border-border/70 border-b bg-muted/30 px-5 py-4 sm:px-7">
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-border/70 bg-background shadow-sm">
+                  <ClipboardList className="size-5 text-primary" />
                 </div>
-
-                <div className="flex min-h-72 flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-border/70 bg-muted/20 px-6 py-10 text-center">
-                  <div className="rounded-full border border-border/70 bg-background p-5 shadow-sm">
-                    <ShoppingCart className="size-8 text-primary" />
-                  </div>
-
-                  {openOrderId ? (
-                    <div className="space-y-2">
-                      <p className="text-muted-foreground max-w-md text-sm">
-                        Você tem um orçamento aberto ID:{" "}
-                        <span className="font-semibold text-foreground">
-                          #{openOrderId}
-                        </span>{" "}
-                        com{" "}
-                        <span className="font-semibold text-foreground">
-                          {openItemsCount}{" "}
-                          {openItemsCount === 1 ? "produto" : "produtos"}
-                        </span>
-                        .{" "}
-                        <Link
-                          href={`/dashboard?orderId=${openOrderId}`}
-                          className="text-primary font-medium underline-offset-4 hover:underline"
-                        >
-                          ir para o catálogo de produtos e continuar comprando
-                        </Link>
-                        .
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground max-w-md text-sm">
-                      Inicie um orçamento de compra e adicione produtos no
-                      catálogo.
-                    </p>
-                  )}
-
-                  <CreateBudgetButton size="lg" />
+                <div className="min-w-0">
+                  <h1 className="font-semibold text-2xl tracking-tight sm:text-3xl">
+                    Novo orçamento
+                  </h1>
+                  <p className="mt-1 text-muted-foreground text-sm">
+                    Comece uma nova compra e selecione os produtos no catálogo.
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
+
+            <div className="flex min-h-[430px] flex-col items-center justify-center gap-7 px-5 py-10 text-center sm:px-8 sm:py-12">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-primary/10 blur-2xl" />
+                <div className="relative flex size-24 items-center justify-center rounded-full border border-border/70 bg-card shadow-sm sm:size-28">
+                  <ShoppingCart className="size-10 text-primary sm:size-12" />
+                </div>
+              </div>
+
+              <div className="max-w-xl space-y-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-muted/40 px-3 py-1 text-muted-foreground text-xs font-medium">
+                  <PackagePlus className="size-3.5 text-primary" />
+                  Fluxo rápido de criação
+                </div>
+
+                {openOrderId ? (
+                  <div className="space-y-3">
+                    <p className="text-base text-foreground sm:text-lg">
+                      Já existe um orçamento aberto{" "}
+                      <span className="font-semibold">#{openOrderId}</span>.
+                    </p>
+                    <p className="mx-auto max-w-md text-muted-foreground text-sm leading-6">
+                      Ele possui{" "}
+                      <span className="font-medium text-foreground">
+                        {openItemsCount}{" "}
+                        {openItemsCount === 1 ? "produto" : "produtos"}
+                      </span>
+                      . Você pode continuar de onde parou ou criar um novo
+                      orçamento.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-base text-foreground sm:text-lg">
+                      Tudo pronto para montar um orçamento profissional.
+                    </p>
+                    <p className="mx-auto max-w-md text-muted-foreground text-sm leading-6">
+                      Clique no botão abaixo para abrir um novo orçamento e
+                      adicionar produtos direto pelo catálogo.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex w-full max-w-sm flex-col items-center gap-3">
+                <CreateBudgetButton
+                  className="h-11 w-full px-6 text-sm shadow-sm sm:h-12"
+                  size="lg"
+                />
+
+                {openOrderId ? (
+                  <Button
+                    asChild
+                    className="w-full gap-2"
+                    size="lg"
+                    variant="outline"
+                  >
+                    <Link href={`/dashboard?orderId=${openOrderId}`}>
+                      Continuar orçamento aberto
+                      <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                    <CheckCircle2 className="size-4 text-primary" />
+                    Você será levado ao catálogo após criar o orçamento.
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </>
