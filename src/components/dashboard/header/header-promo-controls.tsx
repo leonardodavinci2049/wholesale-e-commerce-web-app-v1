@@ -161,7 +161,7 @@ export function HeaderPromoControls() {
               <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
               <Input
                 id="header-promo-product-search"
-                placeholder="Buscar produto em promoção..."
+                placeholder="Digite o termo de pesquisa"
                 key={currentSearchValue}
                 defaultValue={currentSearchValue}
                 onChange={(e) => handleSearch(e.target.value)}

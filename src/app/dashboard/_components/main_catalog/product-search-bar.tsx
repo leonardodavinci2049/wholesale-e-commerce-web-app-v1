@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { useBudgetProductSearch } from "@/hooks/use-budget-product-search";
+import { useProductSearch } from "@/hooks/use-product-search";
 import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
 import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
@@ -37,7 +37,7 @@ export function ProductSearchBar({
     handleCompositionStart,
     handleCompositionEnd,
     commitSearch,
-  } = useBudgetProductSearch({ initialValue: defaultValue });
+  } = useProductSearch({ initialValue: defaultValue });
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

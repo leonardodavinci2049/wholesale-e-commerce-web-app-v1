@@ -1,71 +1,79 @@
 "use client";
 
-import { Search } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useRef, useTransition } from "react";
+import { Loader2, Search, X } from "lucide-react";
+import type { ReactNode } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const ROUTE = "/dashboard/product/products-on-sale";
+import { useProductSearch } from "@/hooks/use-product-search";
 
 interface ProductSearchBarProps {
   defaultValue: string;
-  viewToggleButton?: React.ReactNode;
+  placeholder?: string;
+  ariaLabel?: string;
+  viewToggleButton?: ReactNode;
 }
 
 export function ProductSearchBar({
   defaultValue,
+  placeholder = "Buscar produto...",
+  ariaLabel = "Buscar produto",
   viewToggleButton,
 }: ProductSearchBarProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const buildSearchParams = useCallback(
-    (searchValue: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      const trimmed = searchValue.trim();
-
-      if (trimmed) {
-        params.set("search", trimmed);
-      } else {
-        params.delete("search");
-      }
-
-      params.delete("limit");
-
-      return params;
-    },
-    [searchParams],
-  );
-
-  const handleSearch = useCallback(
-    (value: string) => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-        const params = buildSearchParams(value);
-        startTransition(() => {
-          router.push(`${ROUTE}?${params.toString()}`, { scroll: false });
-        });
-      }, 400);
-    },
-    [buildSearchParams, router],
-  );
+  const {
+    value,
+    isPending,
+    handleChange,
+    handleCompositionStart,
+    handleCompositionEnd,
+    commitSearch,
+    clearSearch,
+  } = useProductSearch({ initialValue: defaultValue });
 
   return (
     <div className="flex items-center gap-2">
       <div className="relative flex-1">
         <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
         <Input
-          id="promo-product-search"
-          placeholder="Buscar produto em promoção..."
-          key={defaultValue}
-          defaultValue={defaultValue}
-          onChange={(e) => handleSearch(e.target.value)}
-          aria-label="Buscar produto em promoção"
-          className={isPending ? "pl-10 opacity-60" : "pl-10"}
+          type="text"
+          inputMode="search"
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={(e) => handleCompositionEnd(e.currentTarget.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commitSearch(e.currentTarget.value);
+              e.currentTarget.blur();
+            }
+          }}
+          aria-label={ariaLabel}
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect="off"
+          enterKeyHint="search"
+          spellCheck={false}
+          className="h-11 pl-10 pr-10 text-base md:h-10 md:text-sm"
         />
+        {isPending ? (
+          <Loader2
+            className="pointer-events-none absolute inset-y-0 right-3 my-auto h-4 w-4 animate-spin text-muted-foreground"
+            aria-hidden="true"
+          />
+        ) : value ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={clearSearch}
+            aria-label="Limpar busca"
+            className="absolute inset-y-0 right-1 my-auto"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        ) : null}
       </div>
       {viewToggleButton}
     </div>
