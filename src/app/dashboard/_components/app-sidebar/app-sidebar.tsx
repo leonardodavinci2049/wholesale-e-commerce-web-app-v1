@@ -66,6 +66,11 @@ const data = {
           title: "Novo Orçamento",
           url: "/dashboard/order/new-budget",
         },
+
+        {
+          title: "Catálogo",
+          url: "/dashboard/",
+        },
       ],
     },
     {
@@ -94,7 +99,7 @@ const data = {
     },
 
     {
-      title: "Catálogo de Produtos",
+      title: "Produtos",
       url: "#",
       icon: PackageSearch,
       items: [
@@ -110,10 +115,6 @@ const data = {
         {
           title: "Mais Vendidos",
           url: "/dashboard/product/products-best-selling",
-        },
-        {
-          title: "Tabela",
-          url: "/dashboard/product/products-tabela",
         },
       ],
     },
@@ -143,6 +144,11 @@ const data = {
     },
   ],
   projects: [
+    {
+      name: "Home",
+      url: "/dashboard",
+      icon: House,
+    },
     {
       name: "Agenda",
       url: "/dashboard/agenda/agenda-panel",

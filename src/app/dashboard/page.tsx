@@ -196,11 +196,10 @@ export default async function DashboardPage({
   return (
     <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+5rem)] xl:pb-0">
       <SiteHeaderWithBreadcrumb
-        title="Novo Orçamento"
+        title="Catálogo de produtos"
         breadcrumbItems={[
           { label: "Dashboard", href: "/dashboard" },
-          { label: "Vendas", href: "#" },
-          { label: "Novo Orçamento", isActive: true },
+          { label: "Catálogo de produtos", isActive: true },
         ]}
       />
 
