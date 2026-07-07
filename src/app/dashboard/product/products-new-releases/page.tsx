@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CatalogMobileBottomBar } from "@/components/common/catalog-mobile-bottom-bar";
+import { HeaderPromoViewToggle } from "@/components/dashboard/header/header-promo-view-toggle";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
@@ -24,7 +26,6 @@ import { ProductList } from "../_components/product-list";
 import { ProductLoadMore } from "../_components/product-load-more";
 import { ProductSearchBar } from "../_components/product-search-bar";
 import { ProductViewSwitcher } from "../_components/product-view-switcher";
-import { SaleMobileBottomBar } from "../_components/sale-mobile-bottom-bar";
 
 const logger = createLogger("products-new-releases-page");
 
@@ -148,9 +149,15 @@ export default async function ProductsNewReleasesPage({
           { label: "Produtos", href: "#" },
           { label: "Lançamentos", isActive: true },
         ]}
+        mobileSearchBar={
+          <ProductSearchBar
+            defaultValue={search}
+            placeholder="Buscar lançamento..."
+            ariaLabel="Buscar lançamento"
+            viewToggleButton={<HeaderPromoViewToggle />}
+          />
+        }
       />
-
-      <div id="promo-search-panel-container" className="sm:hidden" />
 
       <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
         <div className="mx-auto w-full max-w-350 flex flex-col gap-1 mb-2">
@@ -196,15 +203,8 @@ export default async function ProductsNewReleasesPage({
         </div>
       </main>
 
-      <SaleMobileBottomBar
+      <CatalogMobileBottomBar
         cartItemCount={cartItems.length}
-        searchContent={
-          <ProductSearchBar
-            defaultValue={search}
-            placeholder="Buscar lançamento..."
-            ariaLabel="Buscar lançamento"
-          />
-        }
         cartContent={
           <CartSummaryPanel
             items={cartItems}

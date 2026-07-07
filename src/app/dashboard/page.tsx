@@ -1,3 +1,4 @@
+import { CatalogMobileBottomBar } from "@/components/common/catalog-mobile-bottom-bar";
 import { HeaderBudgetControls } from "@/components/dashboard/header/header-budget-controls";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { serverEnvs } from "@/core/config/envs.server";
@@ -21,7 +22,6 @@ import {
 import { taxonomyBaseServiceApi } from "@/services/api-main/taxonomy-base";
 import { transformTaxonomyMenuList } from "@/services/api-main/taxonomy-base/transformers/transformers";
 
-import { BudgetMobileBottomBar } from "./_components/main_catalog/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "./_components/main_catalog/cart-summary-panel";
 import { ProductGrid } from "./_components/main_catalog/product-grid";
 import { ProductList } from "./_components/main_catalog/product-list";
@@ -265,7 +265,7 @@ export default async function DashboardPage({
         </div>
       </main>
 
-      <BudgetMobileBottomBar
+      <CatalogMobileBottomBar
         cartItemCount={cartItems.length}
         cartContent={
           <CartSummaryPanel
