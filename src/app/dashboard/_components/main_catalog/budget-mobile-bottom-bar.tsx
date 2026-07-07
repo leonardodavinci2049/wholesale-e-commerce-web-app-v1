@@ -1,4 +1,4 @@
-import { Home, MessageCircle, ShoppingCart } from "lucide-react";
+import { ClipboardList, Home, MessageCircle, ShoppingCart } from "lucide-react";
 import type { ReactNode } from "react";
 
 import {
@@ -34,6 +34,12 @@ export function BudgetMobileBottomBar({
         icon={<Home className="h-5 w-5" />}
         label="Home"
         exact
+      />
+
+      <MobileBottomBarLink
+        href="/dashboard/sales-dashboard"
+        icon={<ClipboardList className="h-5 w-5" />}
+        label="Pedido"
       />
 
       <MobileBottomBarExternalLink

@@ -12,8 +12,14 @@ import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
 import { orderSalesServiceApi } from "@/services/api-main/order-sales";
-import { transformDashboardDetailsEntity } from "@/services/api-main/order-sales/transformers/transformers";
+import {
+  transformDashboardDetailsEntity,
+  transformDashboardItemEntity,
+  transformSummaryEntity,
+} from "@/services/api-main/order-sales/transformers/transformers";
 
+import { BudgetMobileBottomBar } from "../../_components/main_catalog/budget-mobile-bottom-bar";
+import { CartSummaryPanel } from "../../_components/main_catalog/cart-summary-panel";
 import { CreateBudgetButton } from "../_components/create-budget-button";
 
 const logger = createLogger("new-budget-page");
@@ -38,6 +44,7 @@ async function getOpenBudget() {
 
     const details = orderSalesServiceApi.extractDashboardDetails(response);
     const items = orderSalesServiceApi.extractDashboardItems(response);
+    const summary = orderSalesServiceApi.extractDashboardSummary(response);
 
     if (!details) {
       return null;
@@ -45,7 +52,8 @@ async function getOpenBudget() {
 
     return {
       details: transformDashboardDetailsEntity(details),
-      itemsCount: items.length,
+      items: items.map(transformDashboardItemEntity),
+      summary: summary ? transformSummaryEntity(summary) : null,
     };
   } catch (error) {
     logger.error("Erro ao carregar orçamento aberto:", error);
@@ -56,7 +64,8 @@ async function getOpenBudget() {
 const NewBudgetPage = async () => {
   const openBudget = await getOpenBudget();
   const openOrderId = openBudget?.details.orderId;
-  const openItemsCount = openBudget?.itemsCount ?? 0;
+  const openItemsCount = openBudget?.items.length ?? 0;
+  const selectedPaymentId = openBudget?.details.paymentFormId;
 
   return (
     <>
@@ -67,7 +76,7 @@ const NewBudgetPage = async () => {
           { label: "Criar Orçamento", isActive: true },
         ]}
       />
-      <div className="flex flex-1 flex-col px-4 py-6 lg:px-6">
+      <div className="flex flex-1 flex-col px-4 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] lg:px-6 xl:pb-6">
         <div className="@container/main flex flex-1 items-center justify-center">
           <section className="w-full max-w-3xl overflow-hidden rounded-3xl border border-border/70 bg-background shadow-sm">
             <div className="border-border/70 border-b bg-muted/30 px-5 py-4 sm:px-7">
@@ -158,6 +167,18 @@ const NewBudgetPage = async () => {
           </section>
         </div>
       </div>
+
+      <BudgetMobileBottomBar
+        cartItemCount={openItemsCount}
+        cartContent={
+          <CartSummaryPanel
+            items={openBudget?.items ?? []}
+            summary={openBudget?.summary}
+            orderId={openOrderId}
+            selectedPaymentId={selectedPaymentId}
+          />
+        }
+      />
     </>
   );
 };

@@ -50,12 +50,12 @@ export function BrandFilterBar({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-border/60 bg-card p-4 transition-opacity",
+        "rounded-lg border border-border/60 bg-card p-3 transition-opacity",
         isPending && "opacity-60",
       )}
     >
       {showHeader && (
-        <div className="mb-4 flex items-center gap-2 text-foreground">
+        <div className="mb-3 flex items-center gap-2 text-foreground">
           <Tags className="size-4" aria-hidden="true" />
           <h3 className="text-base font-semibold tracking-tight">
             Filtro por marcas
@@ -63,13 +63,13 @@ export function BrandFilterBar({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         <SheetClose asChild>
           <button
             type="button"
             onClick={() => handleSelect(undefined)}
             className={cn(
-              "flex h-11 min-w-0 items-center gap-2 rounded-full border px-3 text-left text-xs font-semibold uppercase tracking-wide transition-colors",
+              "flex h-9 min-w-0 items-center gap-1.5 rounded-md border px-2.5 text-left text-[0.7rem] font-semibold uppercase transition-colors",
               !selectedBrandId
                 ? "border-primary bg-primary/5 text-primary shadow-xs"
                 : "border-border bg-background text-foreground hover:border-primary/50 hover:text-primary",
@@ -90,7 +90,7 @@ export function BrandFilterBar({
                 type="button"
                 onClick={() => handleSelect(brand.id)}
                 className={cn(
-                  "flex h-11 min-w-0 items-center gap-2 rounded-full border px-3 text-left text-xs font-semibold uppercase tracking-wide transition-colors",
+                  "flex h-9 min-w-0 items-center gap-1.5 rounded-md border px-2.5 text-left text-[0.7rem] font-semibold uppercase transition-colors",
                   isActive
                     ? "border-primary bg-primary/5 text-primary shadow-xs"
                     : "border-border bg-background text-foreground hover:border-primary/50 hover:text-primary",

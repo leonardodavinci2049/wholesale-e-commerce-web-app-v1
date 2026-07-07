@@ -53,10 +53,10 @@ export function BudgetGeneralFilterSheet({
         aria-describedby={undefined}
         className="flex w-[92vw] max-w-md flex-col gap-0 p-0"
       >
-        <SheetHeader className="border-b border-border/60 p-4">
+        <SheetHeader className="border-b border-border/60 px-4 py-3">
           <SheetTitle className="text-base">Filtros</SheetTitle>
         </SheetHeader>
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto px-4 py-3">
           <BudgetGeneralFilterPanel
             flagStock={flagStock}
             brands={brands}
