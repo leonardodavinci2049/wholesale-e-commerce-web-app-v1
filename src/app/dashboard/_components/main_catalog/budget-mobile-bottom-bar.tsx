@@ -1,12 +1,6 @@
-import {
-  Filter,
-  Home,
-  LayoutGrid,
-  MessageCircle,
-  ShoppingCart,
-  Tags,
-} from "lucide-react";
+import { Home, MessageCircle, ShoppingCart } from "lucide-react";
 import type { ReactNode } from "react";
+
 import {
   MobileBottomBar,
   MobileBottomBarExternalLink,
@@ -14,21 +8,10 @@ import {
   MobileBottomBarSheet,
 } from "@/components/common/mobile-bottom-bar";
 import { companyInfo } from "@/data/info-company";
-import type { UIBrand } from "@/services/api-main/brand/transformers/transformers";
-import type { UITaxonomyMenuItem } from "@/services/api-main/taxonomy-base/transformers/transformers";
-
-import { BudgetBrandFilterPanel } from "./budget-brand-filter-panel";
-import { BudgetCategoryFilterPanel } from "./budget-category-filter-panel";
-import { BudgetGeneralFilterPanel } from "./budget-general-filter-panel";
 
 interface BudgetMobileBottomBarProps {
   cartItemCount: number;
   cartContent: ReactNode;
-  flagStock: number;
-  brands: UIBrand[];
-  selectedBrandId?: number;
-  categories: UITaxonomyMenuItem[];
-  selectedTaxonomyId?: number;
 }
 
 const WHATSAPP_MESSAGE = "Olá Gostaria tirar dúvidas sobre produtos";
@@ -41,11 +24,6 @@ function buildWhatsappUrl(phone: string, message: string): string {
 export function BudgetMobileBottomBar({
   cartItemCount,
   cartContent,
-  flagStock,
-  brands,
-  selectedBrandId,
-  categories,
-  selectedTaxonomyId,
 }: BudgetMobileBottomBarProps) {
   const whatsappUrl = buildWhatsappUrl(companyInfo.whatsapp, WHATSAPP_MESSAGE);
 
@@ -57,39 +35,6 @@ export function BudgetMobileBottomBar({
         label="Home"
         exact
       />
-
-      <MobileBottomBarSheet
-        icon={<LayoutGrid className="h-5 w-5" />}
-        label="Categorias"
-        sheetTitle="Categorias"
-      >
-        <BudgetCategoryFilterPanel
-          categories={categories}
-          selectedTaxonomyId={selectedTaxonomyId}
-        />
-      </MobileBottomBarSheet>
-
-      <MobileBottomBarSheet
-        icon={<Tags className="h-5 w-5" />}
-        label="Marcas"
-        sheetTitle="Marcas"
-      >
-        <BudgetBrandFilterPanel
-          brands={brands}
-          selectedBrandId={selectedBrandId}
-        />
-      </MobileBottomBarSheet>
-
-      <MobileBottomBarSheet
-        icon={<Filter className="h-5 w-5" />}
-        label="Filtro geral"
-        sheetTitle="Filtro geral"
-      >
-        <BudgetGeneralFilterPanel
-          flagStock={flagStock}
-          stockSwitchId="mobile-stock-filter-v2"
-        />
-      </MobileBottomBarSheet>
 
       <MobileBottomBarExternalLink
         href={whatsappUrl}

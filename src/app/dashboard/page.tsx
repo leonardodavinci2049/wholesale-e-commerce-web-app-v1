@@ -1,3 +1,4 @@
+import { HeaderBudgetControls } from "@/components/dashboard/header/header-budget-controls";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
@@ -210,6 +211,7 @@ export default async function DashboardPage({
             selectedBrandId={brandId}
             categories={categories}
             selectedTaxonomyId={taxonomyId}
+            viewToggleButton={<HeaderBudgetControls />}
           />
         }
       />
@@ -265,11 +267,6 @@ export default async function DashboardPage({
 
       <BudgetMobileBottomBar
         cartItemCount={cartItems.length}
-        flagStock={flagStock}
-        brands={brands}
-        selectedBrandId={brandId}
-        categories={categories}
-        selectedTaxonomyId={taxonomyId}
         cartContent={
           <CartSummaryPanel
             items={cartItems}

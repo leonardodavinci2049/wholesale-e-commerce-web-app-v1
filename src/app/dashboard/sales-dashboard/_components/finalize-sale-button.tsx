@@ -67,7 +67,7 @@ export function FinalizeSaleButton({
     return (
       <div className="cursor-not-allowed">
         <Button type="button" size="lg" disabled className={buttonClassName}>
-          Finalizar venda
+          Finalizar Pedido
         </Button>
       </div>
     );
@@ -84,15 +84,15 @@ export function FinalizeSaleButton({
     >
       <AlertDialogTrigger asChild>
         <Button type="button" size="lg" className={buttonClassName}>
-          Finalizar venda
+          Finalizar Pedido
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Confirmar finalização da venda</AlertDialogTitle>
+          <AlertDialogTitle>Confirmar finalização do Pedido</AlertDialogTitle>
           <AlertDialogDescription>
-            Tem certeza que deseja finalizar esta venda? Esta ação não pode ser
+            Tem certeza que deseja finalizar este pedido? Esta ação não pode ser
             desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>
