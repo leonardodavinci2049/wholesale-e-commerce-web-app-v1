@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { HeaderBudgetControls } from "./header-budget-controls";
 import { HeaderPromoControls } from "./header-promo-controls";
 
 const HEADER_LOGO_SRC = "/images/logo/logo-sidebar.png";
@@ -26,6 +25,7 @@ interface SiteHeaderWithBreadcrumbProps {
     href?: string;
     isActive?: boolean;
   }>;
+  mobileSearchBar?: React.ReactNode;
 }
 
 export function SiteHeaderWithBreadcrumb({
@@ -33,10 +33,11 @@ export function SiteHeaderWithBreadcrumb({
     { label: "Dashboard", href: "#" },
     { label: "Analytics", isActive: true },
   ],
+  mobileSearchBar,
 }: SiteHeaderWithBreadcrumbProps) {
   return (
-    <header className="sticky top-0 z-40 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) md:relative md:bg-transparent md:backdrop-blur-none">
-      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+    <header className="sticky top-0 z-40 flex shrink-0 flex-col border-b bg-background/95 backdrop-blur-md transition-[width,height] ease-linear md:relative md:bg-transparent md:backdrop-blur-none">
+      <div className="flex h-(--header-height) w-full items-center gap-1 px-4 group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:gap-2 lg:px-6">
         <SidebarTrigger className="relative z-10 -ml-1" />
         <Separator
           orientation="vertical"
@@ -81,10 +82,6 @@ export function SiteHeaderWithBreadcrumb({
         </div>
         <div className="relative z-10 ml-auto flex items-center gap-2">
           <Suspense>
-            <HeaderBudgetControls />
-          </Suspense>
-
-          <Suspense>
             <HeaderPromoControls />
           </Suspense>
 
@@ -111,6 +108,12 @@ export function SiteHeaderWithBreadcrumb({
           </div>
         </div>
       </div>
+
+      {mobileSearchBar && (
+        <div className="border-t border-border/60 bg-background/95 px-4 py-2 backdrop-blur-md sm:hidden">
+          {mobileSearchBar}
+        </div>
+      )}
     </header>
   );
 }

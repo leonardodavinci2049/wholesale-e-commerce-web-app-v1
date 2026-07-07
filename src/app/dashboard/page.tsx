@@ -1,3 +1,4 @@
+import { HeaderBudgetControls } from "@/components/dashboard/header/header-budget-controls";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
@@ -25,6 +26,7 @@ import { CartSummaryPanel } from "./_components/main_catalog/cart-summary-panel"
 import { ProductGrid } from "./_components/main_catalog/product-grid";
 import { ProductList } from "./_components/main_catalog/product-list";
 import { ProductLoadMoreV2 } from "./_components/main_catalog/product-load-more-v2";
+import { ProductSearchBar } from "./_components/main_catalog/product-search-bar";
 import { ProductViewSwitcher } from "./_components/main_catalog/product-view-switcher";
 
 const logger = createLogger("dashboard-page");
@@ -201,9 +203,18 @@ export default async function DashboardPage({
           { label: "Dashboard", href: "/dashboard" },
           { label: "Catálogo de produtos", isActive: true },
         ]}
+        mobileSearchBar={
+          <ProductSearchBar
+            defaultValue={search}
+            flagStock={flagStock}
+            brands={brands}
+            selectedBrandId={brandId}
+            categories={categories}
+            selectedTaxonomyId={taxonomyId}
+            viewToggleButton={<HeaderBudgetControls />}
+          />
+        }
       />
-
-      <div id="budget-search-panel-container" className="sm:hidden" />
 
       <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
         <div className="mx-auto grid w-full max-w-350 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
@@ -256,11 +267,6 @@ export default async function DashboardPage({
 
       <BudgetMobileBottomBar
         cartItemCount={cartItems.length}
-        flagStock={flagStock}
-        brands={brands}
-        selectedBrandId={brandId}
-        categories={categories}
-        selectedTaxonomyId={taxonomyId}
         cartContent={
           <CartSummaryPanel
             items={cartItems}
