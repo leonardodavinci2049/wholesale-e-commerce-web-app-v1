@@ -96,7 +96,7 @@ export function ProductViewSwitcher({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="hidden sm:block rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs sm:p-4">
+      <section className="sticky top-4 z-30 hidden rounded-2xl border border-border/60 bg-card/95 p-3 shadow-xs backdrop-blur-md sm:block sm:p-4">
         <ProductSearchBar {...searchProps} viewToggleButton={toggleButton} />
       </section>
 
