@@ -1,42 +1,20 @@
 "use client";
 
-import { LayoutGrid, List, Search, X } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { LayoutGrid, List } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useProductSearch } from "@/hooks/use-product-search";
 
 const BUDGET_ROUTE = "/dashboard";
 const STORAGE_KEY = "budget:product-view-mode";
-const SEARCH_PANEL_CONTAINER_ID = "budget-search-panel-container";
 type ViewMode = "grid" | "list";
 
 export function HeaderBudgetControls() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mode, setMode] = useState<ViewMode>("grid");
   const [hydrated, setHydrated] = useState(false);
-  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
-  const currentSearchValue = searchParams.get("search") ?? "";
-  const {
-    value,
-    isPending,
-    handleChange,
-    handleCompositionStart,
-    handleCompositionEnd,
-    commitSearch,
-    clearSearch,
-  } = useProductSearch({ initialValue: currentSearchValue });
 
-  useEffect(() => {
-    setPortalTarget(document.getElementById(SEARCH_PANEL_CONTAINER_ID));
-  }, []);
-
-  // Hydrate mode from localStorage
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -49,7 +27,6 @@ export function HeaderBudgetControls() {
     setHydrated(true);
   }, []);
 
-  // Listen to external view mode changes
   useEffect(() => {
     const handleModeChange = (e: Event) => {
       const customEvent = e as CustomEvent<ViewMode>;
@@ -63,8 +40,7 @@ export function HeaderBudgetControls() {
     };
   }, []);
 
-  // Function to toggle mode
-  const toggleMode = () => {
+  function toggleMode() {
     const newMode = mode === "grid" ? "list" : "grid";
     setMode(newMode);
     try {
@@ -72,46 +48,17 @@ export function HeaderBudgetControls() {
     } catch {
       // ignore
     }
-    // Dispatch event to sync other switcher components
     window.dispatchEvent(
       new CustomEvent("budget-view-mode-change", { detail: newMode }),
     );
-  };
+  }
 
-  // Close search on escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsSearchOpen(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  // Check if we are on the budget route
   if (pathname !== BUDGET_ROUTE) {
     return null;
   }
 
   return (
     <div className="flex items-center gap-1 sm:hidden">
-      {/* Search Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-9 w-9 rounded-full hover:bg-muted/60"
-        onClick={() => setIsSearchOpen(!isSearchOpen)}
-        aria-label={isSearchOpen ? "Fechar busca" : "Abrir busca"}
-      >
-        {isSearchOpen ? (
-          <X className="h-5 w-5 text-foreground animate-in fade-in zoom-in duration-200" />
-        ) : (
-          <Search className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
-        )}
-      </Button>
-
-      {/* View Switcher Button */}
       {hydrated ? (
         <Button
           variant="ghost"
@@ -133,53 +80,6 @@ export function HeaderBudgetControls() {
       ) : (
         <div className="h-9 w-9" />
       )}
-
-      {/* Search Panel via portal */}
-      {isSearchOpen &&
-        portalTarget &&
-        createPortal(
-          <div className="w-full border-b bg-background px-4 py-3 animate-in slide-in-from-top-2 duration-200">
-            <div className="relative mx-auto max-w-350">
-              <Search className="pointer-events-none absolute inset-y-0 left-3 my-auto h-4 w-4 text-muted-foreground" />
-              <Input
-                id="header-product-search-v2"
-                type="search"
-                placeholder="Digite o termo de pesquisa..."
-                value={value}
-                onChange={(e) => handleChange(e.target.value)}
-                onCompositionStart={handleCompositionStart}
-                onCompositionEnd={(e) =>
-                  handleCompositionEnd(e.currentTarget.value)
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    commitSearch(e.currentTarget.value);
-                    e.currentTarget.blur();
-                  }
-                }}
-                aria-label="Buscar produto"
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect="off"
-                enterKeyHint="search"
-                spellCheck={false}
-                className={isPending ? "pl-10 opacity-60 pr-10" : "pl-10 pr-10"}
-                autoFocus
-              />
-              {value && (
-                <button
-                  type="button"
-                  onClick={clearSearch}
-                  className="absolute inset-y-0 right-3 my-auto text-muted-foreground hover:text-foreground"
-                  aria-label="Limpar busca"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          </div>,
-          portalTarget,
-        )}
     </div>
   );
 }
