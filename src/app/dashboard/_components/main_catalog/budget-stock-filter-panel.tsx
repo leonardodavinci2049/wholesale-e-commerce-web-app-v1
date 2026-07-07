@@ -43,7 +43,7 @@ export function BudgetStockFilterPanel({
   return (
     <div
       className={cn(
-        "rounded-lg border border-border/60 bg-card p-4 transition-opacity",
+        "rounded-lg border border-border/60 bg-card px-3 py-2.5 transition-opacity",
         isPending && "opacity-60",
       )}
     >

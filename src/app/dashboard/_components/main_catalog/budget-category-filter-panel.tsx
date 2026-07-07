@@ -122,7 +122,7 @@ export function BudgetCategoryFilterPanel({
     path.length > 0 ? path[path.length - 1].name : undefined;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
         <button
           type="button"
@@ -183,7 +183,7 @@ export function BudgetCategoryFilterPanel({
           Nenhuma categoria disponível neste nível.
         </p>
       ) : (
-        <ul className="flex max-h-80 flex-col gap-1 overflow-y-auto">
+        <ul className="flex max-h-72 flex-col gap-1 overflow-y-auto">
           {currentItems.map((item) => {
             const children = childrenByParent.get(item.id) ?? [];
             const hasChildren = children.length > 0 && canDrillDown;
@@ -203,7 +203,7 @@ export function BudgetCategoryFilterPanel({
                       onClick={() => handleSelect(item.id)}
                       disabled={isPending}
                       className={cn(
-                        "flex flex-1 items-center gap-2 px-3 py-2.5 text-left text-sm hover:bg-muted/60 disabled:opacity-60",
+                        "flex flex-1 items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted/60 disabled:opacity-60",
                         isSelected && "text-primary",
                       )}
                     >
@@ -227,7 +227,7 @@ export function BudgetCategoryFilterPanel({
                       type="button"
                       onClick={() => handleDrillDown(item)}
                       aria-label={`Abrir subcategorias de ${item.name}`}
-                      className="flex items-center justify-center border-l border-border/60 px-3 text-muted-foreground hover:bg-muted/60"
+                      className="flex items-center justify-center border-l border-border/60 px-2.5 text-muted-foreground hover:bg-muted/60"
                     >
                       <ChevronRight className="size-4" aria-hidden="true" />
                     </button>

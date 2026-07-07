@@ -62,8 +62,8 @@ export function BudgetGeneralFilterPanel({
   }, [router, searchParams]);
 
   return (
-    <div className="flex min-h-full flex-col gap-6">
-      <section className="space-y-3">
+    <div className="flex min-h-full flex-col gap-4">
+      <section className="space-y-2">
         <SectionTitle>Estoque</SectionTitle>
         <BudgetStockFilterPanel
           flagStock={flagStock}
@@ -71,9 +71,9 @@ export function BudgetGeneralFilterPanel({
         />
       </section>
 
-      <section className="space-y-3">
+      <section className="space-y-2">
         <SectionTitle>Categorias</SectionTitle>
-        <div className="rounded-lg border border-border/60 bg-card p-4">
+        <div className="rounded-lg border border-border/60 bg-card p-3">
           <BudgetCategoryFilterPanel
             categories={categories}
             selectedTaxonomyId={selectedTaxonomyId}
@@ -81,17 +81,17 @@ export function BudgetGeneralFilterPanel({
         </div>
       </section>
 
-      <section className="space-y-3">
+      <section className="space-y-2">
         <SectionTitle>Marcas</SectionTitle>
         <BrandFilterBar brands={brands} selectedBrandId={selectedBrandId} />
       </section>
 
-      <div className="sticky bottom-0 mt-auto border-t border-border/60 bg-background/95 pt-4 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm">
+      <div className="sticky bottom-0 mt-auto border-t border-border/60 bg-background/95 pt-3 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm">
         <SheetClose asChild>
           <Button
             type="button"
             variant="outline"
-            className="h-11 w-full rounded-xl"
+            className="h-10 w-full rounded-lg"
             onClick={handleClearFilters}
             disabled={isPending || !hasActiveFilters}
           >
