@@ -54,7 +54,7 @@ export function ProductSearchBar({
           <Input
             id="product-search-v2"
             type="search"
-            placeholder="Digite o termo de pesquis"
+            placeholder="Digite o termo de pesquisa"
             value={value}
             onChange={(e) => handleChange(e.target.value)}
             onCompositionStart={handleCompositionStart}

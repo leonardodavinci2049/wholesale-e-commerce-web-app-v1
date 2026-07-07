@@ -9,26 +9,26 @@ import {
 } from "@/components/common/mobile-bottom-bar";
 import { companyInfo } from "@/data/info-company";
 
-interface BudgetMobileBottomBarProps {
+interface CatalogMobileBottomBarProps {
   cartItemCount: number;
   cartContent: ReactNode;
 }
 
-const WHATSAPP_MESSAGE = "Olá Gostaria tirar dúvidas sobre produtos";
+const WHATSAPP_MESSAGE = "Olá, gostaria de tirar dúvidas sobre produtos";
 
 function buildWhatsappUrl(phone: string, message: string): string {
   const digits = phone.replace(/\D/g, "");
   return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
 
-export function BudgetMobileBottomBar({
+export function CatalogMobileBottomBar({
   cartItemCount,
   cartContent,
-}: BudgetMobileBottomBarProps) {
+}: CatalogMobileBottomBarProps) {
   const whatsappUrl = buildWhatsappUrl(companyInfo.whatsapp, WHATSAPP_MESSAGE);
 
   return (
-    <MobileBottomBar aria-label="Menu de navegação do orçamento">
+    <MobileBottomBar aria-label="Menu de navegação do catálogo">
       <MobileBottomBarLink
         href="/dashboard"
         icon={<Home className="h-5 w-5" />}

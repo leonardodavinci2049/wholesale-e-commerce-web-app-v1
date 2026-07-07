@@ -6,6 +6,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import Link from "next/link";
+import { CatalogMobileBottomBar } from "@/components/common/catalog-mobile-bottom-bar";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
 import { Button } from "@/components/ui/button";
 import { serverEnvs } from "@/core/config/envs.server";
@@ -18,7 +19,6 @@ import {
   transformSummaryEntity,
 } from "@/services/api-main/order-sales/transformers/transformers";
 
-import { BudgetMobileBottomBar } from "../../_components/main_catalog/budget-mobile-bottom-bar";
 import { CartSummaryPanel } from "../../_components/main_catalog/cart-summary-panel";
 import { CreateBudgetButton } from "../_components/create-budget-button";
 
@@ -168,7 +168,7 @@ const NewBudgetPage = async () => {
         </div>
       </div>
 
-      <BudgetMobileBottomBar
+      <CatalogMobileBottomBar
         cartItemCount={openItemsCount}
         cartContent={
           <CartSummaryPanel
