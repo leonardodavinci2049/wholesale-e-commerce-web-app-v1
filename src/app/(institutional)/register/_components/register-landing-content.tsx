@@ -13,7 +13,7 @@ export function RegisterLandingContent() {
       <RegisterViewTracker />
       <RegisterHero />
 
-      {/* Split layout: value props (left) + form (right, sticky on desktop) */}
+      {/* Split layout: form (left, sticky) + value props (right) on desktop */}
       <section
         id="formulario"
         aria-labelledby="formulario-titulo"
@@ -22,25 +22,24 @@ export function RegisterLandingContent() {
         <h2 id="formulario-titulo" className="sr-only">
           Formulário de pré-cadastro
         </h2>
-        <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+        <div className="container mx-auto max-w-7xl px-4 pt-3 pb-6 sm:px-6 sm:pt-4 sm:pb-8 lg:px-8 lg:pt-5 lg:pb-10">
           {/*
-            Ordem no mobile (grid-cols-1): Passos -> Formulário -> Vantagens,
-            para o usuário chegar ao formulário com menos scroll.
-            No desktop, o formulário ocupa a coluna direita (sticky) e
-            passos + vantagens ficam empilhados na coluna esquerda.
+            Ordem no mobile (grid-cols-1): Formulário -> Passos -> Vantagens.
+            No desktop, o formulário ocupa a coluna esquerda (sticky) e
+            passos + vantagens ficam empilhados na coluna direita.
           */}
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-5 lg:col-start-1 lg:row-start-1">
-              <RegisterSteps />
-            </div>
-
-            <div className="lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1">
+            <div className="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1">
               <div className="lg:sticky lg:top-20">
                 <RegisterForm />
               </div>
             </div>
 
-            <div className="lg:col-span-5 lg:col-start-1 lg:row-start-2">
+            <div className="lg:col-span-5 lg:col-start-8 lg:row-start-1">
+              <RegisterSteps />
+            </div>
+
+            <div className="lg:col-span-5 lg:col-start-8 lg:row-start-2">
               <ResellerBenefits />
             </div>
           </div>

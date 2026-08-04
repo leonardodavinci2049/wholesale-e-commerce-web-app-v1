@@ -5,9 +5,10 @@ import {
   ArrowRight,
   CheckCircle2,
   ClipboardList,
+  Copy,
   Loader2,
-  LogIn,
   MessageCircle,
+  RotateCcw,
   Search,
 } from "lucide-react";
 import Link from "next/link";
@@ -118,6 +119,17 @@ type CepStatus = {
 };
 
 export function RegisterForm() {
+  const [formSession, setFormSession] = useState(0);
+
+  return (
+    <RegisterFormContent
+      key={formSession}
+      onNewRegister={() => setFormSession((current) => current + 1)}
+    />
+  );
+}
+
+function RegisterFormContent({ onNewRegister }: { onNewRegister: () => void }) {
   const reactId = useId();
   const [state, formAction, isPending] = useActionState<
     RegisterLeadState,
@@ -253,7 +265,12 @@ export function RegisterForm() {
 
   // Sucesso: substitui o formulário pela confirmação.
   if (state?.status === "success") {
-    return <RegisterSuccessCard customerId={state.customerId} />;
+    return (
+      <RegisterSuccessCard
+        customerId={state.customerId}
+        onNewRegister={onNewRegister}
+      />
+    );
   }
 
   const isDuplicate = state?.status === "error" && state.isDuplicate === true;
@@ -262,27 +279,21 @@ export function RegisterForm() {
     cepDigits.length === 8 && !isPending && cepStatus.state !== "loading";
 
   return (
-    <Card className="group/form-card relative overflow-hidden border-border/60 shadow-lg ring-1 ring-primary/5">
+    <Card className="group/form-card relative gap-0 overflow-hidden rounded-xl border-border/60 py-0 shadow-lg ring-1 ring-primary/5">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary/8 to-transparent"
       />
-      <CardContent className="relative flex flex-col gap-5 px-4 py-5 sm:px-7 sm:py-6">
+      <CardContent className="relative flex flex-col gap-5 px-4 py-4 sm:px-7 sm:py-5">
         <header className="flex flex-col gap-1.5">
           <div className="inline-flex items-center gap-2 text-primary">
             <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/10">
               <ClipboardList className="size-4" />
             </span>
-            <span className="text-xs font-semibold uppercase tracking-wide">
-              Pré-cadastro
-            </span>
+            <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
+              Pré-cadastro - Solicite seu acesso comercial
+            </h2>
           </div>
-          <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
-            Solicite seu acesso comercial
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            É rápido e não exige senha nesta etapa.
-          </p>
         </header>
 
         <div ref={feedbackRef}>
@@ -828,7 +839,24 @@ function FormField({
   );
 }
 
-function RegisterSuccessCard({ customerId }: { customerId?: number }) {
+function RegisterSuccessCard({
+  customerId,
+  onNewRegister,
+}: {
+  customerId?: number;
+  onNewRegister: () => void;
+}) {
+  const handleCopyCustomerId = async (): Promise<void> => {
+    if (!customerId) return;
+
+    try {
+      await navigator.clipboard.writeText(String(customerId));
+      toast.success("Número do cadastro copiado");
+    } catch {
+      toast.error("Não foi possível copiar o número do cadastro");
+    }
+  };
+
   return (
     <Card className="relative overflow-hidden border-chart-2/30 shadow-lg ring-1 ring-chart-2/10">
       <div
@@ -848,9 +876,19 @@ function RegisterSuccessCard({ customerId }: { customerId?: number }) {
         </p>
         {customerId ? (
           <div className="w-full max-w-md rounded-lg border border-chart-2/30 bg-chart-2/10 px-4 py-3 text-sm">
-            <p className="font-semibold text-foreground">
-              Seu número de cadastro é {customerId}.
-            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 font-semibold text-foreground">
+              <span>Seu número de cadastro é {customerId}.</span>
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={handleCopyCustomerId}
+                aria-label={`Copiar número do cadastro ${customerId}`}
+              >
+                <Copy className="size-3" />
+                Copiar
+              </Button>
+            </div>
             <p className="mt-1 text-muted-foreground">
               Anote esse número e informe ao atendimento quando entrar em
               contato.
@@ -869,14 +907,13 @@ function RegisterSuccessCard({ customerId }: { customerId?: number }) {
             </a>
           </Button>
           <Button
-            asChild
+            type="button"
             variant="outline"
             className="w-full cursor-pointer sm:w-auto"
+            onClick={onNewRegister}
           >
-            <Link href="/sign-in">
-              <LogIn className="mr-2 size-4" />
-              Ir para o login
-            </Link>
+            <RotateCcw className="mr-2 size-4" />
+            Novo Cadastro
           </Button>
         </div>
       </CardContent>

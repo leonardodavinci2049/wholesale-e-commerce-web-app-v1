@@ -125,9 +125,9 @@ export interface CustomerCreateRequest extends CustomerBaseRequest {
   pe_name: string;
   pe_email: string;
   pe_person_type_id: number;
-  pe_cnpj?: string;
-  pe_company_name?: string;
-  pe_cpf?: string;
+  pe_cnpj: string;
+  pe_company_name: string;
+  pe_cpf: string;
   pe_phone?: string;
   pe_whatsapp?: string;
   pe_image?: string;
@@ -138,7 +138,7 @@ export interface CustomerCreateRequest extends CustomerBaseRequest {
   pe_neighborhood?: string;
   pe_city?: string;
   pe_state?: string;
-  pe_notes?: string;
+  pe_notes: string;
 }
 
 export interface StoredProcedureResponse {
