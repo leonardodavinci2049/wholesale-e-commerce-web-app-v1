@@ -26,9 +26,9 @@ export const CustomerCreateSchema = z.object({
   pe_name: z.string().max(255).min(1),
   pe_email: z.string().max(255).min(1),
   pe_person_type_id: z.number().int(),
-  pe_cnpj: z.string().max(100).optional(),
-  pe_company_name: z.string().max(255).optional(),
-  pe_cpf: z.string().max(100).optional(),
+  pe_cnpj: z.string().max(100),
+  pe_company_name: z.string().max(255),
+  pe_cpf: z.string().max(100),
   pe_phone: z.string().max(100).optional(),
   pe_whatsapp: z.string().max(100).optional(),
   pe_image: z.string().max(500).optional(),
@@ -39,7 +39,7 @@ export const CustomerCreateSchema = z.object({
   pe_neighborhood: z.string().max(300).optional(),
   pe_city: z.string().max(300).optional(),
   pe_state: z.string().max(100).optional(),
-  pe_notes: z.string().optional(),
+  pe_notes: z.string(),
 });
 
 export const CustomerFindLatestProductsSchema = z.object({

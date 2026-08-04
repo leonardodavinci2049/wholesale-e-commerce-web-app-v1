@@ -8,7 +8,6 @@ import {
 } from "@/lib/axios/base-api-service";
 import {
   type CustomerCreateRequest,
-  CustomerError,
   customerGeneralServiceApi,
 } from "@/services/api-main/customer-general";
 import { PERSON_TYPE_ID, registerLeadSchema } from "../schema";
@@ -125,9 +124,9 @@ export async function submitRegisterLead(
     pe_name: data.name,
     pe_email: data.email,
     pe_person_type_id: personTypeId,
-    ...(isPJ
-      ? { pe_cnpj: data.cnpj, pe_company_name: data.companyName, pe_cpf: "" }
-      : { pe_cpf: data.cpf }),
+    pe_cnpj: isPJ ? (data.cnpj ?? "") : "",
+    pe_company_name: isPJ ? (data.companyName ?? "") : "",
+    pe_cpf: isPJ ? "" : (data.cpf ?? ""),
     pe_phone: data.phone || undefined,
     pe_whatsapp: data.whatsapp,
     pe_image: "",
@@ -138,7 +137,7 @@ export async function submitRegisterLead(
     pe_neighborhood: data.neighborhood,
     pe_city: data.city,
     pe_state: data.state.toUpperCase(),
-    pe_notes: data.notes || undefined,
+    pe_notes: data.notes || "",
   };
 
   try {
@@ -151,19 +150,20 @@ export async function submitRegisterLead(
       customerId: customerId > 0 ? customerId : undefined,
     };
   } catch (error) {
-    const apiMessage =
-      error instanceof Error ? error.message.toLowerCase() : "";
+    const apiMessage = error instanceof Error ? error.message.trim() : "";
+    const normalizedApiMessage = apiMessage.toLowerCase();
 
     const isDuplicate =
-      error instanceof CustomerError &&
-      DUPLICATE_KEYWORDS.some((keyword) => apiMessage.includes(keyword));
+      apiMessage !== "" &&
+      DUPLICATE_KEYWORDS.some((keyword) =>
+        normalizedApiMessage.includes(keyword),
+      );
 
     if (isDuplicate) {
       return {
         status: "error",
         isDuplicate: true,
-        message:
-          "Encontramos um cadastro com esses dados. Se você já é cliente, acesse o login ou fale com nossa equipe pelo WhatsApp.",
+        message: apiMessage,
         values: rawValues,
       };
     }
@@ -182,8 +182,7 @@ export async function submitRegisterLead(
     if (error instanceof ApiValidationError) {
       return {
         status: "error",
-        message:
-          "Não foi possível enviar seu pré-cadastro neste momento. Verifique os dados e tente novamente, ou fale com nossa equipe pelo WhatsApp.",
+        message: apiMessage || "A API recusou os dados do pré-cadastro.",
         values: rawValues,
       };
     }

@@ -1,13 +1,13 @@
 import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with-breadcrumb";
 
-const EllyIndicatesPage = () => {
+const SettingsPage = () => {
   return (
     <>
       <SiteHeaderWithBreadcrumb
         title="Dashboard"
         breadcrumbItems={[
           { label: "Dashboard", href: "#" },
-          { label: "Indicates", isActive: true },
+          { label: "Configurações", isActive: true },
         ]}
       />
       <div className="flex flex-1 flex-col">
@@ -35,4 +35,4 @@ const EllyIndicatesPage = () => {
   );
 };
 
-export default EllyIndicatesPage;
+export default SettingsPage;
