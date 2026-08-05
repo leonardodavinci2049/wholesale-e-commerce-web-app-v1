@@ -57,11 +57,12 @@ export async function updateCustomerAddressAction(
       customerId,
       ...values,
     });
-    const { apiContext } = await getAuthContext();
+    const { apiContext, session } = await getAuthContext();
     const orderCustomerValidation = await validateEditableOrderCustomer(
       validated.orderId,
-      validated.customerId,
+      session.user.personId ?? 0,
       apiContext,
+      validated.customerId,
     );
 
     if (!orderCustomerValidation.success) {

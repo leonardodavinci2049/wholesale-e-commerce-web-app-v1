@@ -127,6 +127,8 @@ export interface OrderB2bCustomerEntity {
   PATH_IMAGEM: string;
   DATADOCADASTRO: string;
   DT_ULTIMA_COMPRA: string | null;
+  FLAG_FRETE_GRATIS: number;
+  VL_PP_DESCONTO: string;
   FONE1: string;
   WHATAPP1: string;
   EMAIL: string;

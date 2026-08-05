@@ -9,11 +9,9 @@ import {
   OrderOperationsError,
   orderOperationsServiceApi,
 } from "@/services/api-main/order-operations";
-import { orderSalesServiceApi } from "@/services/api-main/order-sales/order-sales-service-api";
+import { validateEditableOrderCustomer } from "./validate-editable-order-customer";
 
 const logger = createLogger("sales-dashboard-close-order-action");
-
-const CLOSEABLE_ORDER_STATUS_ID = 22;
 
 const CloseOrderSchema = z.object({
   orderId: z.number().int().positive(),
@@ -29,33 +27,17 @@ export async function closeOrderAction(
 ): Promise<CloseOrderActionResult> {
   try {
     const validatedOrderId = CloseOrderSchema.parse({ orderId }).orderId;
-    const { apiContext } = await getAuthContext();
+    const { apiContext, session } = await getAuthContext();
+    const orderCustomerValidation = await validateEditableOrderCustomer(
+      validatedOrderId,
+      session.user.personId ?? 0,
+      apiContext,
+    );
 
-    const dashboardResponse = await orderSalesServiceApi.findDashboardId({
-      pe_order_id: validatedOrderId,
-      pe_id_seller:
-        apiContext.pe_person_id && apiContext.pe_person_id > 0
-          ? apiContext.pe_person_id
-          : undefined,
-      pe_type_business: 1,
-      ...apiContext,
-    });
-
-    const orderDetails = dashboardResponse
-      ? orderSalesServiceApi.extractDashboardDetails(dashboardResponse)
-      : null;
-
-    if (!orderDetails) {
+    if (!orderCustomerValidation.success) {
       return {
         success: false,
-        message: "Pedido não encontrado para validação",
-      };
-    }
-
-    if (orderDetails.ID_STATUS_PEDIDO !== CLOSEABLE_ORDER_STATUS_ID) {
-      return {
-        success: false,
-        message: "Pedido não está com status de orçamento",
+        message: orderCustomerValidation.message,
       };
     }
 

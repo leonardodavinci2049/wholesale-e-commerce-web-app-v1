@@ -5,11 +5,10 @@ import { z } from "zod";
 import { createLogger } from "@/core/logger";
 import { CACHE_TAGS } from "@/lib/cache-config";
 import { getAuthContext } from "@/server/auth-context";
-import { orderSalesServiceApi } from "@/services/api-main/order-sales/order-sales-service-api";
 import { orderUpdServiceApi } from "@/services/api-main/order-upd";
+import { validateEditableOrderCustomer } from "./validate-editable-order-customer";
 
 const logger = createLogger("sales-dashboard-update-order-inline-field-action");
-const EDITABLE_ORDER_STATUS_ID = 22;
 
 const EditableOrderFieldSchema = z.object({
   orderId: z.number().int().positive(),
@@ -29,29 +28,17 @@ export async function updateOrderInlineFieldAction(
 ): Promise<UpdateOrderInlineFieldResult> {
   try {
     const validated = EditableOrderFieldSchema.parse({ orderId, field, value });
-    const { apiContext } = await getAuthContext();
-    const dashboardResponse = await orderSalesServiceApi.findDashboardId({
-      pe_order_id: validated.orderId,
-      pe_id_seller: apiContext.pe_person_id,
-      pe_type_business: 1,
-      ...apiContext,
-    });
+    const { apiContext, session } = await getAuthContext();
+    const orderCustomerValidation = await validateEditableOrderCustomer(
+      validated.orderId,
+      session.user.personId ?? 0,
+      apiContext,
+    );
 
-    const dashboardDetails = dashboardResponse
-      ? orderSalesServiceApi.extractDashboardDetails(dashboardResponse)
-      : null;
-
-    if (!dashboardDetails) {
+    if (!orderCustomerValidation.success) {
       return {
         success: false,
-        message: "Nao foi possivel validar o status atual do pedido",
-      };
-    }
-
-    if (dashboardDetails.ID_STATUS_PEDIDO !== EDITABLE_ORDER_STATUS_ID) {
-      return {
-        success: false,
-        message: "Somente pedidos em orcamento podem ser editados",
+        message: orderCustomerValidation.message,
       };
     }
 

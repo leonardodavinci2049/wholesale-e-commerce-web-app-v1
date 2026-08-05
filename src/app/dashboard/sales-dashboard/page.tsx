@@ -4,6 +4,7 @@ import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-hea
 import { Skeleton } from "@/components/ui/skeleton";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
+import { orderB2bServiceApi } from "@/services/api-main/order-b2b";
 import type { OrderTipoFreteEntity } from "@/services/api-main/order-sales";
 import { orderSalesServiceApi } from "@/services/api-main/order-sales";
 import {
@@ -43,32 +44,26 @@ interface PdvPageProps {
 async function getFindOrder(
   orderId: number,
   params: {
-    customerId?: number;
-    typeBusiness?: number;
+    customerId: number;
     pe_user_id: string;
     pe_user_name: string;
     pe_user_role: string;
     pe_person_id: number;
   },
-): Promise<UIOrderDashboardData | undefined> {
-  const response = await orderSalesServiceApi.findOrderId({
+): Promise<UIOrderDashboardData> {
+  const response = await orderB2bServiceApi.findDashboardCustomerId({
     pe_order_id: orderId,
-    pe_id_customer: params.customerId,
-    pe_type_business: params.typeBusiness,
+    pe_customer_id: params.customerId,
     pe_user_id: params.pe_user_id,
     pe_user_name: params.pe_user_name,
     pe_user_role: params.pe_user_role,
     pe_person_id: params.pe_person_id,
   });
 
-  if (!response) {
-    return undefined;
-  }
-
-  const summary = orderSalesServiceApi.extractDashboardSummary(response);
-  const details = orderSalesServiceApi.extractDashboardDetails(response);
-  const items = orderSalesServiceApi.extractDashboardItems(response);
-  const customer = orderSalesServiceApi.extractDashboardCustomer(response);
+  const summary = orderB2bServiceApi.extractDashboardSummary(response);
+  const details = orderB2bServiceApi.extractDashboardDetails(response);
+  const items = orderB2bServiceApi.extractDashboardItems(response);
+  const customer = orderB2bServiceApi.extractDashboardCustomer(response);
 
   return {
     summary: summary ? transformSummaryEntity(summary) : null,
@@ -105,12 +100,20 @@ async function SalesPanelContent({ searchParams }: PdvPageProps) {
   let deliveryMethods: OrderTipoFreteEntity[] = [];
 
   try {
-    dashboardData =
-      (await getFindOrder(orderId, {
+    if (sessionCustomerId <= 0) {
+      dashboardData = {
+        summary: null,
+        details: null,
+        items: [],
+        customer: null,
+        error: "Cliente autenticado invalido",
+      };
+    } else {
+      dashboardData = await getFindOrder(orderId, {
         ...apiContext,
         customerId: sessionCustomerId,
-        typeBusiness: 1,
-      })) ?? null;
+      });
+    }
 
     if (
       dashboardData?.details &&
