@@ -3,7 +3,10 @@ import "server-only";
 import { createLogger } from "@/core/logger";
 import type { AuthContext } from "@/server/auth-context";
 import { orderB2bServiceApi } from "@/services/api-main/order-b2b/order-b2b-service-api";
-import { OrderB2bNotFoundError } from "@/services/api-main/order-b2b/types/order-b2b-types";
+import {
+  OrderB2bNotFoundError,
+  type OrderFindDashboardCustomerIdResponse,
+} from "@/services/api-main/order-b2b/types/order-b2b-types";
 
 const logger = createLogger("sales-dashboard-validate-editable-order-customer");
 const EDITABLE_ORDER_STATUS_ID = 22;
@@ -47,7 +50,7 @@ export async function validateEditableOrderCustomer(
     };
   }
 
-  let dashboardResponse;
+  let dashboardResponse: OrderFindDashboardCustomerIdResponse;
 
   try {
     dashboardResponse = await orderB2bServiceApi.findDashboardCustomerId({
