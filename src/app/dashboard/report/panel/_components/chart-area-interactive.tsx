@@ -175,9 +175,9 @@ export function ChartAreaInteractive({ orders }: ChartAreaInteractiveProps) {
               minTickGap={32}
               tickFormatter={(value) => {
                 try {
-                  return dateFormatter.format(new Date(value));
+                  return dateFormatter.format(new Date(String(value)));
                 } catch {
-                  return value;
+                  return String(value);
                 }
               }}
             />
@@ -186,7 +186,7 @@ export function ChartAreaInteractive({ orders }: ChartAreaInteractiveProps) {
               axisLine={false}
               tickMargin={4}
               width={80}
-              tickFormatter={(value) => formatCurrency(value)}
+              tickFormatter={(value) => formatCurrency(Number(value))}
             />
             <ChartTooltip
               cursor={false}
@@ -198,7 +198,7 @@ export function ChartAreaInteractive({ orders }: ChartAreaInteractiveProps) {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
-                      }).format(new Date(value));
+                      }).format(new Date(String(value)));
                     } catch {
                       return value;
                     }
