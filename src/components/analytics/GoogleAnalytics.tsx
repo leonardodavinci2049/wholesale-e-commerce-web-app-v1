@@ -1,8 +1,7 @@
-"use client";
-
 import Script from "next/script";
+import { publicEnvs } from "@/core/config/envs.client";
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const CONSENT_STORAGE_KEY = "analytics_consent";
 
 /**
  * Google Analytics 4 Component
@@ -13,28 +12,43 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
  * @see https://developers.google.com/analytics/devguides/collection/ga4
  */
 export function GoogleAnalytics() {
-  // Don't render if no measurement ID is configured
-  if (!GA_MEASUREMENT_ID) {
-    return null;
-  }
+  const measurementId = publicEnvs.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
     <>
-      {/* Load gtag.js */}
+      <Script id="google-consent-default" strategy="beforeInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+
+          var storedConsent = null;
+          try {
+            storedConsent = window.localStorage.getItem('${CONSENT_STORAGE_KEY}');
+          } catch (error) {
+            storedConsent = null;
+          }
+          var hasConsentChoice = storedConsent === 'granted' || storedConsent === 'denied';
+          var analyticsConsent = storedConsent === 'granted' ? 'granted' : 'denied';
+
+          window.gtag('consent', 'default', {
+            analytics_storage: analyticsConsent,
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            wait_for_update: hasConsentChoice ? 0 : 500,
+          });
+        `}
+      </Script>
+
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
         strategy="afterInteractive"
       />
 
-      {/* Initialize gtag */}
       <Script id="google-analytics" strategy="afterInteractive">
         {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}', {
-            page_path: window.location.pathname,
-          });
+          window.gtag('js', new Date());
+          window.gtag('config', '${measurementId}');
         `}
       </Script>
     </>

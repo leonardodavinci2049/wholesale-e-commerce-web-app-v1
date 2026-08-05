@@ -4,6 +4,7 @@ import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,9 @@ const ADD_ITEM_SUCCESS_TOAST_DURATION_MS = 1000;
 interface ProductAddButtonV2Props {
   productId: number;
   productName: string;
+  productPrice: number;
+  productSku?: string | number | null;
+  productBrand?: string;
   storeStock: number;
   orderId?: number;
   hideQuantityOnMobile?: boolean;
@@ -24,6 +28,9 @@ interface ProductAddButtonV2Props {
 export function ProductAddButtonV2({
   productId,
   productName,
+  productPrice,
+  productSku,
+  productBrand,
   storeStock,
   orderId,
   hideQuantityOnMobile,
@@ -58,6 +65,13 @@ export function ProductAddButtonV2({
     prevStateRef.current = state;
 
     if (state?.success) {
+      trackAddToCart({
+        item_id: productSku ? String(productSku) : String(productId),
+        item_name: productName,
+        item_brand: productBrand,
+        price: productPrice,
+        quantity: safeQuantity,
+      });
       toast.success(state.message, {
         duration: ADD_ITEM_SUCCESS_TOAST_DURATION_MS,
       });
@@ -74,7 +88,18 @@ export function ProductAddButtonV2({
     } else if (state?.success === false) {
       toast.error(state.message);
     }
-  }, [state, searchParams, router, orderId]);
+  }, [
+    state,
+    searchParams,
+    router,
+    orderId,
+    productId,
+    productName,
+    productPrice,
+    productSku,
+    productBrand,
+    safeQuantity,
+  ]);
 
   return (
     <div className="flex items-center justify-between gap-2">

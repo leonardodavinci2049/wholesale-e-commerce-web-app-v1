@@ -7,17 +7,7 @@
  * @see https://developers.google.com/analytics/devguides/collection/ga4/ecommerce
  */
 
-// Type declarations for gtag
-declare global {
-  interface Window {
-    gtag: (
-      command: "event" | "config" | "js",
-      action: string,
-      params?: Record<string, unknown>,
-    ) => void;
-    dataLayer?: Record<string, unknown>[];
-  }
-}
+import type {} from "./types";
 
 /**
  * Product item for GA4 e-commerce events
@@ -50,7 +40,7 @@ function isGtagAvailable(): boolean {
 export function trackViewItem(item: GA4Item, currency = "BRL"): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "view_item", {
+  window.gtag?.("event", "view_item", {
     currency,
     value: item.price,
     items: [item],
@@ -68,7 +58,7 @@ export function trackAddToCart(item: GA4Item, currency = "BRL"): void {
 
   const value = item.price * (item.quantity || 1);
 
-  window.gtag("event", "add_to_cart", {
+  window.gtag?.("event", "add_to_cart", {
     currency,
     value,
     items: [item],
@@ -86,7 +76,7 @@ export function trackRemoveFromCart(item: GA4Item, currency = "BRL"): void {
 
   const value = item.price * (item.quantity || 1);
 
-  window.gtag("event", "remove_from_cart", {
+  window.gtag?.("event", "remove_from_cart", {
     currency,
     value,
     items: [item],
@@ -107,7 +97,7 @@ export function trackViewCart(
 ): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "view_cart", {
+  window.gtag?.("event", "view_cart", {
     currency,
     value,
     items,
@@ -128,7 +118,7 @@ export function trackBeginCheckout(
 ): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "begin_checkout", {
+  window.gtag?.("event", "begin_checkout", {
     currency,
     value,
     items,
@@ -155,7 +145,7 @@ export function trackPurchase(
 ): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "purchase", {
+  window.gtag?.("event", "purchase", {
     transaction_id: transactionId,
     currency,
     value,
@@ -179,7 +169,7 @@ export function trackViewItemList(
 ): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "view_item_list", {
+  window.gtag?.("event", "view_item_list", {
     item_list_id: listId,
     item_list_name: listName,
     items,
@@ -200,7 +190,7 @@ export function trackSelectItem(
 ): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "select_item", {
+  window.gtag?.("event", "select_item", {
     item_list_id: listId,
     item_list_name: listName,
     items: [item],
@@ -215,7 +205,7 @@ export function trackSelectItem(
 export function trackSearch(searchTerm: string): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", "search", {
+  window.gtag?.("event", "search", {
     search_term: searchTerm,
   });
 }
@@ -232,5 +222,5 @@ export function trackEvent(
 ): void {
   if (!isGtagAvailable()) return;
 
-  window.gtag("event", eventName, params);
+  window.gtag?.("event", eventName, params);
 }

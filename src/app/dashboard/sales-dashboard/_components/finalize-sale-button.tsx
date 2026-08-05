@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { trackPurchase } from "@/components/analytics";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,11 +18,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type {
+  UIOrderDashboardItem,
+  UIOrderSalesSummary,
+} from "@/services/api-main/order-sales/transformers/transformers";
 import { closeOrderAction } from "../actions/close-order-action";
 
 interface FinalizeSaleButtonProps {
   orderId: number;
   orderStatusId: number;
+  items: UIOrderDashboardItem[];
+  summary: UIOrderSalesSummary | null;
   disabled?: boolean;
 }
 
@@ -30,6 +37,8 @@ const CLOSEABLE_ORDER_STATUS_ID = 22;
 export function FinalizeSaleButton({
   orderId,
   orderStatusId,
+  items,
+  summary,
   disabled = false,
 }: FinalizeSaleButtonProps) {
   const router = useRouter();
@@ -45,6 +54,26 @@ export function FinalizeSaleButton({
         const result = await closeOrderAction(orderId);
 
         if (result.success) {
+          if (summary) {
+            trackPurchase(
+              String(orderId),
+              items.map((item) => ({
+                item_id: item.sku || String(item.productId),
+                item_name: item.product,
+                price:
+                  item.quantity > 0
+                    ? Number(item.totalValue) / item.quantity
+                    : Number(item.unitValue),
+                quantity: item.quantity,
+                discount:
+                  item.quantity > 0
+                    ? Number(item.totalDiscountValue) / item.quantity
+                    : 0,
+              })),
+              Number(summary.totalOrderValue),
+              Number(summary.freightValue),
+            );
+          }
           toast.success(result.message);
           setOpen(false);
           router.refresh();

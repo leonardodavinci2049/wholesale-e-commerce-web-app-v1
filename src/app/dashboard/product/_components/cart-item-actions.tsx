@@ -4,6 +4,7 @@ import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { trackAddToCart, trackRemoveFromCart } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { deleteItemAction } from "../actions/delete-item-action";
@@ -13,6 +14,8 @@ interface CartItemActionsProps {
   movementId: number;
   orderId: number;
   productName: string;
+  productId: number;
+  unitPrice: number;
   quantity: number;
   storeStock: number;
   variant?: "default" | "mobile";
@@ -24,6 +27,8 @@ export function CartItemActions({
   movementId,
   orderId,
   productName,
+  productId,
+  unitPrice,
   quantity,
   storeStock,
   variant = "default",
@@ -48,6 +53,16 @@ export function CartItemActions({
         toast.error(result.message);
         return;
       }
+
+      const changedQuantity = nextQuantity - quantity;
+      const item = {
+        item_id: String(productId),
+        item_name: productName,
+        price: unitPrice,
+        quantity: Math.abs(changedQuantity),
+      };
+      if (changedQuantity > 0) trackAddToCart(item);
+      if (changedQuantity < 0) trackRemoveFromCart(item);
 
       router.refresh();
     });
@@ -74,6 +89,12 @@ export function CartItemActions({
       }
 
       toast.success(result.message);
+      trackRemoveFromCart({
+        item_id: String(productId),
+        item_name: productName,
+        price: unitPrice,
+        quantity,
+      });
       router.refresh();
     });
   }

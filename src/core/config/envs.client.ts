@@ -13,7 +13,9 @@ const publicEnvsSchema = z.object({
   NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: z.coerce.number().nonnegative(),
   NEXT_PUBLIC_PAY_IN_UP_TO: z.coerce.number().int().positive(),
   NEXT_PUBLIC_FREE_SHIPPING_OVER: z.coerce.number().nonnegative(),
-  NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().min(1),
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z
+    .string()
+    .regex(/^G-[A-Z0-9]+$/, "must be a valid GA4 Measurement ID"),
 });
 
 export const publicEnvs = parseEnv(
