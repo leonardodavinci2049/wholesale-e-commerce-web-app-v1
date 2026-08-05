@@ -4,6 +4,7 @@ import { Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { trackAddToCart, trackRemoveFromCart } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { updateQuantityAction } from "../actions/update-quantity-action";
 
@@ -11,6 +12,8 @@ interface QuantityControlsProps {
   movementId: number;
   orderId: number;
   productName: string;
+  productId: number;
+  unitPrice: number;
   quantity: number;
   storeStock: number;
   disabled: boolean;
@@ -20,6 +23,8 @@ export function QuantityControls({
   movementId,
   orderId,
   productName,
+  productId,
+  unitPrice,
   quantity,
   storeStock,
   disabled,
@@ -42,6 +47,16 @@ export function QuantityControls({
         toast.error(result.message);
         return;
       }
+
+      const changedQuantity = nextQuantity - quantity;
+      const item = {
+        item_id: String(productId),
+        item_name: productName,
+        price: unitPrice,
+        quantity: Math.abs(changedQuantity),
+      };
+      if (changedQuantity > 0) trackAddToCart(item);
+      if (changedQuantity < 0) trackRemoveFromCart(item);
 
       router.refresh();
     });

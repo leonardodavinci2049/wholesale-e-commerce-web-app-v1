@@ -4,6 +4,7 @@
  * Exports Google Analytics 4 component and e-commerce event tracking functions.
  */
 
+export { CookieConsent } from "./CookieConsent";
 export {
   type GA4Item,
   trackAddToCart,

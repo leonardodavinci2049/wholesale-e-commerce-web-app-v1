@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { companyInfo } from "@/data/info-company";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { GoogleAnalytics } from "@/components/analytics";
+import { CookieConsent, GoogleAnalytics } from "@/components/analytics";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { publicEnvs } from "@/core/config/envs.client";
 import { cn } from "@/lib/utils";
@@ -80,6 +80,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <GoogleAnalytics />
+        <CookieConsent />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -14,6 +14,7 @@ import {
   useTransition,
 } from "react";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/components/analytics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -111,6 +112,16 @@ export function AddProductDialog({
       });
 
       if (result.success) {
+        const price = product.productValue
+          ? Number(product.productValue)
+          : Number(product.retailPrice);
+        trackAddToCart({
+          item_id: product.sku ? String(product.sku) : String(product.id),
+          item_name: product.name,
+          item_brand: product.brand,
+          price,
+          quantity: 1,
+        });
         toast.success(result.message);
         setOpen(false);
         router.refresh();

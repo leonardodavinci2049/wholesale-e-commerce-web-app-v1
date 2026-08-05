@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { trackRemoveFromCart } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { deleteItemAction } from "../actions/delete-item-action";
 
@@ -11,12 +12,18 @@ interface DeleteItemButtonProps {
   orderId: number;
   movementId: number;
   productName: string;
+  productId: number;
+  quantity: number;
+  unitPrice: number;
 }
 
 export function DeleteItemButton({
   orderId,
   movementId,
   productName,
+  productId,
+  quantity,
+  unitPrice,
 }: DeleteItemButtonProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -30,6 +37,12 @@ export function DeleteItemButton({
           startTransition(async () => {
             const result = await deleteItemAction({ orderId, movementId });
             if (result.success) {
+              trackRemoveFromCart({
+                item_id: String(productId),
+                item_name: productName,
+                price: unitPrice,
+                quantity,
+              });
               toast.success(result.message);
               router.refresh();
             } else {

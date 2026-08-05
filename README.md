@@ -182,6 +182,12 @@ NEXT_PUBLIC_FREE_SHIPPING_OVER=
 NEXT_PUBLIC_GA_MEASUREMENT_ID=
 ```
 
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` must be a GA4 Measurement ID in the
+`G-XXXXXXXXXX` format. For client-side route changes, enable **Enhanced
+Measurement > Page views > Page changes based on browser history events** in
+the GA4 web data stream. Do not add manual page-view tracking while this option
+is enabled, or page views may be duplicated.
+
 Environment files:
 
 - `.env` - base configuration loaded by all package scripts.

@@ -44,6 +44,8 @@ export function OrderActionsSection({
         <FinalizeSaleButton
           orderId={summary?.orderId ?? 0}
           orderStatusId={orderStatusId}
+          items={items}
+          summary={summary}
         />
       </CardContent>
     </Card>

@@ -123,6 +123,9 @@ export function OrderItemsSection({
                       orderId={orderId}
                       movementId={item.movementId}
                       productName={item.product}
+                      productId={item.productId}
+                      quantity={item.quantity}
+                      unitPrice={Number(item.unitValue)}
                     />
                   </div>
                 )}
@@ -134,6 +137,8 @@ export function OrderItemsSection({
                       movementId={item.movementId}
                       orderId={orderId}
                       productName={item.product}
+                      productId={item.productId}
+                      unitPrice={Number(item.unitValue)}
                       quantity={item.quantity}
                       storeStock={item.storeStock}
                       disabled={!isEditable}
@@ -165,6 +170,9 @@ export function OrderItemsSection({
                       orderId={orderId}
                       movementId={item.movementId}
                       productName={item.product}
+                      productId={item.productId}
+                      quantity={item.quantity}
+                      unitPrice={Number(item.unitValue)}
                     />
                   </div>
                 )}

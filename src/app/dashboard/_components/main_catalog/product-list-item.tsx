@@ -120,6 +120,9 @@ export function ProductListItem({
               <ProductAddButtonV2
                 productId={product.id}
                 productName={product.name}
+                productPrice={Number(product.wholesalePrice)}
+                productSku={product.sku}
+                productBrand={product.brand}
                 storeStock={product.storeStock}
                 orderId={orderId}
               />

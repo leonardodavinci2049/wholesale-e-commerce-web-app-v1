@@ -49,6 +49,8 @@ export function CartItemRow({ item }: CartItemRowProps) {
             movementId={item.movementId}
             orderId={item.orderId}
             productName={item.product}
+            productId={item.productId}
+            unitPrice={Number(item.unitValue)}
             quantity={item.quantity}
             storeStock={item.storeStock}
             showDeleteButton={false}
@@ -57,6 +59,8 @@ export function CartItemRow({ item }: CartItemRowProps) {
             movementId={item.movementId}
             orderId={item.orderId}
             productName={item.product}
+            productId={item.productId}
+            unitPrice={Number(item.unitValue)}
             quantity={item.quantity}
             storeStock={item.storeStock}
             showQuantityControls={false}
