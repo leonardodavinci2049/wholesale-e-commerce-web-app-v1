@@ -25,6 +25,8 @@ export interface OrderSalesFindByIdRequest extends OrderSalesBaseRequest {
   pe_type_business?: number;
 }
 
+export interface OrderSalesFindTipoFreteRequest extends OrderSalesBaseRequest {}
+
 export interface OrderSalesDashboardRequest extends OrderSalesBaseRequest {
   pe_order_id?: number;
   pe_id_customer?: number;
@@ -57,6 +59,8 @@ export interface OrderCustomerEntity {
   PATH_IMAGEM: string;
   DATADOCADASTRO: string;
   DT_ULTIMA_COMPRA: string | null;
+  FLAG_FRETE_GRATIS?: number;
+  VL_PP_DESCONTO?: number;
   FONE1: string;
   WHATAPP1: string;
   EMAIL: string;
@@ -187,6 +191,13 @@ export interface OrderSellerEntity {
   EMAIL_VENDEDOR: string;
 }
 
+/** Entidade tipo de frete do cliente */
+export interface OrderTipoFreteEntity {
+  ID_TIPO_FRETE: number;
+  TIPO_FRETE: string;
+  VALOR_PADRAO: string;
+}
+
 /** Entidade resumo do pedido */
 export interface OrderSalesSummaryEntity {
   ID_PEDIDO: number;
@@ -312,6 +323,10 @@ export interface OrderFindCoSellerIdResponse extends OrderSalesBaseResponse {
 
 export interface OrderFindCoSummaryIdResponse extends OrderSalesBaseResponse {
   data: Record<string, OrderSalesSummaryEntity[]>;
+}
+
+export interface OrderFindCoTipoFreteResponse extends OrderSalesBaseResponse {
+  data: Record<string, OrderTipoFreteEntity[]>;
 }
 
 export interface OrderFindDashboardIdResponse extends OrderSalesBaseResponse {

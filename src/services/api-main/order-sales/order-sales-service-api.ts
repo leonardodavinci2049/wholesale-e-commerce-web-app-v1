@@ -25,6 +25,7 @@ import type {
   OrderFindCoProtocolIdResponse,
   OrderFindCoSellerIdResponse,
   OrderFindCoSummaryIdResponse,
+  OrderFindCoTipoFreteResponse,
   OrderFindDashboardIdResponse,
   OrderFindEquipmentIdResponse,
   OrderHistoryEntity,
@@ -33,8 +34,10 @@ import type {
   OrderProtocolEntity,
   OrderSalesDashboardRequest,
   OrderSalesFindByIdRequest,
+  OrderSalesFindTipoFreteRequest,
   OrderSalesSummaryEntity,
   OrderSellerEntity,
+  OrderTipoFreteEntity,
 } from "./types/order-sales-types";
 import {
   OrderSalesError,
@@ -43,6 +46,7 @@ import {
 import {
   OrderSalesDashboardSchema,
   OrderSalesFindByIdSchema,
+  OrderSalesFindTipoFreteSchema,
 } from "./validation/order-sales-schemas";
 
 const logger = createLogger("OrderSalesServiceApi");
@@ -226,6 +230,23 @@ export class OrderSalesServiceApi extends BaseApiService {
     }
   }
 
+  async findCoTipoFrete(
+    params: OrderSalesFindTipoFreteRequest,
+  ): Promise<OrderFindCoTipoFreteResponse> {
+    try {
+      const validatedParams = OrderSalesFindTipoFreteSchema.parse(params);
+
+      return await this.findById<OrderFindCoTipoFreteResponse>(
+        ORDER_SALES_ENDPOINTS.FIND_CO_TIPO_FRETE,
+        validatedParams,
+        "tipos de frete do cliente",
+      );
+    } catch (error) {
+      logger.error("Erro ao buscar tipos de frete do cliente", error);
+      throw error;
+    }
+  }
+
   async findCartId(
     params: OrderSalesDashboardRequest,
   ): Promise<OrderFindDashboardIdResponse | null> {
@@ -395,6 +416,12 @@ export class OrderSalesServiceApi extends BaseApiService {
     response: OrderFindCoSummaryIdResponse,
   ): OrderSalesSummaryEntity | null {
     return response.data?.["Order Summary"]?.[0] ?? null;
+  }
+
+  extractTipoFrete(
+    response: OrderFindCoTipoFreteResponse,
+  ): OrderTipoFreteEntity[] {
+    return response.data?.["Order Tipo Frete"] ?? [];
   }
 
   extractDashboardSummary(
