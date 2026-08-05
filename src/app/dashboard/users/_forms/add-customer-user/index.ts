@@ -1,6 +1,8 @@
 export {
   type AddCustomerUserState,
   addCustomerAsUserAction,
+  type ConvertCustomerToWholesaleState,
+  convertCustomerToWholesaleAction,
   type SearchCustomersState,
   searchCustomersAction,
 } from "./actions";

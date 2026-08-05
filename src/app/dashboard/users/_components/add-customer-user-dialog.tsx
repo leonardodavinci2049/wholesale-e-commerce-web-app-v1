@@ -17,12 +17,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { UICustomerListItem } from "@/services/api-main/customer-general/transformers/transformers";
 import {
   addCustomerAsUserAction,
+  convertCustomerToWholesaleAction,
   getCustomerUserValidationMessage,
   searchCustomersAction,
+  WHOLESALE_CUSTOMER_TYPE_ID,
 } from "../_forms/add-customer-user";
 
 function getCustomerInitials(name: string) {
@@ -48,12 +51,29 @@ function getCustomerTypeBadgeClassName(customerType: string) {
     : "bg-orange-100 text-orange-800 hover:bg-orange-100";
 }
 
+function isWholesaleCustomer(customer: UICustomerListItem) {
+  const customerType = customer.customerType.trim().toUpperCase();
+
+  if (customerType.includes("VAREJ")) {
+    return false;
+  }
+
+  if (customerType.includes("ATACADO")) {
+    return true;
+  }
+
+  return customer.customerTypeId === WHOLESALE_CUSTOMER_TYPE_ID;
+}
+
 export function AddCustomerUserDialog() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [customers, setCustomers] = useState<UICustomerListItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pendingId, setPendingId] = useState<number | null>(null);
+  const [conversionPendingId, setConversionPendingId] = useState<number | null>(
+    null,
+  );
   const [, startTransition] = useTransition();
 
   const debouncedSearch = useDebounce(search, 350);
@@ -85,8 +105,37 @@ export function AddCustomerUserDialog() {
       setSearch("");
       setCustomers([]);
       setPendingId(null);
+      setConversionPendingId(null);
     }
   }, [open]);
+
+  function handleConvertToWholesale(customer: UICustomerListItem) {
+    setConversionPendingId(customer.customerId);
+    startTransition(async () => {
+      const result = await convertCustomerToWholesaleAction(
+        customer.customerId,
+      );
+      setConversionPendingId(null);
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      setCustomers((currentCustomers) =>
+        currentCustomers.map((currentCustomer) =>
+          currentCustomer.customerId === customer.customerId
+            ? {
+                ...currentCustomer,
+                customerTypeId: WHOLESALE_CUSTOMER_TYPE_ID,
+                customerType: "ATACADO",
+              }
+            : currentCustomer,
+        ),
+      );
+      toast.success(result.message);
+    });
+  }
 
   function handleAdd(customer: UICustomerListItem) {
     const validationMessage = getCustomerUserValidationMessage(customer);
@@ -197,19 +246,46 @@ export function AddCustomerUserDialog() {
                         </p>
                       </div>
                     </div>
-                    <Button
-                      className="w-full shrink-0 sm:w-auto"
-                      type="button"
-                      size="sm"
-                      onClick={() => handleAdd(customer)}
-                      disabled={pendingId !== null}
-                    >
-                      {pendingId === customer.customerId ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Adicionar"
+                    <div className="flex w-full shrink-0 items-center justify-end gap-3 sm:w-auto">
+                      {!isWholesaleCustomer(customer) && (
+                        <div className="flex shrink-0 items-center gap-2 rounded-md border px-2 py-1.5">
+                          <label
+                            className="cursor-pointer whitespace-nowrap text-xs font-medium text-green-600 dark:text-green-400"
+                            htmlFor={`convert-customer-${customer.customerId}`}
+                          >
+                            APROVAR
+                          </label>
+                          <Switch
+                            aria-label={`Converter ${customer.name} para cliente ATACADO`}
+                            id={`convert-customer-${customer.customerId}`}
+                            title="Converter cliente para ATACADO"
+                            checked={false}
+                            onCheckedChange={(checked) => {
+                              if (checked) handleConvertToWholesale(customer);
+                            }}
+                            disabled={
+                              pendingId !== null || conversionPendingId !== null
+                            }
+                          />
+                        </div>
                       )}
-                    </Button>
+                      <Button
+                        className="min-w-24 flex-1 shrink-0 sm:flex-none"
+                        type="button"
+                        size="sm"
+                        onClick={() => handleAdd(customer)}
+                        disabled={
+                          pendingId !== null || conversionPendingId !== null
+                        }
+                      >
+                        {pendingId === customer.customerId ||
+                        conversionPendingId === customer.customerId ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Adicionar"
+                        )}
+                      </Button>
+                    </div>
                   </li>
                 ))}
               </ul>
