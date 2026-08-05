@@ -79,7 +79,7 @@ export const OrderUpdDiscountSchema = z.object({
 
 export const OrderUpdFreteSchema = z.object({
   ...baseContextSchema,
-  pe_frete_value: z.number(),
+  pe_shipping_type_id: z.number().int().positive(),
 });
 
 export const OrderUpdNotesSchema = z.object({

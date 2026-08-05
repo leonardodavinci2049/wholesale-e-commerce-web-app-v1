@@ -13,6 +13,8 @@ export const OrderSalesFindByIdSchema = z.object({
   pe_type_business: z.number().int().optional(),
 });
 
+export const OrderSalesFindTipoFreteSchema = z.object(baseContextSchema);
+
 export const OrderSalesDashboardSchema = z.object({
   ...baseContextSchema,
   pe_order_id: z.number().int().optional(),
@@ -22,6 +24,9 @@ export const OrderSalesDashboardSchema = z.object({
 });
 
 export type OrderSalesFindByIdInput = z.infer<typeof OrderSalesFindByIdSchema>;
+export type OrderSalesFindTipoFreteInput = z.infer<
+  typeof OrderSalesFindTipoFreteSchema
+>;
 export type OrderSalesDashboardInput = z.infer<
   typeof OrderSalesDashboardSchema
 >;

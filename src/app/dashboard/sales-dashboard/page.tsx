@@ -1,6 +1,10 @@
+import { connection } from "next/server";
+import { Suspense } from "react";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { Skeleton } from "@/components/ui/skeleton";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
+import type { OrderTipoFreteEntity } from "@/services/api-main/order-sales";
 import { orderSalesServiceApi } from "@/services/api-main/order-sales";
 import {
   transformCustomerEntity,
@@ -74,16 +78,33 @@ async function getFindOrder(
   };
 }
 
-export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
+function SalesPanelSkeleton() {
+  return (
+    <div className="mx-auto grid w-full max-w-350 gap-4 px-4 pb-6 pt-4 md:px-6 md:pb-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(360px,420px)] xl:grid-cols-[minmax(0,2fr)_minmax(380px,450px)]">
+      <div className="space-y-4">
+        <Skeleton className="h-32 w-full rounded-[28px]" />
+        <Skeleton className="h-110 w-full rounded-[28px]" />
+      </div>
+      <div className="space-y-4">
+        <Skeleton className="h-96 w-full rounded-[28px]" />
+        <Skeleton className="h-32 w-full rounded-[28px]" />
+      </div>
+    </div>
+  );
+}
+
+async function SalesPanelContent({ searchParams }: PdvPageProps) {
+  await connection();
+
   const params = await searchParams;
   const orderId = params.orderId ? Number(params.orderId) : 0;
+  const { apiContext, session } = await getAuthContext();
+  const sessionCustomerId = session.user.personId ?? 0;
 
   let dashboardData: UIOrderDashboardData | null = null;
+  let deliveryMethods: OrderTipoFreteEntity[] = [];
 
   try {
-    const { apiContext, session } = await getAuthContext();
-    const sessionCustomerId = session.user.personId ?? 0;
-
     dashboardData =
       (await getFindOrder(orderId, {
         ...apiContext,
@@ -109,6 +130,21 @@ export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
         error: "Pedido nao encontrado para o cliente autenticado",
       };
     }
+
+    if (dashboardData?.details) {
+      try {
+        const deliveryMethodsResponse =
+          await orderSalesServiceApi.findCoTipoFrete({
+            ...apiContext,
+          });
+
+        deliveryMethods = orderSalesServiceApi.extractTipoFrete(
+          deliveryMethodsResponse,
+        );
+      } catch (error) {
+        logger.error("Erro ao carregar formas de entrega do pedido", error);
+      }
+    }
   } catch (error) {
     logger.error("Erro ao carregar dados do pedido:", error);
   }
@@ -116,6 +152,76 @@ export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
   const errorMessage = dashboardData?.error ?? null;
   const shouldShowErrorState = Boolean(errorMessage) || !dashboardData?.details;
 
+  return (
+    <div className="mx-auto flex w-full max-w-350 flex-col gap-4 px-4 pb-6 pt-4 md:px-6 md:pb-8">
+      {shouldShowErrorState ? (
+        <OrderLoadErrorState
+          errorMessage={errorMessage}
+          orderId={orderId > 0 ? orderId : undefined}
+        />
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(360px,420px)] xl:grid-cols-[minmax(0,2fr)_minmax(380px,450px)]">
+          <main className="order-1 flex min-w-0 flex-col gap-4">
+            <HeaderOrderSection
+              details={dashboardData?.details ?? null}
+              customerName={dashboardData?.customer?.customerName ?? null}
+            />
+            <OrderTabsSection
+              cartContent={
+                <OrderItemsSection
+                  items={dashboardData?.items ?? []}
+                  orderStatusId={dashboardData?.details?.orderStatusId ?? 0}
+                  orderId={dashboardData?.details?.orderId ?? 0}
+                  customerId={dashboardData?.details?.customerId ?? 0}
+                  sellerId={dashboardData?.details?.sellerId ?? 0}
+                  paymentFormId={dashboardData?.details?.paymentFormId ?? 0}
+                />
+              }
+              purchaseDetailsContent={
+                <PurchaseDetailsSection
+                  details={dashboardData?.details ?? null}
+                />
+              }
+              customerDetailsContent={
+                <CustomerSection
+                  customer={dashboardData?.customer ?? null}
+                  orderId={dashboardData?.details?.orderId ?? orderId}
+                  orderStatusId={dashboardData?.details?.orderStatusId ?? 0}
+                />
+              }
+              orderEditContent={
+                <OrderEditSection details={dashboardData?.details ?? null} />
+              }
+            />
+          </main>
+
+          <aside className="order-2 min-w-0">
+            <div className="space-y-4 xl:sticky xl:top-4">
+              <OrderSummarySection
+                summary={dashboardData?.summary ?? null}
+                deliveryMethods={deliveryMethods}
+                hasFreeShipping={
+                  dashboardData?.customer?.hasFreeShipping ?? false
+                }
+                orderId={dashboardData?.details?.orderId ?? orderId}
+                orderStatusId={dashboardData?.details?.orderStatusId ?? 0}
+              />
+              <OrderActionsSection
+                summary={dashboardData?.summary ?? null}
+                details={dashboardData?.details ?? null}
+                items={dashboardData?.items ?? []}
+                customer={dashboardData?.customer ?? null}
+                orderStatusId={dashboardData?.details?.orderStatusId ?? 0}
+              />
+            </div>
+          </aside>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function SalesPanelPage({ searchParams }: PdvPageProps) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-105 bg-[radial-gradient(circle_at_top_left,var(--tw-gradient-stops))] from-primary/10 via-background to-transparent" />
@@ -130,73 +236,9 @@ export default async function SalesPanelPage({ searchParams }: PdvPageProps) {
 
       <div className="relative flex flex-1 flex-col overflow-hidden">
         <div className="flex-1 overflow-auto">
-          <div className="mx-auto flex w-full max-w-350 flex-col gap-4 px-4 pb-6 pt-4 md:px-6 md:pb-8">
-            {shouldShowErrorState ? (
-              <OrderLoadErrorState
-                errorMessage={errorMessage}
-                orderId={orderId > 0 ? orderId : undefined}
-              />
-            ) : (
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(360px,420px)] xl:grid-cols-[minmax(0,2fr)_minmax(380px,450px)]">
-                <main className="order-1 flex min-w-0 flex-col gap-4">
-                  <HeaderOrderSection
-                    details={dashboardData?.details ?? null}
-                    customerName={dashboardData?.customer?.customerName ?? null}
-                  />
-                  <OrderTabsSection
-                    cartContent={
-                      <OrderItemsSection
-                        items={dashboardData?.items ?? []}
-                        orderStatusId={
-                          dashboardData?.details?.orderStatusId ?? 0
-                        }
-                        orderId={dashboardData?.details?.orderId ?? 0}
-                        customerId={dashboardData?.details?.customerId ?? 0}
-                        sellerId={dashboardData?.details?.sellerId ?? 0}
-                        paymentFormId={
-                          dashboardData?.details?.paymentFormId ?? 0
-                        }
-                      />
-                    }
-                    purchaseDetailsContent={
-                      <PurchaseDetailsSection
-                        details={dashboardData?.details ?? null}
-                      />
-                    }
-                    customerDetailsContent={
-                      <CustomerSection
-                        customer={dashboardData?.customer ?? null}
-                        orderId={dashboardData?.details?.orderId ?? orderId}
-                        orderStatusId={
-                          dashboardData?.details?.orderStatusId ?? 0
-                        }
-                      />
-                    }
-                    orderEditContent={
-                      <OrderEditSection
-                        details={dashboardData?.details ?? null}
-                      />
-                    }
-                  />
-                </main>
-
-                <aside className="order-2 min-w-0">
-                  <div className="space-y-4 xl:sticky xl:top-4">
-                    <OrderSummarySection
-                      summary={dashboardData?.summary ?? null}
-                    />
-                    <OrderActionsSection
-                      summary={dashboardData?.summary ?? null}
-                      details={dashboardData?.details ?? null}
-                      items={dashboardData?.items ?? []}
-                      customer={dashboardData?.customer ?? null}
-                      orderStatusId={dashboardData?.details?.orderStatusId ?? 0}
-                    />
-                  </div>
-                </aside>
-              </div>
-            )}
-          </div>
+          <Suspense fallback={<SalesPanelSkeleton />}>
+            <SalesPanelContent searchParams={searchParams} />
+          </Suspense>
         </div>
       </div>
     </div>

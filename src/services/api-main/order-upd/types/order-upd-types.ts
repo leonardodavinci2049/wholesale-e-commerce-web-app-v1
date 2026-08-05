@@ -48,7 +48,7 @@ export interface OrderUpdDiscountRequest extends OrderUpdBaseRequest {
 }
 
 export interface OrderUpdFreteRequest extends OrderUpdBaseRequest {
-  pe_frete_value?: number;
+  pe_shipping_type_id: number;
 }
 
 export interface OrderUpdNotesRequest extends OrderUpdBaseRequest {

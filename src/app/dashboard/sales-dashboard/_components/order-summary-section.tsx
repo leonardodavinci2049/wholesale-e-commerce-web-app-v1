@@ -1,14 +1,26 @@
 import { Tag, WalletCards } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import type { OrderTipoFreteEntity } from "@/services/api-main/order-sales";
 import type { UIOrderSalesSummary } from "@/services/api-main/order-sales/transformers/transformers";
 import { formatCurrency } from "@/utils/common-utils";
+import { DeliveryMethodsSection } from "./delivery-methods-section";
 import { PaymentMethodsSection } from "./payment-methods-section";
 
 interface OrderSummaryProps {
   summary: UIOrderSalesSummary | null;
+  deliveryMethods: OrderTipoFreteEntity[];
+  hasFreeShipping: boolean;
+  orderId: number;
+  orderStatusId: number;
 }
 
-export function OrderSummarySection({ summary }: OrderSummaryProps) {
+export function OrderSummarySection({
+  summary,
+  deliveryMethods,
+  hasFreeShipping,
+  orderId,
+  orderStatusId,
+}: OrderSummaryProps) {
   const subtotal = summary ? Number(summary.subtotalValue) : 0;
   const freight = summary ? Number(summary.freightValue) : 0;
   const additions = summary ? Number(summary.additionValue) : 0;
@@ -86,6 +98,15 @@ export function OrderSummarySection({ summary }: OrderSummaryProps) {
 
         <div className="rounded-3xl border border-border/70 bg-background/75 p-4 dark:bg-white/4">
           <PaymentMethodsSection />
+        </div>
+
+        <div className="rounded-3xl border border-border/70 bg-background/75 p-4 dark:bg-white/4">
+          <DeliveryMethodsSection
+            deliveryMethods={deliveryMethods}
+            hasFreeShipping={hasFreeShipping}
+            orderId={orderId}
+            orderStatusId={orderStatusId}
+          />
         </div>
       </div>
     </Card>

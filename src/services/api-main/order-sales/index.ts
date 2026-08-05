@@ -19,6 +19,7 @@ export type {
   OrderFindCoProtocolIdResponse,
   OrderFindCoSellerIdResponse,
   OrderFindCoSummaryIdResponse,
+  OrderFindCoTipoFreteResponse,
   OrderFindDashboardIdResponse,
   OrderFindEquipmentIdResponse,
   OrderHistoryEntity,
@@ -27,8 +28,10 @@ export type {
   OrderProtocolEntity,
   OrderSalesDashboardRequest,
   OrderSalesFindByIdRequest,
+  OrderSalesFindTipoFreteRequest,
   OrderSalesSummaryEntity,
   OrderSellerEntity,
+  OrderTipoFreteEntity,
 } from "./types/order-sales-types";
 
 export {

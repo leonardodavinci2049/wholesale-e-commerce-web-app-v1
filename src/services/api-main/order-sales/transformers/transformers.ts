@@ -33,6 +33,7 @@ export interface UIOrderCarrier {
 export interface UIOrderCustomer {
   customerId: number;
   customerName: string;
+  hasFreeShipping: boolean;
   imagePath: string;
   createdAt: string;
   lastPurchaseDate: string | null;
@@ -272,6 +273,7 @@ export function transformCustomerEntity(
   return {
     customerId: entity.ID_CLIENTE,
     customerName: entity.NOME_CLIENTE,
+    hasFreeShipping: Number(entity.FLAG_FRETE_GRATIS) === 1,
     imagePath: entity.PATH_IMAGEM,
     createdAt: entity.DATADOCADASTRO,
     lastPurchaseDate: entity.DT_ULTIMA_COMPRA,
