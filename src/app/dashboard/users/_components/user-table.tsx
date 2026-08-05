@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SellerIdEditor } from "./seller-id-editor";
 import { UserPasswordDialog } from "./user-password-dialog";
 
 type UserWithCustomerAndSellerIds = UserWithRole & {
@@ -77,7 +78,12 @@ export function UserTable({ users, selfId }: UserTableProps) {
                   {user.email}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {user.sellerId != null ? `#${user.sellerId}` : "—"}
+                  <SellerIdEditor
+                    userId={user.id}
+                    userName={user.name || "Sem nome"}
+                    personId={user.personId ?? null}
+                    sellerId={user.sellerId ?? null}
+                  />
                 </TableCell>
                 <TableCell>
                   <Badge
@@ -170,9 +176,15 @@ export function UserTable({ users, selfId }: UserTableProps) {
                   <p className="text-xs text-muted-foreground truncate">
                     {user.email}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    Vendedor {user.sellerId != null ? `#${user.sellerId}` : "—"}
-                  </p>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span>Vendedor</span>
+                    <SellerIdEditor
+                      userId={user.id}
+                      userName={user.name || "Sem nome"}
+                      personId={user.personId ?? null}
+                      sellerId={user.sellerId ?? null}
+                    />
+                  </div>
                 </div>
               </div>
 
