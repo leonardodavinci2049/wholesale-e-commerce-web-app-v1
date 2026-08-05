@@ -13,10 +13,13 @@ import {
 } from "@/components/ui/table";
 import { UserPasswordDialog } from "./user-password-dialog";
 
-type UserWithPersonId = UserWithRole;
+type UserWithCustomerAndSellerIds = UserWithRole & {
+  personId?: number | null;
+  sellerId?: number | null;
+};
 
 interface UserTableProps {
-  users: UserWithPersonId[];
+  users: UserWithCustomerAndSellerIds[];
   selfId: string;
 }
 
@@ -31,6 +34,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
               <TableHead className="w-12">Avatar</TableHead>
               <TableHead>Usuário</TableHead>
               <TableHead>E-mail</TableHead>
+              <TableHead>Vendedor</TableHead>
               <TableHead>Função</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Criado em</TableHead>
@@ -50,6 +54,9 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
+                    <span className="shrink-0 text-muted-foreground">
+                      {user.personId != null ? `#${user.personId}` : "—"}
+                    </span>
                     <Link
                       href={`/dashboard/users/${user.id}`}
                       className="hover:underline text-blue-600 dark:text-blue-400"
@@ -68,6 +75,9 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {user.email}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {user.sellerId != null ? `#${user.sellerId}` : "—"}
                 </TableCell>
                 <TableCell>
                   <Badge
@@ -113,7 +123,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
             ))}
             {users.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   Nenhum usuário encontrado.
                 </TableCell>
               </TableRow>
@@ -139,6 +149,9 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
+                    <span className="shrink-0 text-sm font-medium text-muted-foreground">
+                      {user.personId != null ? `#${user.personId}` : "—"}
+                    </span>
                     <Link
                       href={`/dashboard/users/${user.id}`}
                       className="font-medium hover:underline text-blue-600 dark:text-blue-400 block truncate"
@@ -156,6 +169,9 @@ export function UserTable({ users, selfId }: UserTableProps) {
                   </div>
                   <p className="text-xs text-muted-foreground truncate">
                     {user.email}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Vendedor {user.sellerId != null ? `#${user.sellerId}` : "—"}
                   </p>
                 </div>
               </div>
