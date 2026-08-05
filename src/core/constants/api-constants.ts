@@ -227,6 +227,13 @@ export const CARRIER_ENDPOINTS = {
   DELETE: "/carrier/v2/carrier-delete",
 } as const;
 
+// Endpoints de Seller
+export const SELLER_ENDPOINTS = {
+  FIND_BY_ID: "/seller/v2/seller-find-id",
+  SEARCH_ALL: "/seller/v2/seller-search-all",
+  FIND_MANAGER_ALL: "/seller/v2/seller-find-manager-all",
+} as const;
+
 // Endpoints de Supplier
 export const SUPPLIER_ENDPOINTS = {
   FIND_ALL: "/supplier/v2/supplier-find-all",

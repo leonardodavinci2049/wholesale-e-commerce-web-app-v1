@@ -43,6 +43,8 @@ export class SellerServiceApi extends BaseApiService {
       pe_app_id: serverEnvs.APP_ID,
       pe_store_id: serverEnvs.STORE_ID,
       ...additionalData,
+      pe_system_client_id: serverEnvs.SYSTEM_CLIENT_ID,
+      pe_organization_id: serverEnvs.ORGANIZATION_ID,
     };
   }
 
