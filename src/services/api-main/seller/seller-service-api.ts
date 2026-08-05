@@ -68,7 +68,6 @@ export class SellerServiceApi extends BaseApiService {
         requestBody,
       );
 
-
       return this.normalizeEmptySellerSearchAllResponse(response);
     } catch (error) {
       logger.error("Erro ao pesquisar vendedores", error);
