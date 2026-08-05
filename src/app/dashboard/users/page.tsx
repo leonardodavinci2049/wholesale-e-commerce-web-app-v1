@@ -1,5 +1,7 @@
 import { headers } from "next/headers";
 import { connection } from "next/server";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/lib/auth/auth";
 import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with-breadcrumb";
 import { AddCustomerUserDialog } from "./_components/add-customer-user-dialog";
@@ -8,9 +10,13 @@ import { UserTable } from "./_components/user-table";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default async function UsersPage(props: { searchParams: SearchParams }) {
+async function UsersContent({
+  searchParams: searchParamsPromise,
+}: {
+  searchParams: SearchParams;
+}) {
   await connection();
-  const searchParams = await props.searchParams;
+  const searchParams = await searchParamsPromise;
   const session = await auth.api.getSession({ headers: await headers() });
 
   const searchTerm =
@@ -34,6 +40,24 @@ export default async function UsersPage(props: { searchParams: SearchParams }) {
 
   return (
     <>
+      <UserSearch />
+      <UserTable users={users.users} selfId={session?.user.id ?? ""} />
+    </>
+  );
+}
+
+function UsersContentFallback() {
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-14 w-full max-w-sm" />
+      <Skeleton className="h-64 w-full" />
+    </div>
+  );
+}
+
+export default function UsersPage(props: { searchParams: SearchParams }) {
+  return (
+    <>
       <SiteHeaderWithBreadcrumb
         title="Dashboard"
         breadcrumbItems={[
@@ -55,8 +79,9 @@ export default async function UsersPage(props: { searchParams: SearchParams }) {
           </div>
         </div>
 
-        <UserSearch />
-        <UserTable users={users.users} selfId={session?.user.id ?? ""} />
+        <Suspense fallback={<UsersContentFallback />}>
+          <UsersContent searchParams={props.searchParams} />
+        </Suspense>
       </div>
     </>
   );

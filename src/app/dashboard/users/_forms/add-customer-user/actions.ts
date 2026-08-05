@@ -1,11 +1,13 @@
 "use server";
 
 import type { RowDataPacket } from "mysql2";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { headers } from "next/headers";
+import { createLogger } from "@/core/logger";
 import dbService from "@/database/dbConnection";
 import { AUTH_TABLES } from "@/database/shared/auth/auth.types";
 import { auth } from "@/lib/auth/auth";
+import { CACHE_TAGS } from "@/lib/cache-config";
 import { getAuthContext } from "@/server/auth-context";
 import { customerGeneralServiceApi } from "@/services/api-main/customer-general";
 import {
@@ -13,8 +15,14 @@ import {
   transformCustomerList,
   type UICustomerListItem,
 } from "@/services/api-main/customer-general/transformers/transformers";
+import {
+  CustomerInlineError,
+  customerInlineServiceApi,
+} from "@/services/api-main/customer-inline";
 import { getCustomerUserValidationMessage } from "./customer-user-rules";
 import { addCustomerUserSchema } from "./schema";
+
+const logger = createLogger("add-customer-user-actions");
 
 export type AddCustomerUserState = {
   success: boolean;
@@ -25,6 +33,11 @@ export type SearchCustomersState = {
   success: boolean;
   message?: string;
   customers: UICustomerListItem[];
+};
+
+export type ConvertCustomerToWholesaleState = {
+  success: boolean;
+  message: string;
 };
 
 interface ExistingUserRow extends RowDataPacket {
@@ -58,6 +71,55 @@ export async function searchCustomersAction(
       success: false,
       message: e.message || "Falha ao buscar clientes",
       customers: [],
+    };
+  }
+}
+
+export async function convertCustomerToWholesaleAction(
+  customerId: number,
+): Promise<ConvertCustomerToWholesaleState> {
+  const parsed = addCustomerUserSchema.safeParse({ customerId });
+
+  if (!parsed.success) {
+    return { success: false, message: "ID de cliente inválido" };
+  }
+
+  try {
+    const { apiContext, session } = await getAuthContext();
+
+    if (session.user.role !== "admin") {
+      return {
+        success: false,
+        message: "Você não tem permissão para converter clientes.",
+      };
+    }
+
+    await customerInlineServiceApi.updateTypeCustomer({
+      ...apiContext,
+      pe_customer_id: parsed.data.customerId,
+      pe_customer_type_id: 1,
+    });
+
+    revalidateTag(
+      CACHE_TAGS.customer(String(parsed.data.customerId)),
+      "seconds",
+    );
+    revalidateTag(CACHE_TAGS.customers, "seconds");
+
+    return {
+      success: true,
+      message: "Cliente convertido para ATACADO com sucesso",
+    };
+  } catch (error) {
+    logger.error("Erro ao converter cliente para atacado", error);
+
+    if (error instanceof CustomerInlineError) {
+      return { success: false, message: error.message };
+    }
+
+    return {
+      success: false,
+      message: "Falha ao converter cliente para ATACADO",
     };
   }
 }
