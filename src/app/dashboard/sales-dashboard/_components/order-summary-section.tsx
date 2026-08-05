@@ -1,4 +1,4 @@
-import { Tag, WalletCards } from "lucide-react";
+import { ReceiptText, Tag, WalletCards } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import type { OrderTipoFreteEntity } from "@/services/api-main/order-sales";
 import type { UIOrderSalesSummary } from "@/services/api-main/order-sales/transformers/transformers";
@@ -29,7 +29,6 @@ export function OrderSummarySection({
   const total = summary ? Number(summary.totalOrderValue) : 0;
 
   const breakdown = [
-    { label: "Subtotal", value: subtotal },
     ...(freight > 0 ? [{ label: "Frete", value: freight }] : []),
     ...(additions > 0 ? [{ label: "Adicionais", value: additions }] : []),
     ...(insurance > 0 ? [{ label: "Seguro", value: insurance }] : []),
@@ -40,6 +39,18 @@ export function OrderSummarySection({
       <div className="space-y-5 px-3 py-4 md:px-6 md:py-6">
         <div className="rounded-[24px] border border-border/70 bg-background/75 p-4 dark:bg-white/4">
           <div className="space-y-3">
+            <div className="flex items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-primary/8 px-3 py-3.5 md:px-4">
+              <span className="flex min-w-0 items-center gap-2.5 text-sm font-semibold text-foreground">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary">
+                  <ReceiptText className="h-4 w-4" />
+                </span>
+                Subtotal
+              </span>
+              <span className="shrink-0 text-lg font-bold tracking-tight text-primary md:text-xl">
+                {formatCurrency(subtotal)}
+              </span>
+            </div>
+
             {breakdown.map((row) => (
               <div
                 key={row.label}

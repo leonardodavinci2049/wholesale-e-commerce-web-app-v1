@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { companyInfo } from "@/data/info-company";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { GoogleAnalytics } from "@/components/analytics";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { publicEnvs } from "@/core/config/envs.client";
 import { cn } from "@/lib/utils";
@@ -78,6 +79,7 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans")}
     >
       <body className="min-h-full flex flex-col">
+        <GoogleAnalytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
