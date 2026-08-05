@@ -266,7 +266,7 @@ export function PurchaseDetailsSection({
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
             <Sparkles className="h-3.5 w-3.5" />
-            Informacoes da compra
+            Informações da compra
           </div>
           <h3 className="text-lg font-semibold tracking-tight text-foreground">
             Detalhes da compra

@@ -206,7 +206,7 @@ export function OrderEditInlineFields({ details }: OrderEditInlineFieldsProps) {
       <div className="rounded-3xl border border-border/70 bg-background/75 p-3 shadow-sm dark:bg-white/3 md:p-4">
         <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <FileText className="h-4 w-4" />
-          Anotacoes do Orçamento
+          Anotações do Orçamento
         </div>
 
         <div

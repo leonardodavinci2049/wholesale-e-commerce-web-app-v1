@@ -4,7 +4,11 @@ import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-hea
 import { Skeleton } from "@/components/ui/skeleton";
 import { createLogger } from "@/core/logger";
 import { getAuthContext } from "@/server/auth-context";
-import { orderB2bServiceApi } from "@/services/api-main/order-b2b";
+import {
+  orderB2bServiceApi,
+  transformSellerEntity,
+  type UIOrderB2bSeller,
+} from "@/services/api-main/order-b2b";
 import type { OrderTipoFreteEntity } from "@/services/api-main/order-sales";
 import { orderSalesServiceApi } from "@/services/api-main/order-sales";
 import {
@@ -26,6 +30,7 @@ import { OrderLoadErrorState } from "./_components/order-load-error-state";
 import { OrderSummarySection } from "./_components/order-summary-section";
 import { OrderTabsSection } from "./_components/order-tabs-section";
 import { PurchaseDetailsSection } from "./_components/purchase-details-section";
+import { SellerSection } from "./_components/seller-section";
 
 const logger = createLogger("dashboard-pdv-page");
 
@@ -34,6 +39,7 @@ type UIOrderDashboardData = {
   details: UIOrderDashboardDetails | null;
   items: UIOrderDashboardItem[];
   customer: UIOrderCustomer | null;
+  seller: UIOrderB2bSeller | null;
   error?: string;
 };
 
@@ -64,12 +70,14 @@ async function getFindOrder(
   const details = orderB2bServiceApi.extractDashboardDetails(response);
   const items = orderB2bServiceApi.extractDashboardItems(response);
   const customer = orderB2bServiceApi.extractDashboardCustomer(response);
+  const seller = orderB2bServiceApi.extractDashboardSeller(response);
 
   return {
     summary: summary ? transformSummaryEntity(summary) : null,
     details: details ? transformDashboardDetailsEntity(details) : null,
     items: items.map(transformDashboardItemEntity),
     customer: customer ? transformCustomerEntity(customer) : null,
+    seller: seller ? transformSellerEntity(seller) : null,
   };
 }
 
@@ -106,6 +114,7 @@ async function SalesPanelContent({ searchParams }: PdvPageProps) {
         details: null,
         items: [],
         customer: null,
+        seller: null,
         error: "Cliente autenticado invalido",
       };
     } else {
@@ -130,6 +139,7 @@ async function SalesPanelContent({ searchParams }: PdvPageProps) {
         details: null,
         items: [],
         customer: null,
+        seller: null,
         error: "Pedido nao encontrado para o cliente autenticado",
       };
     }
@@ -184,6 +194,9 @@ async function SalesPanelContent({ searchParams }: PdvPageProps) {
                 <PurchaseDetailsSection
                   details={dashboardData?.details ?? null}
                 />
+              }
+              sellerDetailsContent={
+                <SellerSection seller={dashboardData?.seller ?? null} />
               }
               customerDetailsContent={
                 <CustomerSection
