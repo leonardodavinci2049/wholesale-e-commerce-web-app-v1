@@ -60,7 +60,7 @@ export interface OrderCustomerEntity {
   DATADOCADASTRO: string;
   DT_ULTIMA_COMPRA: string | null;
   FLAG_FRETE_GRATIS?: number;
-  VL_PP_DESCONTO?: number;
+  VL_PP_DESCONTO?: string;
   FONE1: string;
   WHATAPP1: string;
   EMAIL: string;

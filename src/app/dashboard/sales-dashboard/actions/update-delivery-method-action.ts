@@ -10,9 +10,9 @@ import {
   OrderUpdError,
   orderUpdServiceApi,
 } from "@/services/api-main/order-upd";
+import { validateEditableOrderCustomer } from "./validate-editable-order-customer";
 
 const logger = createLogger("sales-dashboard-update-delivery-method-action");
-const EDITABLE_ORDER_STATUS_ID = 22;
 
 const UpdateDeliveryMethodSchema = z.object({
   orderId: z.number().int().positive(),
@@ -43,27 +43,16 @@ export async function updateDeliveryMethodAction(
       };
     }
 
-    const orderResponse = await orderSalesServiceApi.findOrderId({
-      ...apiContext,
-      pe_order_id: validated.orderId,
-      pe_id_customer: customerId,
-      pe_type_business: 1,
-    });
-    const orderDetails = orderResponse
-      ? orderSalesServiceApi.extractDashboardDetails(orderResponse)
-      : null;
+    const orderCustomerValidation = await validateEditableOrderCustomer(
+      validated.orderId,
+      customerId,
+      apiContext,
+    );
 
-    if (!orderDetails || orderDetails.ID_CLIENTE !== customerId) {
+    if (!orderCustomerValidation.success) {
       return {
         success: false,
-        message: "Pedido não encontrado para o cliente autenticado",
-      };
-    }
-
-    if (orderDetails.ID_STATUS_PEDIDO !== EDITABLE_ORDER_STATUS_ID) {
-      return {
-        success: false,
-        message: "Somente pedidos em orçamento podem ter o frete alterado",
+        message: orderCustomerValidation.message,
       };
     }
 

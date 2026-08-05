@@ -2,7 +2,8 @@ import "server-only";
 
 import { createLogger } from "@/core/logger";
 import type { AuthContext } from "@/server/auth-context";
-import { orderSalesServiceApi } from "@/services/api-main/order-sales/order-sales-service-api";
+import { orderB2bServiceApi } from "@/services/api-main/order-b2b/order-b2b-service-api";
+import { OrderB2bNotFoundError } from "@/services/api-main/order-b2b/types/order-b2b-types";
 
 const logger = createLogger("sales-dashboard-validate-editable-order-customer");
 const EDITABLE_ORDER_STATUS_ID = 22;
@@ -19,19 +20,54 @@ type ValidateEditableOrderCustomerResult =
 
 export async function validateEditableOrderCustomer(
   orderId: number,
-  customerId: number,
+  authenticatedCustomerId: number,
   apiContext: AuthContext["apiContext"],
+  requestedCustomerId?: number,
 ): Promise<ValidateEditableOrderCustomerResult> {
-  const dashboardResponse = await orderSalesServiceApi.findDashboardId({
-    pe_order_id: orderId,
-    pe_id_seller: apiContext.pe_person_id,
-    pe_type_business: 1,
-    ...apiContext,
-  });
+  if (authenticatedCustomerId <= 0) {
+    return {
+      success: false,
+      message: "Cliente autenticado invalido",
+    };
+  }
 
-  const dashboardDetails = dashboardResponse
-    ? orderSalesServiceApi.extractDashboardDetails(dashboardResponse)
-    : null;
+  if (
+    requestedCustomerId !== undefined &&
+    requestedCustomerId !== authenticatedCustomerId
+  ) {
+    logger.warn("Cliente informado difere do cliente autenticado", {
+      orderId,
+      authenticatedCustomerId,
+      requestedCustomerId,
+    });
+
+    return {
+      success: false,
+      message: "Cliente nao pertence ao pedido informado",
+    };
+  }
+
+  let dashboardResponse;
+
+  try {
+    dashboardResponse = await orderB2bServiceApi.findDashboardCustomerId({
+      ...apiContext,
+      pe_order_id: orderId,
+      pe_customer_id: authenticatedCustomerId,
+    });
+  } catch (error) {
+    if (error instanceof OrderB2bNotFoundError) {
+      return {
+        success: false,
+        message: "Pedido nao encontrado para o cliente autenticado",
+      };
+    }
+
+    throw error;
+  }
+
+  const dashboardDetails =
+    orderB2bServiceApi.extractDashboardDetails(dashboardResponse);
 
   if (!dashboardDetails) {
     return {
@@ -49,11 +85,11 @@ export async function validateEditableOrderCustomer(
 
   const orderCustomerId = dashboardDetails.ID_CLIENTE;
 
-  if (orderCustomerId !== customerId) {
-    logger.warn("Cliente informado nao pertence ao pedido validado", {
+  if (orderCustomerId !== authenticatedCustomerId) {
+    logger.warn("Pedido retornado nao pertence ao cliente autenticado", {
       orderId,
       orderCustomerId,
-      requestedCustomerId: customerId,
+      authenticatedCustomerId,
     });
 
     return {
