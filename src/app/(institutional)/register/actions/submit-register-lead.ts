@@ -132,8 +132,9 @@ export async function submitRegisterLead(
     pe_image: "",
     pe_zip_code: data.zipCode,
     pe_address: data.address,
-    pe_address_number: data.addressNumber,
-    pe_complement: data.complement || undefined,
+    // O endpoint exige strings, embora estes campos sejam opcionais no formulário.
+    pe_address_number: data.addressNumber || "",
+    pe_complement: data.complement || "",
     pe_neighborhood: data.neighborhood,
     pe_city: data.city,
     pe_state: data.state.toUpperCase(),

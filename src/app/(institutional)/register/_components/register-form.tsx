@@ -636,13 +636,13 @@ function RegisterFormContent({ onNewRegister }: { onNewRegister: () => void }) {
             <FormField
               id={fieldId("addressNumber")}
               label="Número"
-              required
               error={errors?.addressNumber}
               errorId={errorId("addressNumber")}
             >
               <Input
                 id={fieldId("addressNumber")}
                 name="addressNumber"
+                type="text"
                 className={FORM_CONTROL_CLASS}
                 value={values.addressNumber}
                 onChange={(e) => setField("addressNumber", e.target.value)}

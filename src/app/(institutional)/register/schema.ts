@@ -77,11 +77,7 @@ export const registerLeadSchema = z
       .trim()
       .min(2, "Informe o endereço")
       .max(300, "Endereço muito longo"),
-    addressNumber: z
-      .string()
-      .trim()
-      .min(1, "Informe o número")
-      .max(100, "Número inválido"),
+    addressNumber: z.string().trim().max(100, "Número inválido").optional(),
     complement: z.string().trim().max(100).optional(),
     neighborhood: z
       .string()
