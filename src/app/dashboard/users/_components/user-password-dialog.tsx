@@ -16,6 +16,38 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { generateUserPasswordAction } from "./generate-user-password-action";
 
+async function copyToClipboard(value: string): Promise<boolean> {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      // Tenta o fallback abaixo para navegadores móveis incompatíveis.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.readOnly = true;
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "-9999px";
+  textarea.style.fontSize = "16px";
+
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  try {
+    return document.execCommand("copy");
+  } catch {
+    return false;
+  } finally {
+    textarea.remove();
+  }
+}
+
 type UserPasswordDialogProps = {
   userId: string;
   userName: string | null | undefined;
@@ -53,9 +85,14 @@ export function UserPasswordDialog({
         return;
       }
 
+      const signInUrl = new URL("/sign-in", window.location.origin).href;
+
       setContent(
         [
-          "Segue os dados de acesso ao sistema",
+          "Segue os dados de acesso ao Sistema de Atacado",
+          "",
+          signInUrl,
+          "",
           `Email: ${email}`,
           `Senha: ${result.password}`,
         ].join("\n"),
@@ -69,10 +106,11 @@ export function UserPasswordDialog({
   };
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(content);
+    const copied = await copyToClipboard(content);
+
+    if (copied) {
       toast.success("Conteúdo copiado para a área de transferência");
-    } catch (_error) {
+    } else {
       toast.error("Falha ao copiar conteúdo");
     }
   };
@@ -101,7 +139,7 @@ export function UserPasswordDialog({
           <div className="space-y-4 py-4">
             <Textarea
               readOnly
-              rows={3}
+              rows={6}
               value={content}
               placeholder="Clique em 'Gerar Senha' para criar uma nova senha"
               className="resize-none"
@@ -110,14 +148,17 @@ export function UserPasswordDialog({
 
           <DialogFooter className="flex-col gap-2 sm:flex-row">
             <DialogClose asChild>
-              <Button variant="outline">Fechar</Button>
+              <Button variant="outline" className="w-full sm:w-auto">
+                Fechar
+              </Button>
             </DialogClose>
-            <div className="flex gap-2">
+            <div className="grid w-full gap-2 sm:flex sm:w-auto">
               <Button
                 type="button"
                 variant="secondary"
                 onClick={handleCopy}
                 disabled={!content}
+                className="w-full sm:w-auto"
               >
                 <Copy className="mr-1 size-4" />
                 Copiar
@@ -126,6 +167,7 @@ export function UserPasswordDialog({
                 type="button"
                 onClick={handleGeneratePassword}
                 disabled={isGenerating}
+                className="w-full sm:w-auto"
               >
                 {isGenerating ? (
                   <>
