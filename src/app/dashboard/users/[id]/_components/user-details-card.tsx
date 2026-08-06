@@ -59,9 +59,7 @@ export function UserDetailsCard({ user }: UserDetailsCardProps) {
           </div>
           <div>
             <CardTitle>Detalhes do Usuário</CardTitle>
-            <CardDescription>
-              Informações pessoais e de conta do usuário
-            </CardDescription>
+  
           </div>
         </div>
       </CardHeader>
