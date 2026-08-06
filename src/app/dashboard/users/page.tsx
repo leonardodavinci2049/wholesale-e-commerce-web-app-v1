@@ -7,6 +7,7 @@ import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with
 import { AddCustomerUserDialog } from "./_components/add-customer-user-dialog";
 import { UserSearch } from "./_components/user-search";
 import { UserTable } from "./_components/user-table";
+import { UsersMobileBottomBar } from "./_components/users-mobile-bottom-bar";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -55,26 +56,43 @@ function UsersContentFallback() {
   );
 }
 
+function SiteHeaderFallback() {
+  return (
+    <header className="flex h-(--header-height) w-full shrink-0 items-center border-b border-border/60 bg-background/50 px-4 lg:px-6">
+      <Skeleton className="size-9 rounded-full" />
+      <Skeleton className="mx-auto h-8 w-36 md:mx-4 md:h-4 md:w-44" />
+      <div className="ml-auto flex gap-2">
+        <Skeleton className="size-9 rounded-full" />
+        <Skeleton className="size-9 rounded-full" />
+      </div>
+    </header>
+  );
+}
+
 export default function UsersPage(props: { searchParams: SearchParams }) {
   return (
     <>
-      <SiteHeaderWithBreadcrumb
-        title="Dashboard"
-        breadcrumbItems={[
-          { label: "Dashboard", href: "" },
-          { label: "Usuários", isActive: true },
-        ]}
-      />
+      <Suspense fallback={<SiteHeaderFallback />}>
+        <SiteHeaderWithBreadcrumb
+          title="Dashboard"
+          breadcrumbItems={[
+            { label: "Dashboard", href: "" },
+            { label: "Usuários", isActive: true },
+          ]}
+        />
+      </Suspense>
 
-      <div className="container mx-auto py-10 px-4 space-y-6">
+      <div className="container mx-auto space-y-3 px-4 pt-4 pb-[calc(env(safe-area-inset-bottom)+5rem)] md:space-y-6 md:pt-10 md:pb-10">
         <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-bold tracking-tight">Usuários</h1>
-            <p className="text-muted-foreground">
+          <div className="flex flex-col gap-0.5 md:gap-1">
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+              Usuários
+            </h1>
+            <p className="text-sm leading-snug text-muted-foreground md:text-base md:leading-normal">
               Gerencie contas de usuário, funções e permissões.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 md:flex">
             <AddCustomerUserDialog />
           </div>
         </div>
@@ -83,6 +101,8 @@ export default function UsersPage(props: { searchParams: SearchParams }) {
           <UsersContent searchParams={props.searchParams} />
         </Suspense>
       </div>
+
+      <UsersMobileBottomBar />
     </>
   );
 }

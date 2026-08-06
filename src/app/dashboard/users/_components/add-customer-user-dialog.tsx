@@ -4,6 +4,11 @@ import { Loader2, Search, UserPlus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import {
+  MOBILE_BOTTOM_BAR_ITEM_ACTIVE_CLASS,
+  MOBILE_BOTTOM_BAR_ITEM_BASE_CLASS,
+  MobileBottomBarItemContent,
+} from "@/components/common/mobile-bottom-bar/mobile-bottom-bar-shell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { useDebounce } from "@/hooks/use-debounce";
+import { cn } from "@/lib/utils";
 import type { UICustomerListItem } from "@/services/api-main/customer-general/transformers/transformers";
 import {
   addCustomerAsUserAction,
@@ -65,7 +71,13 @@ function isWholesaleCustomer(customer: UICustomerListItem) {
   return customer.customerTypeId === WHOLESALE_CUSTOMER_TYPE_ID;
 }
 
-export function AddCustomerUserDialog() {
+interface AddCustomerUserDialogProps {
+  triggerVariant?: "default" | "mobile-bottom-bar";
+}
+
+export function AddCustomerUserDialog({
+  triggerVariant = "default",
+}: AddCustomerUserDialogProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [customers, setCustomers] = useState<UICustomerListItem[]>([]);
@@ -166,11 +178,30 @@ export function AddCustomerUserDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <UserPlus className="mr-2 h-4 w-4" />
-          <span className="hidden sm:inline">Adicionar Usuário</span>
-          <span className="sm:hidden">Adicionar</span>
-        </Button>
+        {triggerVariant === "mobile-bottom-bar" ? (
+          <button
+            type="button"
+            aria-label="Adicionar usuário"
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            className={cn(
+              MOBILE_BOTTOM_BAR_ITEM_BASE_CLASS,
+              open && MOBILE_BOTTOM_BAR_ITEM_ACTIVE_CLASS,
+            )}
+          >
+            <MobileBottomBarItemContent
+              icon={<UserPlus className="h-5 w-5" />}
+              label="Adicionar"
+              isActive={open}
+            />
+          </button>
+        ) : (
+          <Button>
+            <UserPlus className="mr-2 h-4 w-4" />
+            <span className="hidden sm:inline">Adicionar Usuário</span>
+            <span className="sm:hidden">Adicionar</span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-[calc(100%-0.75rem)] gap-4 rounded-2xl p-3 sm:max-w-2xl sm:gap-6 sm:rounded-4xl sm:p-6">
         <DialogHeader className="pr-10">

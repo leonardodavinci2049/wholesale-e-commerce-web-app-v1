@@ -46,8 +46,8 @@ export function UserSearch() {
   };
 
   return (
-    <div className="flex justify-start w-full">
-      <Card className="w-full md:w-1/4 min-w-[300px] shadow-sm">
+    <div className="sticky top-0 z-30 -mx-4 flex w-[calc(100%+2rem)] justify-start border-b border-border/60 bg-background/90 px-4 py-2 shadow-sm backdrop-blur-md supports-[backdrop-filter]:bg-background/75">
+      <Card className="w-full min-w-0 gap-0 rounded-xl py-0 shadow-sm md:w-1/4 md:min-w-[300px]">
         <CardContent className="p-2">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
