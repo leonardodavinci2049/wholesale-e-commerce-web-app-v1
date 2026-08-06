@@ -1,6 +1,9 @@
+import { connection } from "next/server";
+import { Suspense } from "react";
 import { CatalogMobileBottomBar } from "@/components/common/catalog-mobile-bottom-bar";
 import { HeaderBudgetControls } from "@/components/dashboard/header/header-budget-controls";
 import { SiteHeaderWithBreadcrumb } from "@/components/dashboard/header/site-header-with-breadcrumb";
+import { Skeleton } from "@/components/ui/skeleton";
 import { serverEnvs } from "@/core/config/envs.server";
 import { createLogger } from "@/core/logger";
 import { isApiAvailabilityError } from "@/lib/axios/base-api-service";
@@ -82,9 +85,9 @@ interface DashboardPageProps {
   }>;
 }
 
-export default async function DashboardPage({
-  searchParams,
-}: DashboardPageProps) {
+async function DashboardContent({ searchParams }: DashboardPageProps) {
+  await connection();
+
   const { session, apiContext } = await getAuthContext();
 
   const customerId = session.user.personId ?? 0;
@@ -277,5 +280,41 @@ export default async function DashboardPage({
         }
       />
     </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+5rem)] xl:pb-0">
+      <div className="h-16 w-full border-b" />
+      <main className="flex flex-1 flex-col gap-4 p-4 pt-0 lg:p-6 lg:pt-0">
+        <div className="mx-auto grid w-full max-w-350 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <Skeleton className="h-10 w-full rounded-lg" />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-64 w-full rounded-2xl" />
+            </div>
+          </div>
+          <aside className="hidden xl:block">
+            <Skeleton className="sticky top-4 h-96 w-full rounded-2xl" />
+          </aside>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default function DashboardPage({ searchParams }: DashboardPageProps) {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent searchParams={searchParams} />
+    </Suspense>
   );
 }
