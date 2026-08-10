@@ -1,8 +1,6 @@
 import Script from "next/script";
 import { publicEnvs } from "@/core/config/envs.client";
 
-const CONSENT_STORAGE_KEY = "analytics_consent";
-
 /**
  * Google Analytics 4 Component
  *
@@ -21,21 +19,11 @@ export function GoogleAnalytics() {
           window.dataLayer = window.dataLayer || [];
           window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
 
-          var storedConsent = null;
-          try {
-            storedConsent = window.localStorage.getItem('${CONSENT_STORAGE_KEY}');
-          } catch (error) {
-            storedConsent = null;
-          }
-          var hasConsentChoice = storedConsent === 'granted' || storedConsent === 'denied';
-          var analyticsConsent = storedConsent === 'granted' ? 'granted' : 'denied';
-
           window.gtag('consent', 'default', {
-            analytics_storage: analyticsConsent,
+            analytics_storage: 'granted',
             ad_storage: 'denied',
             ad_user_data: 'denied',
             ad_personalization: 'denied',
-            wait_for_update: hasConsentChoice ? 0 : 500,
           });
         `}
       </Script>
