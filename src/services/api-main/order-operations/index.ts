@@ -12,6 +12,8 @@ export type {
   OrderOperAddItemResponse,
   OrderOperCloseRequest,
   OrderOperCloseResponse,
+  OrderOperCreateManagerRequest,
+  OrderOperCreateManagerResponse,
   OrderOperCreateRequest,
   OrderOperCreateResponse,
   OrderOperReverseRequest,

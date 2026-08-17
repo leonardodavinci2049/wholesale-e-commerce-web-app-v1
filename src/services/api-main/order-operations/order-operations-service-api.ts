@@ -10,6 +10,8 @@ import type {
   OrderOperAddItemResponse,
   OrderOperCloseRequest,
   OrderOperCloseResponse,
+  OrderOperCreateManagerRequest,
+  OrderOperCreateManagerResponse,
   OrderOperCreateRequest,
   OrderOperCreateResponse,
   OrderOperReverseRequest,
@@ -22,6 +24,7 @@ import { OrderOperationsError } from "./types/order-operations-types";
 import {
   OrderOperAddItemSchema,
   OrderOperCloseSchema,
+  OrderOperCreateManagerSchema,
   OrderOperCreateSchema,
   OrderOperReverseSchema,
   OrderOperSendingByEmailSchema,
@@ -58,6 +61,26 @@ export class OrderOperationsServiceApi extends BaseApiService {
       return response;
     } catch (error) {
       logger.error("Erro ao criar pedido", error);
+      throw error;
+    }
+  }
+
+  async createOrderManager(
+    params: OrderOperCreateManagerRequest,
+  ): Promise<OrderOperCreateManagerResponse> {
+    try {
+      const validatedParams = OrderOperCreateManagerSchema.parse(params);
+      const requestBody = this.buildBasePayload(validatedParams);
+
+      const response = await this.post<OrderOperCreateManagerResponse>(
+        ORDER_OPERATIONS_ENDPOINTS.CREATE_MANAGER,
+        requestBody,
+      );
+
+      this.checkStoredProcedureError(response);
+      return response;
+    } catch (error) {
+      logger.error("Erro ao criar pedido pelo Manager", error);
       throw error;
     }
   }
