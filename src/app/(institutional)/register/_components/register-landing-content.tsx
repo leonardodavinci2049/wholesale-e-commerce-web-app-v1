@@ -1,5 +1,4 @@
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import type { ReactNode } from "react";
 import { RegisterFaq } from "./register-faq";
 import { RegisterFinalCta } from "./register-final-cta";
 import { RegisterForm } from "./register-form";
@@ -9,19 +8,17 @@ import { RegisterTrustSection } from "./register-trust-section";
 import { RegisterViewTracker } from "./register-view-tracker";
 import { ResellerBenefits } from "./reseller-benefits";
 
-interface SellerReferral {
-  id: number;
-  name: string;
-}
-
 interface RegisterLandingContentProps {
-  sellerReferral?: SellerReferral;
-  sellerReferralStatus?: "valid" | "invalid" | "unavailable";
+  /**
+   * Conteúdo da coluna do formulário. Permite injetar uma seção assíncrona
+   * (ex.: validação do vendedor indicado) envolvida em `<Suspense>`,
+   * mantendo o restante da landing prerenderizável.
+   */
+  formSection?: ReactNode;
 }
 
 export function RegisterLandingContent({
-  sellerReferral,
-  sellerReferralStatus = "valid",
+  formSection,
 }: RegisterLandingContentProps) {
   return (
     <main className="pb-10 sm:pb-14">
@@ -46,14 +43,7 @@ export function RegisterLandingContent({
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1">
               <div className="lg:sticky lg:top-20">
-                {sellerReferralStatus === "valid" ? (
-                  <RegisterForm
-                    sellerId={sellerReferral?.id ?? 0}
-                    sellerName={sellerReferral?.name}
-                  />
-                ) : (
-                  <SellerReferralAlert status={sellerReferralStatus} />
-                )}
+                {formSection ?? <RegisterForm sellerId={0} />}
               </div>
             </div>
 
@@ -72,27 +62,5 @@ export function RegisterLandingContent({
       <RegisterTrustSection />
       <RegisterFinalCta />
     </main>
-  );
-}
-
-function SellerReferralAlert({
-  status,
-}: {
-  status: "invalid" | "unavailable";
-}) {
-  const isInvalid = status === "invalid";
-
-  return (
-    <Alert variant="destructive" className="bg-card shadow-lg">
-      <AlertCircle />
-      <AlertTitle>
-        {isInvalid ? "Indicação inválida" : "Validação indisponível"}
-      </AlertTitle>
-      <AlertDescription>
-        {isInvalid
-          ? "A indicação do Vendedor para cadastro não é válida."
-          : "Não foi possível validar a indicação do vendedor agora. Tente novamente em instantes."}
-      </AlertDescription>
-    </Alert>
   );
 }

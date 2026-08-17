@@ -95,7 +95,7 @@ export async function submitRegisterLead(
     logger.warn("ID de vendedor inválido recebido no pré-cadastro");
     return {
       status: "error",
-      message: "A indicação do Vendedor para cadastro não é válida.",
+      message: `A indicação do Vendedor Id #${sellerId} para cadastro não é válida.`,
       values: rawValues,
     };
   }

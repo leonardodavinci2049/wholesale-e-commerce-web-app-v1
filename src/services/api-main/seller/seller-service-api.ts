@@ -56,10 +56,10 @@ export class SellerServiceApi extends BaseApiService {
       const requestBody = this.buildBasePayload({
         pe_system_client_id: validatedParams.pe_system_client_id,
         pe_organization_id: validatedParams.pe_organization_id,
-        pe_user_id: validatedParams.pe_user_id,
-        pe_user_name: validatedParams.pe_user_name,
-        pe_user_role: validatedParams.pe_user_role,
-        pe_person_id: validatedParams.pe_person_id,
+        pe_user_id: validatedParams.pe_user_id ?? serverEnvs.USER_ID,
+        pe_user_name: validatedParams.pe_user_name ?? serverEnvs.USER_NAME,
+        pe_user_role: validatedParams.pe_user_role ?? serverEnvs.USER_ROLE,
+        pe_person_id: validatedParams.pe_person_id ?? serverEnvs.PERSON_ID,
         pe_search: validatedParams.pe_search ?? "",
       });
 
