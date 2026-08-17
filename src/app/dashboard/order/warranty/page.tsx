@@ -50,7 +50,7 @@ export default async function WarrantyPage(props: WarrantyPageProps) {
   try {
     const response = await physicalProductServiceApi.searchWarranties({
       pe_customer_id: apiContext.pe_person_id,
-      PE_search: search ?? "",
+      pe_search: search ?? "",
       pe_limit: limit,
       pe_user_id: apiContext.pe_user_id,
       pe_user_name: apiContext.pe_user_name,
