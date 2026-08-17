@@ -7,7 +7,7 @@ import {
   isApiAvailabilityError,
 } from "@/lib/axios/base-api-service";
 import {
-  type CustomerCreateRequest,
+  type CustomerCreateManagerRequest,
   customerGeneralServiceApi,
 } from "@/services/api-main/customer-general";
 import { PERSON_TYPE_ID, registerLeadSchema } from "../schema";
@@ -74,7 +74,7 @@ function zodIssuesToErrors(error: unknown): Record<string, string> {
  * - Aplica honeypot anti-bot.
  * - Normaliza campos (dígitos, lower-case de e-mail).
  * - Valida com Zod (schema específico da landing).
- * - Mapeia para `CustomerGeneralServiceApi.createCustomer`.
+ * - Mapeia para `CustomerGeneralServiceApi.createCustomerManager`.
  * - Trata duplicidade, indisponibilidade e erros genéricos.
  * - Preserva os valores digitados (com máscara) para reexibição em caso de erro.
  */
@@ -115,19 +115,20 @@ export async function submitRegisterLead(
   const isPJ = data.personType === "PJ";
   const personTypeId = isPJ ? PERSON_TYPE_ID.PJ : PERSON_TYPE_ID.PF;
 
-  const payload: CustomerCreateRequest = {
+  const payload: CustomerCreateManagerRequest = {
     // Contexto fixo para submissões públicas, sem usuário logado.
     pe_user_id: serverEnvs.USER_ID,
     pe_user_name: serverEnvs.USER_NAME,
     pe_user_role: serverEnvs.USER_ROLE,
     pe_person_id: serverEnvs.PERSON_ID,
+    pe_seller_id: serverEnvs.PERSON_ID,
     pe_name: data.name,
     pe_email: data.email,
     pe_person_type_id: personTypeId,
     pe_cnpj: isPJ ? (data.cnpj ?? "") : "",
     pe_company_name: isPJ ? (data.companyName ?? "") : "",
     pe_cpf: isPJ ? "" : (data.cpf ?? ""),
-    pe_phone: data.phone || undefined,
+    pe_phone: data.phone || "",
     pe_whatsapp: data.whatsapp,
     pe_image: "",
     pe_zip_code: data.zipCode,
@@ -142,7 +143,8 @@ export async function submitRegisterLead(
   };
 
   try {
-    const response = await customerGeneralServiceApi.createCustomer(payload);
+    const response =
+      await customerGeneralServiceApi.createCustomerManager(payload);
     const customerId = response.data?.[0]?.sp_return_id || response.recordId;
 
     return {
