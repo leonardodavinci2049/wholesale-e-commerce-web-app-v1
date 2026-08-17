@@ -113,25 +113,32 @@ function RegisterFormFallback() {
   );
 }
 
-export default async function RegisterSellerReferralPage({
+async function SellerReferralFormSectionFromParams({
   params,
 }: RegisterSellerReferralPageProps) {
   const { id } = await params;
   const sellerId = parseSellerId(id);
 
-  const formSection =
-    sellerId === null ? (
-      <SellerReferralAlert status="invalid" />
-    ) : (
-      <Suspense fallback={<RegisterFormFallback />}>
-        <SellerReferralFormSection sellerId={sellerId} />
-      </Suspense>
-    );
+  if (sellerId === null) {
+    return <SellerReferralAlert status="invalid" />;
+  }
 
+  return <SellerReferralFormSection sellerId={sellerId} />;
+}
+
+export default function RegisterSellerReferralPage({
+  params,
+}: RegisterSellerReferralPageProps) {
   return (
     <>
       <FAQPageJsonLd questions={REGISTER_FAQ_DATA} />
-      <RegisterLandingContent formSection={formSection} />
+      <RegisterLandingContent
+        formSection={
+          <Suspense fallback={<RegisterFormFallback />}>
+            <SellerReferralFormSectionFromParams params={params} />
+          </Suspense>
+        }
+      />
     </>
   );
 }

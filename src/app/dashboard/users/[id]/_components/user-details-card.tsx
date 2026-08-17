@@ -1,12 +1,6 @@
 import { CalendarIcon, User } from "lucide-react";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { User as UserType } from "@/database/shared/auth/auth.types";
 import { EditableUserField } from "./editable-user-field";
 
@@ -59,7 +53,6 @@ export function UserDetailsCard({ user }: UserDetailsCardProps) {
           </div>
           <div>
             <CardTitle>Detalhes do Usuário</CardTitle>
-  
           </div>
         </div>
       </CardHeader>
