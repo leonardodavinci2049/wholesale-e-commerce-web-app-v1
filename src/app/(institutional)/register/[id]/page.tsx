@@ -16,7 +16,15 @@ interface RegisterSellerReferralPageProps {
 }
 
 type SellerReferralResult =
-  | { status: "valid"; seller: { id: number; name: string } }
+  | {
+      status: "valid";
+      seller: {
+        id: number;
+        name: string;
+        imagePath?: string;
+        whatsapp?: string;
+      };
+    }
   | { status: "invalid" | "unavailable" };
 
 function parseSellerId(value: string): number | null {
@@ -45,6 +53,8 @@ async function findSellerReferral(
       seller: {
         id: sellerId,
         name: seller.NOME.trim(),
+        imagePath: seller.PATH_IMAGEM?.trim() || undefined,
+        whatsapp: seller.WHATAPP1?.trim() || undefined,
       },
     };
   } catch (error) {
@@ -58,7 +68,12 @@ async function SellerReferralFormSection({ sellerId }: { sellerId: number }) {
 
   if (referral.status === "valid") {
     return (
-      <RegisterForm sellerId={sellerId} sellerName={referral.seller.name} />
+      <RegisterForm
+        sellerId={sellerId}
+        sellerName={referral.seller.name}
+        sellerImagePath={referral.seller.imagePath}
+        sellerWhatsapp={referral.seller.whatsapp}
+      />
     );
   }
 
