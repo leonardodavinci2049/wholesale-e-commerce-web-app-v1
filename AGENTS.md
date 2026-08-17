@@ -78,9 +78,19 @@ Requires all `DATABASE_*` env vars to be set (reads `.env` + `.env.local`).
 
 ## Git workflow
 
-Uses git-flow. Feature branches: `feature/featr-NNN`. Release script:
+- The project follows **git flow**.
+- The base branch is `develop`; never implement directly on `main`.
+- For every new task that results in file changes, create a feature branch from a clean, up-to-date `develop` before editing files.
+- If the user provides a branch name or task number, use it when it is compatible with the `feature/` prefix (for example, `feature/featr-NNN`).
+- If the user does not provide a branch name or task number, do not stop only to ask for one. Derive a concise, descriptive kebab-case name from the task and create `feature/<task-slug>` (for example, `feature/use-manager-create-services`).
+- Analysis-only work, continuation of an existing feature, or an explicit user instruction to work on the current branch are exceptions to automatic branch creation.
+- If `develop` has uncommitted changes from previous work, do not stash, move, discard, or include them in a new feature. Ask the user to commit or otherwise resolve them before creating the branch.
+- Do not merge, finish, delete, or push branches without explicit user authorization.
+
+Release script:
+
 ```bash
-scripts/git-flow-release.sh   # finishes feature → creates release → pushes → starts next feature
+scripts/git-flow-release.sh   # finishes feature → creates release → pushes → returns to develop
 ```
 
 ## Env files

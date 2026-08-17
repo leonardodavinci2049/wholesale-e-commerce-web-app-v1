@@ -36,15 +36,16 @@ export async function addItemAction(
     let targetOrderId = orderId;
 
     if (!targetOrderId) {
-      const createOrderResponse = await orderOperationsServiceApi.createOrder({
-        pe_customer_id: customerId,
-        pe_seller_id: sellerId,
-        pe_business_type: typeBusiness,
-        pe_payment_form_id: 1,
-        pe_location_id: 1,
-        pe_notes: "PDV ONLINE",
-        ...apiContext,
-      });
+      const createOrderResponse =
+        await orderOperationsServiceApi.createOrderManager({
+          pe_customer_id: customerId,
+          pe_seller_id: sellerId,
+          pe_business_type: typeBusiness,
+          pe_payment_form_id: 1,
+          pe_location_id: 1,
+          pe_notes: "PDV ONLINE",
+          ...apiContext,
+        });
 
       targetOrderId =
         createOrderResponse.data?.[0]?.sp_return_id ??
