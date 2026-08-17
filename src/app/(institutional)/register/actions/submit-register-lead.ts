@@ -79,6 +79,7 @@ function zodIssuesToErrors(error: unknown): Record<string, string> {
  * - Preserva os valores digitados (com máscara) para reexibição em caso de erro.
  */
 export async function submitRegisterLead(
+  sellerId: number,
   _prevState: RegisterLeadState,
   formData: FormData,
 ): Promise<RegisterLeadState> {
@@ -88,6 +89,15 @@ export async function submitRegisterLead(
   if (rawValues.website && rawValues.website.trim() !== "") {
     logger.warn("Honeypot preenchido — possível submissão automática ignorada");
     return { status: "success", message: SUCCESS_MESSAGE };
+  }
+
+  if (!Number.isSafeInteger(sellerId) || sellerId < 0) {
+    logger.warn("ID de vendedor inválido recebido no pré-cadastro");
+    return {
+      status: "error",
+      message: "A indicação do Vendedor para cadastro não é válida.",
+      values: rawValues,
+    };
   }
 
   const normalized = {
@@ -121,7 +131,7 @@ export async function submitRegisterLead(
     pe_user_name: serverEnvs.USER_NAME,
     pe_user_role: serverEnvs.USER_ROLE,
     pe_person_id: serverEnvs.PERSON_ID,
-    pe_seller_id: serverEnvs.PERSON_ID,
+    pe_seller_id: sellerId,
     pe_name: data.name,
     pe_email: data.email,
     pe_person_type_id: personTypeId,

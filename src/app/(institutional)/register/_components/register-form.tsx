@@ -118,23 +118,39 @@ type CepStatus = {
   message?: string;
 };
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  sellerId: number;
+  sellerName?: string;
+}
+
+export function RegisterForm({ sellerId, sellerName }: RegisterFormProps) {
   const [formSession, setFormSession] = useState(0);
 
   return (
     <RegisterFormContent
       key={formSession}
+      sellerId={sellerId}
+      sellerName={sellerName}
       onNewRegister={() => setFormSession((current) => current + 1)}
     />
   );
 }
 
-function RegisterFormContent({ onNewRegister }: { onNewRegister: () => void }) {
+interface RegisterFormContentProps extends RegisterFormProps {
+  onNewRegister: () => void;
+}
+
+function RegisterFormContent({
+  sellerId,
+  sellerName,
+  onNewRegister,
+}: RegisterFormContentProps) {
   const reactId = useId();
+  const submitRegisterLeadForSeller = submitRegisterLead.bind(null, sellerId);
   const [state, formAction, isPending] = useActionState<
     RegisterLeadState,
     FormData
-  >(submitRegisterLead, null);
+  >(submitRegisterLeadForSeller, null);
 
   const [values, setValues] = useState<FormValues>(() => ({
     ...INITIAL_VALUES,
@@ -294,6 +310,15 @@ function RegisterFormContent({ onNewRegister }: { onNewRegister: () => void }) {
               Pré-cadastro - Solicite seu acesso comercial
             </h2>
           </div>
+          {sellerName ? (
+            <p className="text-sm text-muted-foreground sm:text-base">
+              Você está sendo indicado pelo vendedor{" "}
+              <strong className="font-semibold text-foreground">
+                {sellerName}
+              </strong>
+              .
+            </p>
+          ) : null}
         </header>
 
         <div ref={feedbackRef}>
