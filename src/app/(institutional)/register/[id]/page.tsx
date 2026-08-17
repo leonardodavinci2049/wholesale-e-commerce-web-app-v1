@@ -75,12 +75,15 @@ function SellerReferralAlert({
   const isInvalid = status === "invalid";
 
   return (
-    <Alert variant="destructive" className="bg-card shadow-lg">
-      <AlertCircle />
-      <AlertTitle>
+    <Alert
+      variant="destructive"
+      className="bg-card shadow-lg dark:text-red-200"
+    >
+      <AlertCircle className="dark:text-red-400" />
+      <AlertTitle className="dark:text-red-200">
         {isInvalid ? "Indicação inválida" : "Validação indisponível"}
       </AlertTitle>
-      <AlertDescription>
+      <AlertDescription className="dark:text-red-300">
         {isInvalid
           ? `A indicação do Vendedor${sellerId ? ` Id #${sellerId}` : ""} para cadastro não é válida.`
           : "Não foi possível validar a indicação do vendedor agora. Tente novamente em instantes."}
