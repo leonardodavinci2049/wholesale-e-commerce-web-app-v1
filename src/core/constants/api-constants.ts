@@ -136,6 +136,7 @@ export const CUSTOMER_GENERAL_ENDPOINTS = {
   FIND_ALL: "/customer/v2/customer-find-all",
   FIND_BY_ID: "/customer/v2/customer-find-by-id",
   CREATE: "/customer/v2/customer-create",
+  CREATE_MANAGER: "/customer/v2/customer-create-manager",
   FIND_LATEST_PRODUCTS: "/customer/v2/customer-find-latest-products",
 } as const;
 
@@ -290,6 +291,7 @@ export const ORDER_ITEMS_ENDPOINTS = {
 // Endpoints de Order Operations
 export const ORDER_OPERATIONS_ENDPOINTS = {
   CREATE: "/order-operation/v2/order-oper-create",
+  CREATE_MANAGER: "/order-operation/v2/order-oper-create-manager",
   ADD_ITEM: "/order-operation/v2/order-oper-add-item",
   CLOSE: "/order-operation/v2/order-oper-close-id",
   REVERSE: "/order-operation/v2/order-oper-reverse-id",

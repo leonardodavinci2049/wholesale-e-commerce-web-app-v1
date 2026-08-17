@@ -4,6 +4,8 @@ export {
 } from "./customer-general-service-api";
 
 export type {
+  CustomerCreateManagerRequest,
+  CustomerCreateManagerResponse,
   CustomerCreateRequest,
   CustomerCreateResponse,
   CustomerDetail,

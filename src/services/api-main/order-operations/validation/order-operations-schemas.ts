@@ -17,6 +17,19 @@ export const OrderOperCreateSchema = z.object({
   pe_notes: z.string().optional(),
 });
 
+export const OrderOperCreateManagerSchema = z.object({
+  pe_user_id: z.string().max(200),
+  pe_user_name: z.string().max(200),
+  pe_user_role: z.string().max(200),
+  pe_person_id: z.number(),
+  pe_customer_id: z.number(),
+  pe_seller_id: z.number(),
+  pe_business_type: z.number(),
+  pe_payment_form_id: z.number(),
+  pe_location_id: z.number(),
+  pe_notes: z.string(),
+});
+
 export const OrderOperAddItemSchema = z.object({
   ...baseContextSchema,
   pe_order_id: z.number().int().optional(),
@@ -47,6 +60,9 @@ export const OrderOperSendingByEmailSchema = z.object({
 });
 
 export type OrderOperCreateInput = z.infer<typeof OrderOperCreateSchema>;
+export type OrderOperCreateManagerInput = z.infer<
+  typeof OrderOperCreateManagerSchema
+>;
 export type OrderOperAddItemInput = z.infer<typeof OrderOperAddItemSchema>;
 export type OrderOperCloseInput = z.infer<typeof OrderOperCloseSchema>;
 export type OrderOperReverseInput = z.infer<typeof OrderOperReverseSchema>;

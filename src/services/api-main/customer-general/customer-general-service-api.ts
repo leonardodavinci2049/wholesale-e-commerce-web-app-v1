@@ -11,6 +11,8 @@ import { createLogger } from "@/core/logger";
 import { BaseApiService } from "@/lib/axios/base-api-service";
 
 import type {
+  CustomerCreateManagerRequest,
+  CustomerCreateManagerResponse,
   CustomerCreateRequest,
   CustomerCreateResponse,
   CustomerDetail,
@@ -29,6 +31,7 @@ import {
   CustomerNotFoundError,
 } from "./types/customer-general-types";
 import {
+  CustomerCreateManagerSchema,
   CustomerCreateSchema,
   CustomerFindAllSchema,
   CustomerFindByIdSchema,
@@ -140,6 +143,29 @@ export class CustomerGeneralServiceApi extends BaseApiService {
     }
   }
 
+  async createCustomerManager(
+    params: CustomerCreateManagerRequest,
+  ): Promise<CustomerCreateManagerResponse> {
+    try {
+      const validatedParams = CustomerCreateManagerSchema.parse(params);
+      const requestBody = this.buildBasePayload(validatedParams);
+
+      const response = await this.post<CustomerCreateManagerResponse>(
+        CUSTOMER_GENERAL_ENDPOINTS.CREATE_MANAGER,
+        requestBody,
+      );
+
+      this.checkStoredProcedureError(response);
+      return response;
+    } catch (error) {
+      if (error instanceof CustomerError) {
+        throw error;
+      }
+      logger.error("Erro ao criar cliente pelo Manager", error);
+      throw error;
+    }
+  }
+
   async findLatestProducts(
     params: CustomerFindLatestProductsRequest,
   ): Promise<CustomerFindLatestProductsResponse> {
@@ -166,7 +192,9 @@ export class CustomerGeneralServiceApi extends BaseApiService {
     }
   }
 
-  private checkStoredProcedureError(response: CustomerCreateResponse): void {
+  private checkStoredProcedureError(response: {
+    data: StoredProcedureResponse[];
+  }): void {
     const spResponse = response.data?.[0] as StoredProcedureResponse;
     if (spResponse && spResponse.sp_error_id !== 0) {
       throw new CustomerError(

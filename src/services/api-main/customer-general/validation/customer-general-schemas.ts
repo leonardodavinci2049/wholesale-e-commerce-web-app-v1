@@ -42,6 +42,31 @@ export const CustomerCreateSchema = z.object({
   pe_notes: z.string(),
 });
 
+export const CustomerCreateManagerSchema = z.object({
+  pe_user_id: z.string().max(200),
+  pe_user_name: z.string().max(200),
+  pe_user_role: z.string().max(200),
+  pe_person_id: z.number(),
+  pe_seller_id: z.number(),
+  pe_name: z.string().min(3).max(255),
+  pe_email: z.string().min(10).max(255),
+  pe_person_type_id: z.number(),
+  pe_cnpj: z.string().max(100),
+  pe_company_name: z.string().max(255),
+  pe_cpf: z.string().max(100),
+  pe_phone: z.string().max(100),
+  pe_whatsapp: z.string().max(100),
+  pe_image: z.string().max(500),
+  pe_zip_code: z.string().max(100),
+  pe_address: z.string().max(300),
+  pe_address_number: z.string().max(100),
+  pe_complement: z.string().max(100).optional(),
+  pe_neighborhood: z.string().max(300),
+  pe_city: z.string().max(300),
+  pe_state: z.string().max(100),
+  pe_notes: z.string(),
+});
+
 export const CustomerFindLatestProductsSchema = z.object({
   ...baseContextSchema,
   pe_customer_id: z.number().int().positive(),
@@ -51,6 +76,9 @@ export const CustomerFindLatestProductsSchema = z.object({
 export type CustomerFindAllInput = z.infer<typeof CustomerFindAllSchema>;
 export type CustomerFindByIdInput = z.infer<typeof CustomerFindByIdSchema>;
 export type CustomerCreateInput = z.infer<typeof CustomerCreateSchema>;
+export type CustomerCreateManagerInput = z.infer<
+  typeof CustomerCreateManagerSchema
+>;
 export type CustomerFindLatestProductsInput = z.infer<
   typeof CustomerFindLatestProductsSchema
 >;

@@ -29,6 +29,20 @@ export interface OrderOperCreateRequest extends OrderOperationsBaseRequest {
   pe_notes?: string;
 }
 
+export interface OrderOperCreateManagerRequest
+  extends OrderOperationsBaseRequest {
+  pe_user_id: string;
+  pe_user_name: string;
+  pe_user_role: string;
+  pe_person_id: number;
+  pe_customer_id: number;
+  pe_seller_id: number;
+  pe_business_type: number;
+  pe_payment_form_id: number;
+  pe_location_id: number;
+  pe_notes: string;
+}
+
 export interface OrderOperAddItemRequest extends OrderOperationsBaseRequest {
   pe_order_id?: number;
   pe_customer_id?: number;
@@ -127,6 +141,11 @@ export interface StoredProcedureResponse {
 // === Response Interfaces ===
 
 export interface OrderOperCreateResponse extends OrderOperationsBaseResponse {
+  data: StoredProcedureResponse[];
+}
+
+export interface OrderOperCreateManagerResponse
+  extends OrderOperationsBaseResponse {
   data: StoredProcedureResponse[];
 }
 
