@@ -10,6 +10,7 @@ import {
   MessageCircle,
   RotateCcw,
   Search,
+  UserRoundCheck,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -22,6 +23,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -71,6 +73,7 @@ const INITIAL_VALUES: FormValues = {
 const UF_OPTIONS = formatStateOptions();
 const FORM_CONTROL_CLASS =
   "border-border/70 bg-input shadow-inner dark:border-border/60 dark:bg-input/80";
+const DEFAULT_SELLER_IMAGE = "/default-images/seller.webp";
 
 const onlyDigits = (value: string): string => value.replace(/\D/g, "");
 
@@ -90,6 +93,17 @@ const maskPhone = (value: string): string => {
   if (digits.length > 2) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
   return digits;
 };
+
+function buildSellerWhatsappUrl(phone: string, pageUrl: string): string | null {
+  const digits = onlyDigits(phone);
+  if (!digits) return null;
+
+  const internationalNumber =
+    digits.length === 10 || digits.length === 11 ? `55${digits}` : digits;
+  const message = `Estou com dúvidas sobre o cadastro no site ${pageUrl} pode me ajudar?`;
+
+  return `https://wa.me/${internationalNumber}?text=${encodeURIComponent(message)}`;
+}
 
 const maskCnpj = (value: string): string => {
   const digits = onlyDigits(value).slice(0, 14);
@@ -121,9 +135,16 @@ type CepStatus = {
 interface RegisterFormProps {
   sellerId: number;
   sellerName?: string;
+  sellerImagePath?: string;
+  sellerWhatsapp?: string;
 }
 
-export function RegisterForm({ sellerId, sellerName }: RegisterFormProps) {
+export function RegisterForm({
+  sellerId,
+  sellerName,
+  sellerImagePath,
+  sellerWhatsapp,
+}: RegisterFormProps) {
   const [formSession, setFormSession] = useState(0);
 
   return (
@@ -131,6 +152,8 @@ export function RegisterForm({ sellerId, sellerName }: RegisterFormProps) {
       key={formSession}
       sellerId={sellerId}
       sellerName={sellerName}
+      sellerImagePath={sellerImagePath}
+      sellerWhatsapp={sellerWhatsapp}
       onNewRegister={() => setFormSession((current) => current + 1)}
     />
   );
@@ -143,6 +166,8 @@ interface RegisterFormContentProps extends RegisterFormProps {
 function RegisterFormContent({
   sellerId,
   sellerName,
+  sellerImagePath,
+  sellerWhatsapp,
   onNewRegister,
 }: RegisterFormContentProps) {
   const reactId = useId();
@@ -311,13 +336,12 @@ function RegisterFormContent({
             </h2>
           </div>
           {sellerName ? (
-            <p className="text-sm text-muted-foreground sm:text-base">
-              Você está sendo indicado pelo vendedor{" "}
-              <strong className="font-semibold text-foreground">
-                {sellerName}
-              </strong>
-              .
-            </p>
+            <SellerReferralCard
+              sellerId={sellerId}
+              sellerName={sellerName}
+              sellerImagePath={sellerImagePath}
+              sellerWhatsapp={sellerWhatsapp}
+            />
           ) : null}
         </header>
 
@@ -792,6 +816,83 @@ function RegisterFormContent({
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+function SellerReferralCard({
+  sellerId,
+  sellerName,
+  sellerImagePath,
+  sellerWhatsapp,
+}: {
+  sellerId: number;
+  sellerName: string;
+  sellerImagePath?: string;
+  sellerWhatsapp?: string;
+}) {
+  const [imageSrc, setImageSrc] = useState(
+    sellerImagePath?.trim() || DEFAULT_SELLER_IMAGE,
+  );
+  const [sellerWhatsappUrl, setSellerWhatsappUrl] = useState<string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    setSellerWhatsappUrl(
+      sellerWhatsapp
+        ? buildSellerWhatsappUrl(sellerWhatsapp, window.location.href)
+        : null,
+    );
+  }, [sellerWhatsapp]);
+
+  return (
+    <div className="mt-1 flex items-center gap-3 rounded-xl border border-primary/15 bg-primary/5 p-3 shadow-sm">
+      <Avatar className="size-14 shrink-0 ring-2 ring-background shadow-sm sm:size-16">
+        <AvatarImage
+          src={imageSrc}
+          alt={`Foto do vendedor ${sellerName}`}
+          className="object-cover"
+          onError={() => setImageSrc(DEFAULT_SELLER_IMAGE)}
+        />
+        <AvatarFallback className="bg-primary/10 text-primary">
+          <UserRoundCheck className="size-6" aria-hidden="true" />
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
+          <UserRoundCheck className="size-3.5" aria-hidden="true" />
+          Indicação de vendedor
+        </div>
+        <p className="truncate font-semibold text-foreground sm:text-lg">
+          {sellerName}
+        </p>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground sm:text-sm">
+          <span>ID #{sellerId}</span>
+          <span className="inline-flex items-center gap-1.5">
+            <MessageCircle
+              className="size-3.5 text-emerald-600 dark:text-emerald-400"
+              aria-hidden="true"
+            />
+            {sellerWhatsapp && sellerWhatsappUrl ? (
+              <a
+                href={sellerWhatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 transition-colors hover:text-emerald-700 hover:underline dark:hover:text-emerald-400"
+                aria-label={`Conversar com ${sellerName} pelo WhatsApp`}
+              >
+                {maskPhone(sellerWhatsapp)}
+              </a>
+            ) : (
+              <span>
+                {sellerWhatsapp ? maskPhone(sellerWhatsapp) : "Não informado"}
+              </span>
+            )}
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
 
