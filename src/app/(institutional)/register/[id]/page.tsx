@@ -1,6 +1,12 @@
+import { AlertCircle } from "lucide-react";
+import { Suspense } from "react";
 import { FAQPageJsonLd } from "@/components/seo";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { createLogger } from "@/core/logger";
 import { REGISTER_FAQ_DATA } from "../_components/register-faq";
+import { RegisterForm } from "../_components/register-form";
 import { RegisterLandingContent } from "../_components/register-landing-content";
 
 const logger = createLogger("RegisterSellerReferralPage");
@@ -21,11 +27,8 @@ function parseSellerId(value: string): number | null {
 }
 
 async function findSellerReferral(
-  rawSellerId: string,
+  sellerId: number,
 ): Promise<SellerReferralResult> {
-  const sellerId = parseSellerId(rawSellerId);
-  if (sellerId === null) return { status: "invalid" };
-
   try {
     const { sellerServiceApi } = await import("@/services/api-main/seller");
     const response = await sellerServiceApi.searchAllSellers({
@@ -50,21 +53,85 @@ async function findSellerReferral(
   }
 }
 
+async function SellerReferralFormSection({ sellerId }: { sellerId: number }) {
+  const referral = await findSellerReferral(sellerId);
+
+  if (referral.status === "valid") {
+    return (
+      <RegisterForm sellerId={sellerId} sellerName={referral.seller.name} />
+    );
+  }
+
+  return <SellerReferralAlert status={referral.status} sellerId={sellerId} />;
+}
+
+function SellerReferralAlert({
+  status,
+  sellerId,
+}: {
+  status: "invalid" | "unavailable";
+  sellerId?: number;
+}) {
+  const isInvalid = status === "invalid";
+
+  return (
+    <Alert variant="destructive" className="bg-card shadow-lg">
+      <AlertCircle />
+      <AlertTitle>
+        {isInvalid ? "Indicação inválida" : "Validação indisponível"}
+      </AlertTitle>
+      <AlertDescription>
+        {isInvalid
+          ? `A indicação do Vendedor${sellerId ? ` Id #${sellerId}` : ""} para cadastro não é válida.`
+          : "Não foi possível validar a indicação do vendedor agora. Tente novamente em instantes."}
+      </AlertDescription>
+    </Alert>
+  );
+}
+
+function RegisterFormFallback() {
+  return (
+    <Card className="gap-0 rounded-xl border-border/60 py-0 shadow-lg ring-1 ring-primary/5">
+      <CardContent className="flex flex-col gap-5 px-4 py-5 sm:px-7">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-48" />
+        </div>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <Skeleton className="h-10 sm:col-span-2" />
+          <Skeleton className="h-10 sm:col-span-2" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10 sm:col-span-2" />
+          <Skeleton className="h-10" />
+        </div>
+        <Skeleton className="h-12 w-full" />
+      </CardContent>
+    </Card>
+  );
+}
+
 export default async function RegisterSellerReferralPage({
   params,
 }: RegisterSellerReferralPageProps) {
   const { id } = await params;
-  const referral = await findSellerReferral(id);
+  const sellerId = parseSellerId(id);
+
+  const formSection =
+    sellerId === null ? (
+      <SellerReferralAlert status="invalid" />
+    ) : (
+      <Suspense fallback={<RegisterFormFallback />}>
+        <SellerReferralFormSection sellerId={sellerId} />
+      </Suspense>
+    );
 
   return (
     <>
       <FAQPageJsonLd questions={REGISTER_FAQ_DATA} />
-      <RegisterLandingContent
-        sellerReferralStatus={referral.status}
-        sellerReferral={
-          referral.status === "valid" ? referral.seller : undefined
-        }
-      />
+      <RegisterLandingContent formSection={formSection} />
     </>
   );
 }
