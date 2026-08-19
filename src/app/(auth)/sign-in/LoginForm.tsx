@@ -3,6 +3,7 @@
 import Form from "next/form";
 import { useActionState, useEffect, useId } from "react";
 import { toast } from "sonner";
+import { PasswordInput } from "@/components/auth/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -58,7 +59,10 @@ export function LoginForm({
               type="email"
               placeholder="seu@email.com"
               required
-              autoComplete="email"
+              autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               className={cn(
                 state?.errors?.email &&
                   "border-destructive focus-visible:ring-destructive",
@@ -71,13 +75,16 @@ export function LoginForm({
 
           <div className="grid gap-3">
             <Label htmlFor={`password-${formId}`}>Senha</Label>
-            <Input
+            <PasswordInput
               id={`password-${formId}`}
               name="password"
-              type="password"
               placeholder="••••••••"
               required
               autoComplete="current-password"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              aria-describedby={`password-help-${formId}`}
               className={cn(
                 state?.errors?.password &&
                   "border-destructive focus-visible:ring-destructive",
@@ -88,6 +95,13 @@ export function LoginForm({
                 {state.errors.password}
               </p>
             )}
+            <p
+              id={`password-help-${formId}`}
+              className="text-muted-foreground text-xs"
+            >
+              A senha diferencia maiúsculas de minúsculas. Ao colar, copie
+              somente a senha, sem “Senha:” ou espaços extras.
+            </p>
             <div className="text-right">
               <a
                 href="/forgot-password"
