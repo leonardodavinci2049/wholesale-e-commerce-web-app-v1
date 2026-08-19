@@ -24,8 +24,8 @@ type UserRow = RowDataPacket & {
 };
 
 function generatePassword() {
-  const chars =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  // Evita caracteres visualmente ambíguos ao copiar ou digitar a senha.
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
   const randomBytes = crypto.randomBytes(10);
 
   return Array.from(randomBytes)

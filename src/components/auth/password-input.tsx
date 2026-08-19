@@ -12,6 +12,7 @@ export function PasswordInput({
 }: Omit<ComponentProps<typeof Input>, "type">) {
   const [showPassword, setShowPassword] = useState(false);
   const Icon = showPassword ? EyeOffIcon : EyeIcon;
+  const toggleLabel = showPassword ? "Ocultar senha" : "Mostrar senha";
 
   return (
     <div className="relative">
@@ -26,11 +27,11 @@ export function PasswordInput({
         type="button"
         className="absolute inset-y-1/2 right-1 size-7 -translate-y-1/2"
         onClick={() => setShowPassword((p) => !p)}
+        aria-label={toggleLabel}
+        aria-pressed={showPassword}
+        title={toggleLabel}
       >
         <Icon className="size-5" />
-        <span className="sr-only">
-          {showPassword ? "Hide password" : "Show password"}
-        </span>
       </Button>
     </div>
   );
