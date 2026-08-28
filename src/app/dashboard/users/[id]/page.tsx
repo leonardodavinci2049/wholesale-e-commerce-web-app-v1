@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth/auth";
 import { AccountService } from "@/services/db/account/account.service";
@@ -26,7 +28,21 @@ import { UserDetailsCard } from "./_components/user-details-card";
 
 type Params = Promise<{ id: string }>;
 
-export default async function UserPage({ params }: { params: Params }) {
+export default function UserPage({ params }: { params: Params }) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center">
+          <Spinner />
+        </div>
+      }
+    >
+      <UserPageContent params={params} />
+    </Suspense>
+  );
+}
+
+async function UserPageContent({ params }: { params: Params }) {
   await connection();
   const { id } = await params;
   const session = await auth.api.getSession({ headers: await headers() });
