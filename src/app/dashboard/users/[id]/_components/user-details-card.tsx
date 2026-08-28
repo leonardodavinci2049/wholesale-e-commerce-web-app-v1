@@ -74,6 +74,13 @@ export function UserDetailsCard({ user }: UserDetailsCardProps) {
 
         <EditableUserField
           userId={user.id}
+          field="whatsapp"
+          label="WhatsApp"
+          value={user.whatsapp}
+        />
+
+        <EditableUserField
+          userId={user.id}
           field="role"
           label="Função"
           value={user.role}

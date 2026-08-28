@@ -7,6 +7,7 @@ export interface User {
   sellerId?: number | null;
   name: string;
   email: string;
+  whatsapp?: string | null;
   emailVerified: boolean;
   image: string | null;
   createdAt: Date;

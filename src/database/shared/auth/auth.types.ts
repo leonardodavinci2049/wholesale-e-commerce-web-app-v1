@@ -73,6 +73,7 @@ export interface UserEntity extends RowDataPacket {
   sellerId?: number | null;
   name: string;
   email: string;
+  whatsapp?: string | null;
   emailVerified: boolean;
   image: string | null;
   createdAt: Date;
@@ -450,6 +451,7 @@ export function mapUserEntityToDto(entity: UserEntity): User {
     sellerId: entity.sellerId ?? null,
     name: entity.name,
     email: entity.email,
+    whatsapp: entity.whatsapp?.trim() || null,
     emailVerified: Boolean(entity.emailVerified),
     image: entity.image,
     createdAt: new Date(entity.createdAt),

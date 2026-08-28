@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { RowDataPacket } from "mysql2/promise";
 import { z } from "zod";
 import { MESSAGES } from "@/core/constants/globalConstants";
 import { createLogger } from "@/core/logger";
@@ -164,6 +165,11 @@ function handleError<T>(error: unknown, operation: string): ServiceResponse<T> {
   };
 }
 
+interface UserWhatsAppEntity extends RowDataPacket {
+  id: string;
+  whatsapp: string | null;
+}
+
 async function findUserById(params: {
   userId: string;
 }): Promise<ServiceResponse<AuthUser>> {
@@ -172,7 +178,7 @@ async function findUserById(params: {
 
     const query = `
       SELECT 
-        id,personId,  sellerId, name, email, emailVerified, image, 
+        id, personId, sellerId, name, email, whatsapp, emailVerified, image,
         createdAt, updatedAt, twoFactorEnabled, 
         role, banned, banReason, banExpires
       FROM ${AUTH_TABLES.USER}
@@ -195,6 +201,34 @@ async function findUserById(params: {
     };
   } catch (error) {
     return handleError<AuthUser>(error, "findUserById");
+  }
+}
+
+async function findUsersWhatsAppByIds(params: {
+  userIds: string[];
+}): Promise<ServiceResponse<UserWhatsAppEntity[]>> {
+  try {
+    validateIdArray(params.userIds, "userIds");
+
+    if (params.userIds.length === 0) {
+      return { success: true, data: [], error: null };
+    }
+
+    const placeholders = params.userIds.map(() => "?").join(", ");
+    const query = `
+      SELECT id, whatsapp
+      FROM ${AUTH_TABLES.USER}
+      WHERE id IN (${placeholders})
+    `;
+
+    const results = await dbService.selectExecute<UserWhatsAppEntity>(
+      query,
+      params.userIds,
+    );
+
+    return { success: true, data: results, error: null };
+  } catch (error) {
+    return handleError<UserWhatsAppEntity[]>(error, "findUsersWhatsAppByIds");
   }
 }
 
@@ -314,6 +348,7 @@ async function findUsersWithoutAnyOrganization(): Promise<
 
 export const UserAuthService = {
   findUserById,
+  findUsersWhatsAppByIds,
   findUsersExcludingIds,
   findNonMemberUsers,
   findUsersWithoutAnyOrganization,
@@ -411,6 +446,26 @@ export async function getAuthUserById(
   } catch (error) {
     logger.error(`Failed to fetch auth user by ID ${userId}:`, error);
     return null;
+  }
+}
+
+export async function getUsersWhatsAppByIds(
+  userIds: string[],
+): Promise<Map<string, string | null>> {
+  try {
+    const response = await UserAuthService.findUsersWhatsAppByIds({ userIds });
+
+    if (!response.success || !response.data) {
+      logger.error("Error loading users WhatsApp:", response.error);
+      return new Map();
+    }
+
+    return new Map(
+      response.data.map((user) => [user.id, user.whatsapp?.trim() || null]),
+    );
+  } catch (error) {
+    logger.error("Failed to fetch users WhatsApp:", error);
+    return new Map();
   }
 }
 

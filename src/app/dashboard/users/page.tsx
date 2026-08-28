@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/lib/auth/auth";
+import { getUsersWhatsAppByIds } from "@/services/db/user/user.service";
 import { SiteHeaderWithBreadcrumb } from "../_components/header/site-header-with-breadcrumb";
 import { AddCustomerUserDialog } from "./_components/add-customer-user-dialog";
 import { UserSearch } from "./_components/user-search";
@@ -39,10 +40,19 @@ async function UsersContent({
     },
   });
 
+  const whatsappByUserId = await getUsersWhatsAppByIds(
+    users.users.map((user) => user.id),
+  );
+
+  const usersWithWhatsApp = users.users.map((user) => ({
+    ...user,
+    whatsapp: whatsappByUserId.get(user.id) ?? null,
+  }));
+
   return (
     <>
       <UserSearch />
-      <UserTable users={users.users} selfId={session?.user.id ?? ""} />
+      <UserTable users={usersWithWhatsApp} selfId={session?.user.id ?? ""} />
     </>
   );
 }

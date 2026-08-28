@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth/auth";
 const UserFieldSchema = z.enum([
   "name",
   "email",
+  "whatsapp",
   "role",
   "personId",
   "sellerId",
@@ -75,6 +76,15 @@ function parseUpdateInput(input: UpdateUserFieldInput): {
         .max(255, "E-mail muito longo")
         .parse(input.value);
       return { userId, field, column: "email", value };
+    }
+    case "whatsapp": {
+      const value = z
+        .string()
+        .trim()
+        .max(255, "WhatsApp muito longo")
+        .transform((whatsapp) => whatsapp || null)
+        .parse(input.value);
+      return { userId, field, column: "whatsapp", value };
     }
     case "role": {
       const value = UserRoleSchema.parse(input.value);
