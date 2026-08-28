@@ -158,6 +158,7 @@ export async function addCustomerAsUserAction(
     const customer = transformCustomerDetail(customerEntity);
     const name = (customer.name || "").trim();
     const email = (customer.email || "").trim().toLowerCase();
+    const whatsapp = customer.whatsapp.trim() || customer.phone.trim() || null;
 
     if (!name) {
       return { success: false, message: "Cliente sem nome cadastrado" };
@@ -200,8 +201,8 @@ export async function addCustomerAsUserAction(
     });
 
     await dbService.modifyExecute(
-      `UPDATE ${AUTH_TABLES.USER} SET emailVerified = 1, personId = ?, sellerId = ? WHERE id = ?`,
-      [customerId, sellerId, result.user.id],
+      `UPDATE ${AUTH_TABLES.USER} SET emailVerified = 1, personId = ?, sellerId = ?, whatsapp = ? WHERE id = ?`,
+      [customerId, sellerId, whatsapp, result.user.id],
     );
 
     revalidatePath("/dashboard/users");
