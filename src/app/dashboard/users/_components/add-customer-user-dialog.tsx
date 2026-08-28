@@ -275,6 +275,13 @@ export function AddCustomerUserDialog({
                         <p className="truncate text-xs text-muted-foreground">
                           {customer.email || "Sem e-mail"}
                         </p>
+                        <p className="truncate text-xs text-muted-foreground">
+                          Telefone: {customer.phone?.trim() || "Não informado"}
+                        </p>
+                        <p className="truncate text-xs text-muted-foreground">
+                          WhatsApp:{" "}
+                          {customer.whatsapp?.trim() || "Não informado"}
+                        </p>
                       </div>
                     </div>
                     <div className="flex w-full shrink-0 items-center justify-end gap-3 sm:w-auto">
