@@ -17,6 +17,7 @@ import { UserPasswordDialog } from "./user-password-dialog";
 type UserWithCustomerAndSellerIds = UserWithRole & {
   personId?: number | null;
   sellerId?: number | null;
+  whatsapp?: string | null;
 };
 
 interface UserTableProps {
@@ -37,6 +38,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
               <TableHead className="w-12">Avatar</TableHead>
               <TableHead>Usuário</TableHead>
               <TableHead>E-mail</TableHead>
+              <TableHead>WhatsApp</TableHead>
               <TableHead>Vendedor</TableHead>
               <TableHead>Função</TableHead>
               <TableHead>Status</TableHead>
@@ -81,6 +83,9 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {user.email}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {user.whatsapp || "—"}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   <SellerIdEditor
@@ -134,7 +139,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
             ))}
             {users.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={9} className="h-24 text-center">
                   Nenhum usuário encontrado.
                 </TableCell>
               </TableRow>
@@ -150,7 +155,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
             key={user.id}
             className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 rounded-xl border bg-card px-3 py-2.5 text-card-foreground shadow-sm transition-shadow hover:shadow-md"
           >
-            <Avatar className="row-span-4 mt-0.5 size-11">
+            <Avatar className="row-span-5 mt-0.5 size-11">
               <AvatarImage
                 src={user.image || DEFAULT_USER_IMAGE}
                 alt={user.name || "Usuário sem nome"}
@@ -174,6 +179,11 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 ID {user.personId != null ? `#${user.personId}` : "—"}
               </span>
               <span className="min-w-0 break-all">{user.email}</span>
+            </div>
+
+            <div className="mt-1 min-w-0 text-xs leading-tight text-muted-foreground">
+              <span className="font-medium">WhatsApp</span>{" "}
+              <span className="break-all">{user.whatsapp || "—"}</span>
             </div>
 
             <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">

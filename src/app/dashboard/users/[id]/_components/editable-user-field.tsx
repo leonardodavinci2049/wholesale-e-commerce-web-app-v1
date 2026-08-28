@@ -6,6 +6,7 @@ import {
   Loader2,
   Mail,
   Pencil,
+  Phone,
   Shield,
   User,
   X,
@@ -29,6 +30,7 @@ import { updateUserFieldAction } from "./update-user-field-action";
 type EditableUserFieldName =
   | "name"
   | "email"
+  | "whatsapp"
   | "role"
   | "personId"
   | "sellerId";
@@ -46,6 +48,7 @@ interface EditableUserFieldProps {
 const fieldIcons = {
   name: User,
   email: Mail,
+  whatsapp: Phone,
   role: Shield,
   personId: Fingerprint,
   sellerId: Fingerprint,
