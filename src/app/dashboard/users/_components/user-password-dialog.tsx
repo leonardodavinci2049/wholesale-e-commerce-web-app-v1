@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, KeyRound, Loader2 } from "lucide-react";
+import { Copy, KeyRound, Loader2, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,16 +48,32 @@ async function copyToClipboard(value: string): Promise<boolean> {
   }
 }
 
+function normalizeBrazilianPhone(value: string): string | null {
+  const digits = value.replace(/\D/g, "");
+
+  if (digits.startsWith("55") && digits.length >= 12 && digits.length <= 13) {
+    return digits;
+  }
+
+  if (digits.length === 10 || digits.length === 11) {
+    return `55${digits}`;
+  }
+
+  return null;
+}
+
 type UserPasswordDialogProps = {
   userId: string;
   userName: string | null | undefined;
   userEmail: string | null | undefined;
+  userWhatsapp: string | null | undefined;
 };
 
 export function UserPasswordDialog({
   userId,
   userName,
   userEmail,
+  userWhatsapp,
 }: UserPasswordDialogProps) {
   const [open, setOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -65,6 +81,8 @@ export function UserPasswordDialog({
 
   const displayName = userName || "usuário";
   const email = userEmail || "";
+  const hasWhatsapp = Boolean(userWhatsapp?.trim());
+  const whatsapp = userWhatsapp?.trim() || "Não informado";
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
@@ -115,6 +133,20 @@ export function UserPasswordDialog({
     }
   };
 
+  const handleWhatsApp = () => {
+    if (!content || !userWhatsapp) return;
+
+    const normalizedPhone = normalizeBrazilianPhone(userWhatsapp);
+
+    if (!normalizedPhone) {
+      toast.error("O número de WhatsApp do usuário é inválido");
+      return;
+    }
+
+    const whatsappUrl = `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(content)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <>
       <Button
@@ -133,6 +165,9 @@ export function UserPasswordDialog({
             <DialogTitle>Gerar Senha</DialogTitle>
             <DialogDescription>
               Gere uma nova senha para <strong>{displayName}</strong>.
+              <span className="mt-1 block">
+                WhatsApp: <strong>{whatsapp}</strong>
+              </span>
             </DialogDescription>
           </DialogHeader>
 
@@ -153,6 +188,18 @@ export function UserPasswordDialog({
               </Button>
             </DialogClose>
             <div className="grid w-full gap-2 sm:flex sm:w-auto">
+              {hasWhatsapp && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleWhatsApp}
+                  disabled={!content}
+                  className="w-full border-[#25D366] bg-[#25D366] text-[#062e14] hover:border-[#20bd5a] hover:bg-[#20bd5a] hover:text-[#062e14] sm:w-auto"
+                >
+                  <MessageCircle className="mr-1 size-4" />
+                  WhatsApp
+                </Button>
+              )}
               <Button
                 type="button"
                 variant="secondary"

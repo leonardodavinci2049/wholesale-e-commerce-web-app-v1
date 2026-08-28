@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SellerIdEditor } from "./seller-id-editor";
+import { SyncUserWhatsAppButton } from "./sync-user-whatsapp-button";
 import { UserPasswordDialog } from "./user-password-dialog";
 
 type UserWithCustomerAndSellerIds = UserWithRole & {
@@ -85,7 +86,13 @@ export function UserTable({ users, selfId }: UserTableProps) {
                   {user.email}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {user.whatsapp || "—"}
+                  {user.whatsapp || (
+                    <SyncUserWhatsAppButton
+                      userId={user.id}
+                      userName={user.name || "Sem nome"}
+                      personId={user.personId ?? null}
+                    />
+                  )}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   <SellerIdEditor
@@ -129,6 +136,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
                       userId={user.id}
                       userName={user.name}
                       userEmail={user.email}
+                      userWhatsapp={user.whatsapp}
                     />
                     <Button asChild variant="outline" size="sm">
                       <Link href={`/dashboard/users/${user.id}`}>Ver</Link>
@@ -183,7 +191,17 @@ export function UserTable({ users, selfId }: UserTableProps) {
 
             <div className="mt-1 min-w-0 text-xs leading-tight text-muted-foreground">
               <span className="font-medium">WhatsApp</span>{" "}
-              <span className="break-all">{user.whatsapp || "—"}</span>
+              {user.whatsapp ? (
+                <span className="break-all">{user.whatsapp}</span>
+              ) : (
+                <span className="inline-flex align-middle">
+                  <SyncUserWhatsAppButton
+                    userId={user.id}
+                    userName={user.name || "Sem nome"}
+                    personId={user.personId ?? null}
+                  />
+                </span>
+              )}
             </div>
 
             <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
@@ -232,6 +250,7 @@ export function UserTable({ users, selfId }: UserTableProps) {
                 userId={user.id}
                 userName={user.name}
                 userEmail={user.email}
+                userWhatsapp={user.whatsapp}
               />
               <Button asChild variant="outline" size="sm">
                 <Link href={`/dashboard/users/${user.id}`}>Ver</Link>
