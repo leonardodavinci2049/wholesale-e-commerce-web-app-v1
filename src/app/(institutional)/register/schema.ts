@@ -2,13 +2,14 @@ import { z } from "zod";
 import { BRAZILIAN_STATES } from "@/core/constants/brazilian-states";
 
 /**
- * IDs de tipo de pessoa no backend.
- * Padrão adotado: PJ = 1, PF = 2.
+ * IDs de tipo de pessoa no backend (ERP).
+ * Padrão do ERP: PF = 1 (PESSOA FÍSICA), PJ = 2 (PESSOA JURÍDICA),
+ * conforme sp_costumer_create_manager_v2 e os dados de tbl_pessoa.
  * Centralizado aqui para facilitar ajuste caso a base utilize valores diferentes.
  */
 export const PERSON_TYPE_ID = {
-  PJ: 1,
-  PF: 2,
+  PJ: 2,
+  PF: 1,
 } as const;
 
 export const PERSON_TYPE_LABEL = {
