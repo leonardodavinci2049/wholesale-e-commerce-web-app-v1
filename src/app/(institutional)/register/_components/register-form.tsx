@@ -41,7 +41,10 @@ import { formatStateOptions } from "@/core/constants/brazilian-states";
 import { cn } from "@/lib/utils";
 import { fetchAddressByCep } from "@/services/api-cep/cep-service";
 import { trackEvent } from "../_lib/tracking";
-import { WHATSAPP_PRECADASTRO_URL } from "../_lib/whatsapp";
+import {
+  buildRegisterSuccessWhatsappUrl,
+  WHATSAPP_PRECADASTRO_URL,
+} from "../_lib/whatsapp";
 import {
   type RegisterLeadState,
   submitRegisterLead,
@@ -635,7 +638,11 @@ function RegisterFormContent({
               <Select
                 name="state"
                 value={values.state}
-                onValueChange={(value) => setField("state", value)}
+                onValueChange={(value) => {
+                  // Ignora o valor vazio disparado pelo listener de "reset"
+                  // do Radix Select (React 19 reseta o form após a action).
+                  if (value) setField("state", value);
+                }}
                 disabled={isPending}
               >
                 <SelectTrigger
@@ -972,6 +979,9 @@ function RegisterSuccessCard({
   customerId?: number;
   onNewRegister: () => void;
 }) {
+  const whatsappUrl = customerId
+    ? buildRegisterSuccessWhatsappUrl(customerId)
+    : WHATSAPP_PRECADASTRO_URL;
   const handleCopyCustomerId = async (): Promise<void> => {
     if (!customerId) return;
 
@@ -1023,11 +1033,7 @@ function RegisterSuccessCard({
         ) : null}
         <div className="mt-2 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button asChild className="w-full cursor-pointer shadow-md sm:w-auto">
-            <a
-              href={WHATSAPP_PRECADASTRO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
               <MessageCircle className="mr-2 size-4" />
               Falar no WhatsApp
             </a>

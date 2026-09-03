@@ -18,3 +18,12 @@ export function buildWhatsappUrl(message: string): string {
 export const WHATSAPP_PRECADASTRO_URL = buildWhatsappUrl(
   WHATSAPP_PRECADASTRO_MESSAGE,
 );
+
+/**
+ * Monta a mensagem de WhatsApp exibida após o pré-cadastro concluído com
+ * sucesso, incluindo o número de cadastro retornado pela API.
+ */
+export function buildRegisterSuccessWhatsappUrl(customerId: number): string {
+  const message = `Olá! Fiz o cadastro no site da ${companyInfo.name} e o meu número de cadastro é ${customerId}. Aguardo sua avaliação.`;
+  return buildWhatsappUrl(message);
+}
