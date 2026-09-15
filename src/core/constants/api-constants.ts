@@ -219,6 +219,13 @@ export const PRODUCT_PDV_ENDPOINTS = {
   FIND_SEARCH: "/product-pdv/v2/product-find-pdv-search",
 } as const;
 
+// Endpoints de Product Wholesale
+export const PRODUCT_WHOLESALE_ENDPOINTS = {
+  FIND_ALL: "/product-wholesale/v2/product-wholesale-find-all",
+  FIND_BY_ID: "/product-wholesale/v2/product-wholesale-find-id",
+  SECTIONS: "/product-wholesale/v2/product-wholesale-sections",
+} as const;
+
 // Endpoints de Carrier
 export const CARRIER_ENDPOINTS = {
   FIND_ALL: "/carrier/v2/carrier-find-all",
