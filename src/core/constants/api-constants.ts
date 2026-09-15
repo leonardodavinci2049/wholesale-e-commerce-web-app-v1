@@ -212,6 +212,14 @@ export const BRAND_ENDPOINTS = {
   DELETE: "/brand/v2/brand-delete",
 } as const;
 
+// Endpoints de App Config
+export const APP_CONFIG_ENDPOINTS = {
+  FIND_ALL: "/app-config/v2/app-config-find-all",
+  FIND_BY_ID: "/app-config/v2/app-config-find-id",
+  UPD_GENERAL_FIELD: "/app-config/v2/app-config-upd-general-field",
+  MENU_FIND_TYPE: "/app-config/v2/app-menu-find-type",
+} as const;
+
 // Endpoints de Product PDV
 export const PRODUCT_PDV_ENDPOINTS = {
   FIND_ALL: "/product-pdv/v2/product-find-pdv-all",
